@@ -1,0 +1,6 @@
+projects/
+output/
+output_test/
+llm/output/
+tmp/
+.git/
