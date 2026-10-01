@@ -23,13 +23,28 @@ logger.setLevel(logging.WARNING)  # Default to WARNING, can be changed to INFO w
 load_dotenv()
 _client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy_key"))
 _openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "dummy_key"))
-_gemini_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY", "dummy_key"))
+
+# Configuração de Múltiplas Chaves do Gemini (Rodízio)
+_gemini_keys = []
+for i in range(1, 10): # Busca no .env por GEMINI_KEY_1 até GEMINI_KEY_9
+    key = os.getenv(f"GEMINI_KEY_{i}")
+    if key:
+        _gemini_keys.append(key)
+
+# Fallback para manter compatibilidade com GEMINI_API_KEY antiga
+if not _gemini_keys and os.getenv("GEMINI_API_KEY"):
+    _gemini_keys.append(os.getenv("GEMINI_API_KEY"))
+
+if not _gemini_keys:
+    _gemini_keys = ["dummy_key"]
+
+_gemini_clients = [genai.Client(api_key=k) for k in _gemini_keys]
+_current_gemini_index = 0
 
 
 # Custom exception for rate limits
 class RateLimitExceeded(Exception):
     """Raised when API rate limit is reached"""
-
     pass
 
 
@@ -430,9 +445,38 @@ def prompt_task4_cot(function):
         ]
     )
 
+def prompt_task4_qg_default(function):
+    return "\n".join(
+        [
+            "Write only the exception handling block for the risky part of this Python snippet.",
+            "Reuse the snippet's identifiers and message style to stay close to the reference solution.",
+            "CRITICAL QUALITY RULES:",
+            "1. Do not catch the generic 'Exception' or 'BaseException' classes (Avoid Pylint W0718: broad-exception-caught). Catch a specific exception.",
+            "2. If you raise a new exception inside the except block, you MUST chain it to the original error using the 'from' keyword (Avoid Pylint W0707: raise-missing-from).",
+            "Return exactly one <code> block containing only the except clause with proper indentation.",
+            "<code>",
+            function,
+            "</code>",
+        ]
+    )
+
+def prompt_task4_qg_cot(function):
+    return "\n".join(
+        [
+            "Decide which exception block best matches this Python snippet.",
+            "CRITICAL QUALITY RULES:",
+            "1. Do not catch the generic 'Exception' or 'BaseException' classes (Avoid Pylint W0718). Catch a specific exception.",
+            "2. If you raise a new exception inside the except block, you MUST chain it using the 'from' keyword (Avoid Pylint W0707).",
+            "<code>",
+            function,
+            "</code>",
+            "Plan silently ensuring the handler aligns with the reference style AND strictly follows the quality rules. Then reply with a single <code> block containing only the except clause and four-space indentation.",
+        ]
+    )
+
 
 def collect_df(task, project: str = DEFAULT_PROJECT):
-    df = pd.read_csv("tmp/balanced_sample.csv")
+    df = pd.read_csv("data/balanced_sample.csv")
     df["project"] = project
 
     if task == "task1":  # 700
@@ -451,33 +495,15 @@ def collect_df(task, project: str = DEFAULT_PROJECT):
 
 
 def _call_claude(prompt: str, model_name: str) -> Dict[str, any]:
-    """
-    Call Claude API and return response text along with token usage.
-
-    Args:
-        prompt: The prompt to send to Claude
-        model_name: The Claude model to use (e.g., "claude-haiku-4-5")
-
-    Returns:
-        Dictionary with keys:
-        - "text": The response text from Claude
-        - "input_tokens": Number of input tokens used
-        - "output_tokens": Number of output tokens used
-
-    Raises:
-        RateLimitExceeded: If API rate limit is reached
-    """
     try:
         response = _client.messages.create(
             model=model_name,
             max_tokens=10050,
-            temperature=0.7,
             messages=[{"role": "user", "content": prompt}],
         )
     except AnthropicRateLimitError as e:
         raise RateLimitExceeded(f"Claude API rate limited: {e}") from e
 
-    # Track tokens
     input_tokens = response.usage.input_tokens
     output_tokens = response.usage.output_tokens
 
@@ -489,22 +515,6 @@ def _call_claude(prompt: str, model_name: str) -> Dict[str, any]:
 
 
 def _call_openai(prompt: str, model_name: str) -> Dict[str, any]:
-    """
-    Call OpenAI API and return response text along with token usage.
-
-    Args:
-        prompt: The prompt to send to OpenAI
-        model_name: The OpenAI model to use (e.g., "gpt-4o-mini")
-
-    Returns:
-        Dictionary with keys:
-        - "text": The response text from OpenAI
-        - "input_tokens": Number of input tokens used
-        - "output_tokens": Number of output tokens used
-
-    Raises:
-        RateLimitExceeded: If API rate limit is reached
-    """
     try:
         response = _openai_client.chat.completions.create(
             model=model_name,
@@ -515,7 +525,6 @@ def _call_openai(prompt: str, model_name: str) -> Dict[str, any]:
     except OpenAIRateLimitError as e:
         raise RateLimitExceeded(f"OpenAI API rate limited: {e}") from e
 
-    # Track tokens
     input_tokens = response.usage.prompt_tokens
     output_tokens = response.usage.completion_tokens
 
@@ -528,71 +537,53 @@ def _call_openai(prompt: str, model_name: str) -> Dict[str, any]:
 
 def _call_gemini(prompt: str, model_name: str) -> Dict[str, any]:
     """
-    Call Gemini API and return response text along with token usage.
-
-    Args:
-        prompt: The prompt to send to Gemini
-        model_name: The Gemini model to use (e.g., "gemini-2.0-flash" or "models/gemini-2.0-flash")
-
-    Returns:
-        Dictionary with keys:
-        - "text": The response text from Gemini
-        - "input_tokens": Number of input tokens used
-        - "output_tokens": Number of output tokens used
-
-    Raises:
-        RateLimitExceeded: If API rate limit is reached
+    Call Gemini API using Key Rotation logic to bypass rate limits.
     """
     from google.genai import types as GenAITypes
+    global _current_gemini_index
 
-    # Auto-add models/ prefix if not present
     if not model_name.startswith("models/"):
         model_name = f"models/{model_name}"
 
-    try:
-        response = _gemini_client.models.generate_content(
-            model=model_name,
-            contents=prompt,
-            config=GenAITypes.GenerateContentConfig(
-                temperature=0.7,
-            ),
-        )
-    except GenAIErrors.APIError as e:
-        if e.code == 429:
-            raise RateLimitExceeded(f"Gemini API rate limited: {e}") from e
-        raise
+    for tentativa in range(len(_gemini_clients)):
+        client = _gemini_clients[_current_gemini_index]
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config=GenAITypes.GenerateContentConfig(
+                    temperature=0.7,
+                ),
+            )
+            
+            input_tokens = response.usage_metadata.prompt_token_count or 0
+            output_tokens = response.usage_metadata.candidates_token_count or 0
+            text = response.text if response.text is not None else ""
+            
+            return {
+                "text": text,
+                "input_tokens": input_tokens,
+                "output_tokens": output_tokens,
+            }
 
-    # Track tokens
-    input_tokens = response.usage_metadata.prompt_token_count or 0
-    output_tokens = response.usage_metadata.candidates_token_count or 0
+        except GenAIErrors.APIError as e:
+            if e.code in (429, 403):
+                if e.code == 403:
+                    logger.warning(f"[!] Chave revogada/bloqueada (403). Pulando para a próxima...")
+                else:
+                    logger.warning(f"[!] Limite da chave atingido (429). Trocando de chave...")
+                
+                # Passa para a próxima chave
+                _current_gemini_index = (_current_gemini_index + 1) % len(_gemini_clients)
+                continue 
+            
+            raise
 
-    # Handle cases where response.text is None (blocked content, etc.)
-    text = response.text if response.text is not None else ""
-
-    return {
-        "text": text,
-        "input_tokens": input_tokens,
-        "output_tokens": output_tokens,
-    }
+    # Se todas as chaves falharem por 429/403
+    raise RateLimitExceeded(f"Todas as {len(_gemini_clients)} chaves do Gemini estouraram ou foram bloqueadas.")
 
 
 def call_llm(prompt: str, model_name: str) -> Dict[str, any]:
-    """
-    Unified LLM interface that routes to the appropriate backend.
-
-    Args:
-        prompt: The prompt to send to the LLM
-        model_name: The model to use (e.g., "claude-haiku-4-5" or "gpt-4o-mini")
-
-    Returns:
-        Dictionary with keys:
-        - "text": The response text
-        - "input_tokens": Number of input tokens used
-        - "output_tokens": Number of output tokens used
-
-    Raises:
-        ValueError: If the model name is not recognized
-    """
     if "claude" in model_name.lower():
         return _call_claude(prompt, model_name)
     elif "gpt" in model_name.lower():
@@ -628,6 +619,8 @@ TASKS = {
         "style-1-shot": prompt_task4_1_shot,
         "style-few-shot": prompt_task4_few_shot,
         "style-cot": prompt_task4_cot,
+        "style-qg-default": prompt_task4_qg_default,
+        "style-qg-cot": prompt_task4_qg_cot,
     },
 }
 
@@ -702,13 +695,11 @@ def parse_args():
 def main():
     args = parse_args()
 
-    # Set logging level based on verbose flag
     if args.verbose:
         logger.setLevel(logging.INFO)
 
     models_to_run: List[str] = args.models or DEFAULT_MODELS
 
-    # Handle --task (single task) which overrides --tasks
     if args.task:
         tasks_to_run = [args.task]
     else:
@@ -716,21 +707,16 @@ def main():
 
     prompt_types_filter = set(args.prompt_types) if args.prompt_types else None
 
-    # Handle task rotation starting from start_task
     if args.start_task:
-        # Rotate tasks to start from the specified task
         all_tasks = list(TASKS.keys())
         if args.start_task in all_tasks:
             start_idx = all_tasks.index(args.start_task)
-            # Rotate the list so start_task is first
             tasks_to_run = all_tasks[start_idx:] + all_tasks[:start_idx]
         else:
             logger.warning(f"Task {args.start_task} not found, using default order")
 
-    # Determine starting prompt type for the starting task
     start_prompt = None
     if args.start_task and args.start_prompt:
-        # Validate that the prompt exists in the start task
         if args.start_prompt in TASKS[args.start_task]:
             start_prompt = args.start_prompt
         else:
@@ -745,24 +731,20 @@ def main():
             model_label = sanitize_for_filename(
                 model.split("/")[-1] if "/" in model else model
             )
-            print(f"Processing with model: {model}")
+            print(f"\nProcessing with model: {model}")
             df_model = pd.DataFrame()
 
             for task in tasks_to_run:
                 print(f"Processing {task}...")
                 prompt_functions = TASKS[task]
 
-                # If this is the start task and we have a start_prompt, rotate prompts
                 prompts_to_run = list(prompt_functions.items())
                 if task == args.start_task and start_prompt:
-                    # Find the start_prompt index and rotate
                     prompt_keys = list(prompt_functions.keys())
                     if start_prompt in prompt_keys:
                         start_idx = prompt_keys.index(start_prompt)
                         rotated_keys = prompt_keys[start_idx:] + prompt_keys[:start_idx]
-                        prompts_to_run = [
-                            (k, prompt_functions[k]) for k in rotated_keys
-                        ]
+                        prompts_to_run = [(k, prompt_functions[k]) for k in rotated_keys]
 
                 for prompt_type, prompt_func in prompts_to_run:
                     if prompt_types_filter and prompt_type not in prompt_types_filter:
@@ -771,125 +753,132 @@ def main():
                     output = []
                     input_tokens_list = []
                     output_tokens_list = []
+                    
                     df = collect_df(task, project=args.project)
                     if args.limit is not None:
                         df = df.head(args.limit)
 
+                    # --- LÓGICA DE RETOMADA DE ONDE PAROU ---
+                    existing_results = {}
+                    output_dir = os.path.join(os.getcwd(), "llm", "output")
+                    filename = f"{args.project}_{model_label}_{task}_{prompt_type}_results.csv"
+                    output_file = os.path.join(output_dir, filename)
+                    
+                    if os.path.exists(output_file):
+                        try:
+                            df_existing = pd.read_csv(output_file)
+                            # Pega as linhas que já têm conteúdo válido gerado pela IA
+                            for idx, row_ext in df_existing.iterrows():
+                                ans = row_ext.get("llm_response")
+                                out_tok = row_ext.get("output_tokens", 0)
+                                # É válido se não for nulo/vazio E se tiver gerado tokens
+                                if pd.notna(ans) and str(ans).strip() != "" and out_tok > 0:
+                                    existing_results[idx] = {
+                                        "text": str(ans),
+                                        "input_tokens": row_ext.get("input_tokens", 0),
+                                        "output_tokens": out_tok
+                                    }
+                            logger.info(f"Encontradas {len(existing_results)} linhas já processadas. Retomando...")
+                        except Exception as e:
+                            logger.warning(f"Não foi possível ler o CSV existente. Ignorando retomada: {e}")
+                    # ----------------------------------------
+
                     for index, row in df.iterrows():
                         call_count = int(index) + 1
-                        print(
-                            f"Calling {call_count} of {len(df)} rows for {prompt_type} prompt of {task}"
-                        )
+                        
+                        # Se já processamos com sucesso no passado, PULA e economiza a API!
+                        if index in existing_results:
+                            print(f"Pulando linha {call_count} de {len(df)} (Já processada com sucesso)")
+                            res = existing_results[index]
+                            output.append(res["text"])
+                            input_tokens_list.append(res["input_tokens"])
+                            output_tokens_list.append(res["output_tokens"])
+                            continue
+
+                        print(f"Calling {call_count} of {len(df)} rows for {prompt_type} prompt of {task}")
+                        
                         if row["n_try_except"] == 1:
                             prompt = prompt_func(row["str_code_without_try_except"])
                         else:
                             prompt = prompt_func(row["func_body"])
 
                         start = time.time()
-                        try:
-                            response = call_llm(prompt=prompt, model_name=model)
-                        except RateLimitExceeded as exc:
-                            # Rate limit reached - save progress and exit gracefully
-                            logger.error(f"Rate limit exceeded: {exc}")
-                            logger.info("Saving results collected so far...")
-
-                            # Save the current batch
-                            df_style = df.copy()
-                            df_style["task"] = task
-                            df_style["prompt_type"] = prompt_type
-                            df_style["llm_response"] = output
-                            df_style["input_tokens"] = input_tokens_list
-                            df_style["output_tokens"] = output_tokens_list
-                            df_model = pd.concat(
-                                [df_model, df_style], ignore_index=True
-                            )
-                            df_result = pd.concat(
-                                [df_result, df_style], ignore_index=True
-                            )
-                            save_results_to_csv(
-                                df_style, task, prompt_type, args.project, model_label
-                            )
-
-                            # Save per-model aggregate
-                            if not df_model.empty:
-                                model_output_file = os.path.join(
-                                    os.getcwd(),
-                                    "llm",
-                                    "output",
-                                    f"{args.project}_{model_label}_results_all.csv",
-                                )
-                                df_model.to_csv(model_output_file, index=False)
-                                logger.info(
-                                    f"Model results saved to {model_output_file}"
-                                )
-
-                            total_processed = len(df_result)
-                            logger.error(
-                                f"Execution stopped. Processed {total_processed} samples before rate limit."
-                            )
-                            sys.exit(1)
-                        except Exception as exc:
-                            logger.error(f"Error from LLM API: {exc}")
-                            output.append("")
-                            input_tokens_list.append(0)
-                            output_tokens_list.append(0)
-                            continue
+                        
+                        # --- LOOP DE TENTATIVAS DA API ---
+                        sucesso = False
+                        while not sucesso:
+                            try:
+                                response = call_llm(prompt=prompt, model_name=model)
+                                sucesso = True 
+                            except RateLimitExceeded as exc:
+                                logger.error(f"Todas as chaves esgotadas: {exc}")
+                                logger.info("Pausando por 60 segundos antes de tentar novamente...")
+                                time.sleep(60) 
+                            except Exception as exc:
+                                if "503" in str(exc) or "UNAVAILABLE" in str(exc):
+                                    logger.error(f"Google sobrecarregado (503). Pausando 30s...")
+                                    time.sleep(30)
+                                else:
+                                    logger.error(f"Erro ao processar linha {call_count}: {exc}")
+                                    # REGRA ANILIXO: Se for um erro fatal inesperado, salva VAZIO (None)
+                                    # Isso faz com que não suje o dataset, e na próxima vez o script tente de novo!
+                                    response = {"text": None, "input_tokens": 0, "output_tokens": 0}
+                                    sucesso = True 
+                        # ---------------------------------
 
                         response_text = response["text"]
                         input_tokens = response["input_tokens"]
                         output_tokens = response["output_tokens"]
                         elapsed_time = time.time() - start
 
-                        logger.info(f"Generated in {elapsed_time:.2f} seconds")
-                        logger.info(
-                            f"Input tokens: {input_tokens}, Output tokens: {output_tokens}"
-                        )
-                        logger.info(f"Response: {response_text}")
+                        if response_text is not None:
+                            logger.info(f"Generated in {elapsed_time:.2f} seconds")
+                            logger.info(f"Input tokens: {input_tokens}, Output tokens: {output_tokens}")
+                            logger.info(f"Response: {response_text[:50]}...")
+                        else:
+                            logger.warning(f"Linha {call_count} falhou. Marcando como vazia para tentar futuramente.")
 
                         output.append(response_text)
                         input_tokens_list.append(input_tokens)
                         output_tokens_list.append(output_tokens)
 
-                    df_style = df.copy()
-                    df_style["task"] = task
-                    df_style["prompt_type"] = prompt_type
-                    df_style["llm_response"] = output
-                    df_style["input_tokens"] = input_tokens_list
-                    df_style["output_tokens"] = output_tokens_list
+                        # --- SALVAMENTO INCREMENTAL A CADA LINHA ---
+                        faltam = len(df) - len(output)
+                        temp_output = output + [None] * faltam
+                        temp_in_tokens = input_tokens_list + [None] * faltam
+                        temp_out_tokens = output_tokens_list + [None] * faltam
+                        
+                        df_style = df.copy()
+                        df_style["task"] = task
+                        df_style["prompt_type"] = prompt_type
+                        df_style["llm_response"] = temp_output
+                        df_style["input_tokens"] = temp_in_tokens
+                        df_style["output_tokens"] = temp_out_tokens
 
+                        save_results_to_csv(
+                            df_style, task, prompt_type, args.project, model_label
+                        )
+
+                    # Após rodar as 379
                     df_model = pd.concat([df_model, df_style], ignore_index=True)
                     df_result = pd.concat([df_result, df_style], ignore_index=True)
-                    save_results_to_csv(
-                        df_style, task, prompt_type, args.project, model_label
-                    )
 
-            # Save per-model aggregate after model completes
             if not df_model.empty:
                 model_output_file = os.path.join(
-                    os.getcwd(),
-                    "llm",
-                    "output",
-                    f"{args.project}_{model_label}_results_all.csv",
+                    os.getcwd(), "llm", "output", f"{args.project}_{model_label}_results_all.csv",
                 )
                 df_model.to_csv(model_output_file, index=False)
                 logger.info(f"Model results saved to {model_output_file}")
 
-        # Completed successfully - save combined results for all models
         if not df_result.empty:
             aggregate_label = sanitize_for_filename("-".join(models_to_run))
             final_output_file = os.path.join(
-                os.getcwd(),
-                "llm",
-                "output",
-                f"{args.project}_{aggregate_label}_results_all.csv",
+                os.getcwd(), "llm", "output", f"{args.project}_{aggregate_label}_results_all.csv",
             )
             df_result.to_csv(final_output_file, index=False)
             logger.info(f"Combined results saved to {final_output_file}")
 
-        total_processed = len(df_result)
-        logger.info(
-            f"✓ Execution completed successfully. Processed {total_processed} samples."
-        )
+        logger.info(f"✓ Execution completed successfully. Processed {len(df_result)} samples.")
 
     except KeyboardInterrupt:
         logger.warning("Execution interrupted by user")
