@@ -689,7 +689,8 @@ serialize_iter,"def serialize_iter(self, data, iter_type, div=None, **kwargs):
                         el_node.text = str(el)
                 final_result.append(el_node)
             return final_result
-        return serialized",combined,task4,style-qg-default,,,
+        return serialized",combined,task4,style-qg-default,"<code>        except TypeError as err:
+            raise SerializationError(""Unable to serialize iterable."") from err</code>",852.0,21.0
 deserialize_duration,"def deserialize_duration(attr):
         """"""Deserialize ISO-8601 formatted string into TimeDelta object.
 
@@ -715,7 +716,8 @@ deserialize_duration,"def deserialize_duration(attr):
         """"""
         if isinstance(attr, ET.Element):
             attr = attr.text
-        duration = isodate.parse_duration(attr)",combined,task4,style-qg-default,,,
+        duration = isodate.parse_duration(attr)",combined,task4,style-qg-default,"<code>        except (ValueError, isodate.ISO8601Error) as err:
+            raise DeserializationError(""Duration string format invalid."", err) from err</code>",249.0,38.0
 wrapper,"def wrapper(*args, **kwargs):
             try:
                 # this assumes the client has an _api_version attribute
@@ -772,7 +774,8 @@ wrapper,"def wrapper(*args, **kwargs):
                         ]
                     )
                 )
-            return func(*args, **kwargs)",combined,task4,style-qg-default,,,
+            return func(*args, **kwargs)",combined,task4,style-qg-default,"<code>            except AttributeError as err:
+                raise ValueError(""Could not find API version on client."") from err</code>",452.0,23.0
 deserialize_decimal,"def deserialize_decimal(attr):
         """"""Deserialize string into Decimal object.
 
@@ -798,7 +801,8 @@ deserialize_decimal,"def deserialize_decimal(attr):
         """"""
         if isinstance(attr, ET.Element):
             attr = attr.text
-        return decimal.Decimal(str(attr))  # type: ignore",combined,task4,style-qg-default,,,
+        return decimal.Decimal(str(attr))  # type: ignore",combined,task4,style-qg-default,"<code>        except decimal.InvalidOperation as error:
+            raise DeserializationError(""Invalid decimal string format"") from error</code>",252.0,26.0
 deserialize_iso,"def deserialize_iso(attr):
         """"""Deserialize ISO-8601 formatted string into Datetime object.
 
@@ -864,7 +868,8 @@ deserialize_iso,"def deserialize_iso(attr):
             test_utc = date_obj.utctimetuple()
             if test_utc.tm_year > 9999 or test_utc.tm_year < 1:
                 raise OverflowError(""Hit max or min date"")
-        return date_obj",combined,task4,style-qg-default,,,
+        return date_obj",combined,task4,style-qg-default,"<code>        except (ValueError, OverflowError, TypeError) as err:
+            raise DeserializationError(""Unable to deserialize to datetime object."", err) from err</code>",488.0,34.0
 _find_and_emit_messages,"def _find_and_emit_messages(self, meta: Meta, response: Any) -> None:
         if isinstance(response, BaseMessage):
             self._emit(meta, response, dedupe=True)
@@ -914,7 +919,8 @@ _find_and_emit_messages,"def _find_and_emit_messages(self, meta: Meta, response:
                     elif isinstance(value, Sequence):
                         for item in value:
                             if isinstance(item, BaseMessage):
-                                self._emit(meta, item, dedupe=True)",combined,task4,style-qg-default,,,
+                                self._emit(meta, item, dedupe=True)",combined,task4,style-qg-default,"<code>                except AttributeError:
+                    continue</code>",445.0,9.0
 delete,"def delete(self, key: str, collection: str = DEFAULT_COLLECTION) -> bool:
         """"""
         Delete a key-value pair from the store.
@@ -948,7 +954,8 @@ delete,"def delete(self, key: str, collection: str = DEFAULT_COLLECTION) -> bool
 
         db_collection = self._scope.collection(collection)
         db_collection.remove(key)
-            return True",combined,task4,style-qg-default,,,
+            return True",combined,task4,style-qg-default,"<code>        except DocumentNotFoundException:
+            return False</code>",289.0,11.0
 _idval_from_function,"def _idval_from_function(self, val: object, argname: str, idx: int) -> str | None:
         """"""Try to make an ID for a parameter in a ParameterSet using the
         user-provided id callable, if given.""""""
@@ -974,7 +981,10 @@ _idval_from_function,"def _idval_from_function(self, val: object, argname: str, 
         id = self.idfn(val)
         if id is None:
             return None
-        return self._idval_from_value(id)",combined,task4,style-qg-default,,,
+        return self._idval_from_value(id)",combined,task4,style-qg-default,"<code>        except TypeError as e:
+            raise TypeError(
+                f""Error in ID function {self.idfn!r} for parameter {argname!r} at index {idx}""
+            ) from e</code>",260.0,47.0
 _create_or_update_initial,"def _create_or_update_initial(
         self, resource_group_name: str, name: str, lab: Union[_models.Lab, IO[bytes]], **kwargs: Any
     ) -> Iterator[bytes]:
@@ -1092,7 +1102,11 @@ _create_or_update_initial,"def _create_or_update_initial(
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            response = e.response
+            response.read()  # Load the body in memory and close the socket
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            raise HttpResponseError(response=response, error_format=ARMErrorFormat) from e</code>",859.0,81.0
 cancel,"async def cancel(self, thread_id: str, run_id: str, **kwargs: Any) -> _models.ThreadRun:
         """"""Cancels a run of an in‐progress thread.
 
@@ -1212,7 +1226,12 @@ cancel,"async def cancel(self, thread_id: str, run_id: str, **kwargs: Any) -> _m
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            if _stream:
+                await e.response.read()  # Load the body in memory and close the socket
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            error = _failsafe_deserialize(_models.AgentV1Error, e.response)
+            raise HttpResponseError(response=e.response, model=error) from e</code>",846.0,106.0
 get_metric_namespaces,"async def get_metric_namespaces(self, test_run_id: str, **kwargs: Any) -> _models.MetricNamespaceCollection:
         """"""List the metric namespaces for a load test run.
 
@@ -1332,7 +1351,10 @@ get_metric_namespaces,"async def get_metric_namespaces(self, test_run_id: str, *
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"```python
+        except ValueError as error:
+            raise HttpResponseError(response=response, error=error) from error
+```",845.0,27.0
 _generate_credentials_initial,"async def _generate_credentials_initial(
         self,
         resource_group_name: str,
@@ -1468,7 +1490,9 @@ _generate_credentials_initial,"async def _generate_credentials_initial(
         if cls:
             return cls(pipeline_response, deserialized, response_headers)  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            raise</code>",975.0,44.0
 deserialize_unicode,"def deserialize_unicode(data):
         """"""Preserve unicode objects in Python 2, otherwise return data
         as a string.
@@ -1504,7 +1528,8 @@ deserialize_unicode,"def deserialize_unicode(data):
         # Consider this is real string
         if isinstance(data, unicode):  # type: ignore
                 return data
-        return str(data)",combined,task4,style-qg-default,,,
+        return str(data)",combined,task4,style-qg-default,"<code>        except NameError:
+                return str(data)</code>",302.0,13.0
 _create_or_update_initial,"def _create_or_update_initial(
         self,
         resource_group_name: str,
@@ -1638,7 +1663,10 @@ _create_or_update_initial,"def _create_or_update_initial(
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            e.response.read()  # Load the body in memory and close the socket
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            raise HttpResponseError(response=e.response, error_format=ARMErrorFormat) from e</code>",953.0,82.0
 _list_learned_prefixes_initial,"async def _list_learned_prefixes_initial(
         self, resource_group_name: str, azure_firewall_name: str, **kwargs: Any
     ) -> AsyncIterator[bytes]:
@@ -1732,7 +1760,9 @@ _list_learned_prefixes_initial,"async def _list_learned_prefixes_initial(
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            raise HttpResponseError(response=e.response, error_format=ARMErrorFormat) from e</code>",731.0,63.0
 get,"async def get(
         self, resource_group_name: str, fleet_name: str, fleet_member_name: str, **kwargs: Any
     ) -> _models.FleetMember:
@@ -1866,7 +1896,12 @@ get,"async def get(
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            if _stream:
+                await e.response.read()
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            error = _failsafe_deserialize(_models.ErrorResponse, e.response.json())
+            raise HttpResponseError(response=e.response, model=error, error_format=ARMErrorFormat) from e</code>",956.0,103.0
 _create_initial,"def _create_initial(
         self, resource_group_name: str, server_name: str, backup_name: str, **kwargs: Any
     ) -> Iterator[bytes]:
@@ -1972,7 +2007,11 @@ _create_initial,"def _create_initial(
         if cls:
             return cls(pipeline_response, deserialized, response_headers)  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            e.response.read()  # Load the body in memory and close the socket
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ErrorResponse, e.response)
+            raise HttpResponseError(response=e.response, model=error, error_format=ARMErrorFormat) from e</code>",801.0,107.0
 _update_token_and_reschedule,"def _update_token_and_reschedule(self):
         should_this_thread_refresh = False
         with self._lock:
@@ -2028,7 +2067,11 @@ _update_token_and_reschedule,"def _update_token_and_reschedule(self):
                     self._lock.notify_all()
         if self._proactive_refresh:
             self._schedule_refresh()
-        return self._token",combined,task4,style-qg-default,,,
+        return self._token",combined,task4,style-qg-default,"<code>        except RuntimeError as err:
+            with self._lock:
+                self._some_thread_refreshing = False
+                self._lock.notify_all()
+            raise RuntimeError(""The token_refresher failed to provide a new token."") from err</code>",418.0,56.0
 find_by_credentials,"def find_by_credentials(cls, user_name: str, password: str, validate_password: bool = True):
 		""""""Find the user by credentials.
 
@@ -2086,7 +2129,8 @@ find_by_credentials,"def find_by_credentials(cls, user_name: str, password: str,
 		if validate_password:
 			check_password(user[""name""], password, delete_tracker_cache=False)
 
-		return user",combined,task4,style-qg-default,,,
+		return user",combined,task4,style-qg-default,"<code>		except frappe.AuthenticationError:
+			return</code>",510.0,13.0
 set_standard_blob_tier,"async def set_standard_blob_tier(self, standard_blob_tier: Union[str, ""StandardBlobTier""], **kwargs: Any) -> None:
         """"""This operation sets the tier on a block blob.
 
@@ -2182,7 +2226,8 @@ set_standard_blob_tier,"async def set_standard_blob_tier(self, standard_blob_tie
                 modified_access_conditions=mod_conditions,
                 lease_access_conditions=access_conditions,
                 version_id=version_id,
-                **kwargs)",combined,task4,style-qg-default,,,
+                **kwargs)",combined,task4,style-qg-default,"<code>        except HttpResponseError as error:
+            process_storage_error(error)</code>",846.0,19.0
 delete,"def delete(
         self,
         entity,  # type: EntityType
@@ -2278,7 +2323,8 @@ delete,"def delete(
             row_key=row_key,
             if_match=if_match,
             **kwargs
-        )",combined,task4,style-qg-default,,,
+        )",combined,task4,style-qg-default,"<code>        except KeyError as error:
+            raise ValueError(""Entity must have a PartitionKey and RowKey."") from error</code>",616.0,25.0
 deserialize_unix,"def deserialize_unix(attr):
         """"""Serialize Datetime object into IntTime format.
         This is represented as seconds.
@@ -2308,7 +2354,8 @@ deserialize_unix,"def deserialize_unix(attr):
         if isinstance(attr, ET.Element):
             attr = int(attr.text)  # type: ignore
         attr = int(attr)
-            date_obj = datetime.datetime.fromtimestamp(attr, TZ_UTC)",combined,task4,style-qg-default,,,
+            date_obj = datetime.datetime.fromtimestamp(attr, TZ_UTC)",combined,task4,style-qg-default,"<code>        except (ValueError, TypeError, OverflowError) as err:
+            raise DeserializationError(""Datetime format invalid"") from err</code>",271.0,29.0
 serialize_iter,"def serialize_iter(self, data, iter_type, div=None, **kwargs):
         """"""Serialize iterable.
 
@@ -2434,7 +2481,8 @@ serialize_iter,"def serialize_iter(self, data, iter_type, div=None, **kwargs):
                         el_node.text = str(el)
                 final_result.append(el_node)
             return final_result
-        return serialized",combined,task4,style-qg-default,,,
+        return serialized",combined,task4,style-qg-default,"<code>        except TypeError as err:
+            raise SerializationError(""Unable to serialize iterable."") from err</code>",889.0,21.0
 _infer_class_models,"def _infer_class_models(cls):
         try:
             str_models = cls.__module__.rsplit(""."", 1)[0]
@@ -2451,7 +2499,10 @@ _infer_class_models,"def _infer_class_models(cls):
             client_models = {k: v for k, v in models.__dict__.items() if isinstance(v, type)}
             if cls.__name__ not in client_models:
                 raise ValueError(""Not Autorest generated code"")
-        return client_models",combined,task4,style-qg-default,,,
+        return client_models",combined,task4,style-qg-default,"<code>
+except KeyError as err:
+    raise ValueError(""Not Autorest generated code"") from err
+</code>",249.0,22.0
 _update_initial,"async def _update_initial(
         self,
         resource_group_name: str,
@@ -2619,7 +2670,9 @@ _update_initial,"async def _update_initial(
         if cls:
             return cls(pipeline_response, deserialized, response_headers)  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            raise</code>",1143.0,44.0
 failsafe_deserialize,"def failsafe_deserialize(self, target_obj, data, content_type=None):
         """"""Ignores any errors encountered in deserialization,
         and falls back to not deserializing the object. Recommended
@@ -2655,7 +2708,8 @@ failsafe_deserialize,"def failsafe_deserialize(self, target_obj, data, content_t
         :return: Deserialized object.
         :rtype: object
         """"""
-        return self(target_obj, data, content_type=content_type)",combined,task4,style-qg-default,,,
+        return self(target_obj, data, content_type=content_type)",combined,task4,style-qg-default,"<code>        except DeserializationError:
+            return data</code>",327.0,12.0
 deserialize_unicode,"def deserialize_unicode(data):
         """"""Preserve unicode objects in Python 2, otherwise return data
         as a string.
@@ -2691,7 +2745,10 @@ deserialize_unicode,"def deserialize_unicode(data):
         # Consider this is real string
         if isinstance(data, unicode):  # type: ignore
                 return data
-        return str(data)",combined,task4,style-qg-default,,,
+        return str(data)",combined,task4,style-qg-default,"<code>
+        except UnicodeEncodeError as err:
+            raise DeserializationError(""Unable to deserialize to unicode."", err) from err
+</code>",302.0,30.0
 deserialize_unicode,"def deserialize_unicode(data):
         """"""Preserve unicode objects in Python 2, otherwise return data
         as a string.
@@ -2727,7 +2784,12 @@ deserialize_unicode,"def deserialize_unicode(data):
         # Consider this is real string
         if isinstance(data, unicode):  # type: ignore
                 return data
-        return str(data)",combined,task4,style-qg-default,,,
+        return str(data)",combined,task4,style-qg-default,"The risky part of the provided snippet is the use of the `unicode` identifier, which is not defined in Python 3 and will raise a `NameError`. To maintain cross-version compatibility (as indicated by the docstring and the `# type: ignore` comment), this should be handled by catching the specific `NameError`.
+
+<code>
+        except NameError:
+                pass
+</code>",302.0,80.0
 sample_chat_completions_with_defaults,"def sample_chat_completions_with_defaults():
     import os
 
@@ -2803,7 +2865,8 @@ sample_chat_completions_with_defaults,"def sample_chat_completions_with_defaults
         max_tokens=2000,
     )
 
-    print(response.choices[0].message.content)",combined,task4,style-qg-default,,,
+    print(response.choices[0].message.content)",combined,task4,style-qg-default,"<code>except HttpResponseError as e:
+    print(f""Service request failed: {e}"")</code>",493.0,21.0
 wrap_model_call,"def wrap_model_call(self, request, handler):
                 attempts.append(""first-attempt"")
                 try:
@@ -2817,7 +2880,9 @@ wrap_model_call,"def wrap_model_call(self, request, handler):
                     return result",0,0,0,"['except Exception:\n                    attempts.append(""retry-attempt"")\n                    result = handler(request)\n                    return result']","def wrap_model_call(self, request, handler):
                 attempts.append(""first-attempt"")
                 result = handler(request)
-                    return result",combined,task4,style-qg-default,,,
+                    return result",combined,task4,style-qg-default,"<code>                except RuntimeError as err:
+                    attempts.append(""retry-attempt"")
+                    raise RuntimeError(""Model call failed"") from err</code>",183.0,29.0
 query,"def query(self, name, data, data_type, **kwargs):
         """"""Serialize data intended for a URL query.
 
@@ -2870,7 +2935,8 @@ query,"def query(self, name, data, data_type, **kwargs):
             if kwargs.get(""skip_quote"") is True:
                 output = str(output)
             else:
-                output = quote(str(output), safe="""")",combined,task4,style-qg-default,,,
+                output = quote(str(output), safe="""")",combined,task4,style-qg-default,"<code>        except AttributeError as err:
+            raise TypeError(""Serialization failed"") from err</code>",454.0,18.0
 test_concurrent_download_and_cleanup,"def test_concurrent_download_and_cleanup(self):
         side_effect = self.side_effect
         chain_side_effects = self.chain_side_effects
@@ -3203,7 +3269,8 @@ test_concurrent_download_and_cleanup,"def test_concurrent_download_and_cleanup(s
         # https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process.terminate
         self.assertTrue(download_checked_the_file.get())
 
-        self.assertFalse(clear_removed_the_file.get())",combined,task4,style-qg-default,,,
+        self.assertFalse(clear_removed_the_file.get())",combined,task4,style-qg-default,"<code>                except LockNotAvailableError:
+                    exited_by_timeout = True</code>",1945.0,19.0
 _update_initial,"async def _update_initial(
         self,
         resource_group_name: str,
@@ -3333,7 +3400,10 @@ _update_initial,"async def _update_initial(
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            await e.response.read()
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            raise HttpResponseError(response=e.response, error_format=ARMErrorFormat) from e</code>",921.0,72.0
 _restart_initial,"def _restart_initial(
         self,
         resource_group_name: str,
@@ -3469,7 +3539,11 @@ _restart_initial,"def _restart_initial(
         if cls:
             return cls(pipeline_response, deserialized, response_headers)  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            e.response.read()  # Load the body in memory and close the socket
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ErrorResponse, e.response)
+            raise HttpResponseError(response=e.response, model=error, error_format=ARMErrorFormat) from e</code>",958.0,108.0
 atransform,"async def atransform(
         self,
         input: AsyncIterator[Input],
@@ -3555,7 +3629,8 @@ atransform,"async def atransform(
 
         if got_first_val:
             async for output in self.astream(final, config, **kwargs):
-                yield output",combined,task4,style-qg-default,,,
+                yield output",combined,task4,style-qg-default,"<code>        except TypeError:
+            final = ichunk</code>",540.0,12.0
 _create_or_update_initial,"async def _create_or_update_initial(
         self,
         resource_group_name: str,
@@ -3685,7 +3760,10 @@ _create_or_update_initial,"async def _create_or_update_initial(
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            await e.response.read()  # Load the body in memory and close the socket
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            raise HttpResponseError(response=e.response, error_format=ARMErrorFormat) from e</code>",940.0,83.0
 deserialize_data,"def deserialize_data(self, data, data_type):
         """"""Process data for deserialization according to data type.
 
@@ -3762,7 +3840,8 @@ deserialize_data,"def deserialize_data(self, data, data_type):
             if issubclass(obj_type, Enum):
                 if isinstance(data, ET.Element):
                     data = data.text
-                return self.deserialize_enum(data, obj_type)",combined,task4,style-qg-default,,,
+                return self.deserialize_enum(data, obj_type)",combined,task4,style-qg-default,"<code>        except (ValueError, TypeError, AttributeError) as error:
+            raise DeserializationError(""Unable to deserialize to object: "" + data_type, error) from error</code>",563.0,38.0
 _delete_initial,"async def _delete_initial(self, fabric_name: str, vcenter_name: str, **kwargs: Any) -> AsyncIterator[bytes]:
         error_map: MutableMapping = {
             401: ClientAuthenticationError,
@@ -3856,7 +3935,9 @@ _delete_initial,"async def _delete_initial(self, fabric_name: str, vcenter_name:
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            raise HttpResponseError(response=e.response, error_format=ARMErrorFormat) from e</code>",730.0,63.0
 query,"def query(self, name, data, data_type, **kwargs):
         """"""Serialize data intended for a URL query.
 
@@ -3909,7 +3990,8 @@ query,"def query(self, name, data, data_type, **kwargs):
             if kwargs.get(""skip_quote"") is True:
                 output = str(output)
             else:
-                output = quote(str(output), safe="""")",combined,task4,style-qg-default,,,
+                output = quote(str(output), safe="""")",combined,task4,style-qg-default,"<code>        except AttributeError as e:
+            raise TypeError(""Unable to serialize parameter '{}'."".format(name)) from e</code>",436.0,26.0
 authorize_access,"def authorize_access(g_calendar: str, reauthorize: bool = False):
 	""""""
 	If no Authorization code get it from Google and then request for Refresh Token.
@@ -3985,7 +4067,9 @@ authorize_access,"def authorize_access(g_calendar: str, reauthorize: bool = Fals
 	frappe.local.response[""type""] = ""redirect""
 	frappe.local.response[""location""] = google_calendar.get_url()
 
-	frappe.msgprint(_(""Google Calendar has been configured.""), indicator=""green"")",combined,task4,style-qg-default,,,
+	frappe.msgprint(_(""Google Calendar has been configured.""), indicator=""green"")",combined,task4,style-qg-default,"<code>	except requests.exceptions.RequestException as e:
+		frappe.log_error()
+		raise frappe.ValidationError(_(""Something went wrong during the authorization process."")) from e</code>",643.0,41.0
 _bms_trigger_data_move_initial,"async def _bms_trigger_data_move_initial(
         self,
         vault_name: str,
@@ -4113,7 +4197,11 @@ _bms_trigger_data_move_initial,"async def _bms_trigger_data_move_initial(
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"<code>        except HttpResponseError as e:
+            await e.response.read()
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.NewErrorResponse, e.response)
+            raise HttpResponseError(response=e.response, model=error, error_format=ARMErrorFormat) from e</code>",918.0,99.0
 query_visualization,"async def query_visualization():
     credential = DefaultAzureCredential()
     client = LogsQueryClient(credential)
@@ -4218,7 +4306,9 @@ query_visualization,"async def query_visualization():
                 data = response.partial_data
                 print(error)
                 print(data)
-    await credential.close()",combined,task4,style-qg-default,,,
+    await credential.close()",combined,task4,style-qg-default,"<code>            except HttpResponseError as error:
+                print(error)
+                raise</code>",678.0,18.0
 api_version_validation,"def api_version_validation(**kwargs):
     params_added_on = kwargs.pop(""params_added_on"", {})
     method_added_on = kwargs.pop(""method_added_on"", """")
@@ -4295,7 +4385,10 @@ api_version_validation,"def api_version_validation(**kwargs):
 
         return wrapper
 
-    return decorator",combined,task4,style-qg-default,,,
+    return decorator",combined,task4,style-qg-default,"<code>            except AttributeError as err:
+                raise ValueError(
+                    f""'{func.__name__}' requires a client with a configured API version.""
+                ) from err</code>",509.0,37.0
 url,"def url(self, name, data, data_type, **kwargs):
         """"""Serialize data intended for a URL path.
 
@@ -4333,7 +4426,8 @@ url,"def url(self, name, data, data_type, **kwargs):
             if kwargs.get(""skip_quote"") is True:
                 output = str(output)
             else:
-                output = quote(str(output), safe="""")",combined,task4,style-qg-default,,,
+                output = quote(str(output), safe="""")",combined,task4,style-qg-default,"<code>        except (TypeError, ValueError) as e:
+            raise TypeError(f""Unable to serialize parameter {name!r} as {data_type!r}."") from e</code>",324.0,38.0
 _revert_relocation_initial,"async def _revert_relocation_initial(
         self, resource_group_name: str, account_name: str, pool_name: str, volume_name: str, **kwargs: Any
     ) -> AsyncIterator[bytes]:
@@ -4433,7 +4527,13 @@ _revert_relocation_initial,"async def _revert_relocation_initial(
         if cls:
             return cls(pipeline_response, deserialized, {})  # type: ignore
 
-        return deserialized  # type: ignore",combined,task4,style-qg-default,,,
+        return deserialized  # type: ignore",combined,task4,style-qg-default,"```python
+        except HttpResponseError as e:
+            await e.response.read()  # Load the body in memory and close the socket
+            map_error(status_code=e.response.status_code, response=e.response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ErrorResponse, e.response)
+            raise HttpResponseError(response=e.response, model=error, error_format=ARMErrorFormat) from e
+```",774.0,112.0
 stage_block,"def stage_block(
         self, block_id: str,
         data: Union[bytes, str, Iterable[AnyStr], IO[AnyStr]],
@@ -4557,7 +4657,8 @@ stage_block,"def stage_block(
             data=data,
             length=length,
             **kwargs)
-        return cast(Dict[str, Any], self._client.block_blob.stage_block(**options))",combined,task4,style-qg-default,,,
+        return cast(Dict[str, Any], self._client.block_blob.stage_block(**options))",combined,task4,style-qg-default,"<code>        except HttpResponseError as error:
+            process_storage_error(error)</code>",1053.0,19.0
 import_data,"def import_data(self):
 		self.before_import()
 
@@ -4892,7 +4993,18 @@ import_data,"def import_data(self):
 
 		self.after_import()
 
-		return import_log",combined,task4,style-qg-default,,,
+		return import_log",combined,task4,style-qg-default,"<code>				except frappe.ValidationError:
+					frappe.db.rollback()
+					create_import_log(
+						self.data_import.name,
+						log_index,
+						{""success"": False, ""exception"": frappe.get_traceback(), ""row_indexes"": row_indexes},
+					)
+
+					log_index += 1
+
+					if self.data_import.status != ""Partial Success"":
+						self.data_import.db_set(""status"", ""Partial Success"")</code>",1664.0,112.0
 on_ready,"def on_ready(self):
         current_cosigner = self.wizard.current_cosigner(self.wizard_data)
         settings = current_cosigner['trezor_settings']

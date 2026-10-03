@@ -1,0 +1,9 @@
+# Variáveis de ambiente
+.env
+
+# Arquivos gerados pelo Python
+__pycache__/
+*.pyc
+
+# Ignorar a pasta de resultados temporários (opcional)
+llm/output/

@@ -24,7 +24,6 @@ load_dotenv()
 _client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy_key"))
 _openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "dummy_key"))
 
-# Configuração de Múltiplas Chaves do Gemini (Rodízio)
 _gemini_keys = []
 for i in range(1, 10): # Busca no .env por GEMINI_KEY_1 até GEMINI_KEY_9
     key = os.getenv(f"GEMINI_KEY_{i}")
@@ -537,16 +536,22 @@ def _call_openai(prompt: str, model_name: str) -> Dict[str, any]:
 
 def _call_gemini(prompt: str, model_name: str) -> Dict[str, any]:
     """
-    Call Gemini API using Key Rotation logic to bypass rate limits.
+    Call Gemini API using Key Rotation logic with Auto-Pruning for dead keys.
     """
     from google.genai import types as GenAITypes
-    global _current_gemini_index
+    global _current_gemini_index, _gemini_clients
 
     if not model_name.startswith("models/"):
         model_name = f"models/{model_name}"
 
-    for tentativa in range(len(_gemini_clients)):
+    if not _gemini_clients:
+        raise RateLimitExceeded("ERRO FATAL: Nenhuma chave do Gemini válida restante.")
+
+    tentativas = 0
+    while tentativas < len(_gemini_clients):
+        _current_gemini_index = _current_gemini_index % len(_gemini_clients)
         client = _gemini_clients[_current_gemini_index]
+
         try:
             response = client.models.generate_content(
                 model=model_name,
@@ -567,20 +572,22 @@ def _call_gemini(prompt: str, model_name: str) -> Dict[str, any]:
             }
 
         except GenAIErrors.APIError as e:
-            if e.code in (429, 403):
-                if e.code == 403:
-                    logger.warning(f"[!] Chave revogada/bloqueada (403). Pulando para a próxima...")
-                else:
-                    logger.warning(f"[!] Limite da chave atingido (429). Trocando de chave...")
-                
-                # Passa para a próxima chave
+            if e.code == 403:
+                logger.error(f"[!] Chave revogada (403). A remover esta chave da lista...")
+                _gemini_clients.pop(_current_gemini_index)
+                if not _gemini_clients:
+                    raise RateLimitExceeded("Todas as suas chaves foram bloqueadas definitivamente (403).")
+                continue 
+            
+            elif e.code == 429:
+                logger.warning(f"[!] Limite da chave atingido (429). Trocando de chave...")
                 _current_gemini_index = (_current_gemini_index + 1) % len(_gemini_clients)
+                tentativas += 1
                 continue 
             
             raise
 
-    # Se todas as chaves falharem por 429/403
-    raise RateLimitExceeded(f"Todas as {len(_gemini_clients)} chaves do Gemini estouraram ou foram bloqueadas.")
+    raise RateLimitExceeded(f"Todas as {len(_gemini_clients)} chaves válidas esgotaram a sua cota simultaneamente (429).")
 
 
 def call_llm(prompt: str, model_name: str) -> Dict[str, any]:
@@ -758,7 +765,6 @@ def main():
                     if args.limit is not None:
                         df = df.head(args.limit)
 
-                    # --- LÓGICA DE RETOMADA DE ONDE PAROU ---
                     existing_results = {}
                     output_dir = os.path.join(os.getcwd(), "llm", "output")
                     filename = f"{args.project}_{model_label}_{task}_{prompt_type}_results.csv"
@@ -767,11 +773,9 @@ def main():
                     if os.path.exists(output_file):
                         try:
                             df_existing = pd.read_csv(output_file)
-                            # Pega as linhas que já têm conteúdo válido gerado pela IA
                             for idx, row_ext in df_existing.iterrows():
                                 ans = row_ext.get("llm_response")
                                 out_tok = row_ext.get("output_tokens", 0)
-                                # É válido se não for nulo/vazio E se tiver gerado tokens
                                 if pd.notna(ans) and str(ans).strip() != "" and out_tok > 0:
                                     existing_results[idx] = {
                                         "text": str(ans),
@@ -781,12 +785,10 @@ def main():
                             logger.info(f"Encontradas {len(existing_results)} linhas já processadas. Retomando...")
                         except Exception as e:
                             logger.warning(f"Não foi possível ler o CSV existente. Ignorando retomada: {e}")
-                    # ----------------------------------------
 
                     for index, row in df.iterrows():
                         call_count = int(index) + 1
                         
-                        # Se já processamos com sucesso no passado, PULA e economiza a API!
                         if index in existing_results:
                             print(f"Pulando linha {call_count} de {len(df)} (Já processada com sucesso)")
                             res = existing_results[index]
@@ -804,24 +806,25 @@ def main():
 
                         start = time.time()
                         
-                        # --- LOOP DE TENTATIVAS DA API ---
                         sucesso = False
                         while not sucesso:
                             try:
                                 response = call_llm(prompt=prompt, model_name=model)
                                 sucesso = True 
                             except RateLimitExceeded as exc:
+                                if "403" in str(exc) or "Nenhuma chave" in str(exc):
+                                    logger.error("FIM DA LINHA: Todas as chaves foram suspensas pelo Google (403). Adicione chaves novas ao .env.")
+                                    sys.exit(1)
+                                    
                                 logger.error(f"Todas as chaves esgotadas: {exc}")
-                                logger.info("Pausando por 60 segundos antes de tentar novamente...")
-                                time.sleep(60) 
+                                logger.info("Pausando por 5 minutos (300s) para limpar a cota do Google...")
+                                time.sleep(300)
                             except Exception as exc:
                                 if "503" in str(exc) or "UNAVAILABLE" in str(exc):
                                     logger.error(f"Google sobrecarregado (503). Pausando 30s...")
                                     time.sleep(30)
                                 else:
                                     logger.error(f"Erro ao processar linha {call_count}: {exc}")
-                                    # REGRA ANILIXO: Se for um erro fatal inesperado, salva VAZIO (None)
-                                    # Isso faz com que não suje o dataset, e na próxima vez o script tente de novo!
                                     response = {"text": None, "input_tokens": 0, "output_tokens": 0}
                                     sucesso = True 
                         # ---------------------------------
@@ -842,7 +845,6 @@ def main():
                         input_tokens_list.append(input_tokens)
                         output_tokens_list.append(output_tokens)
 
-                        # --- SALVAMENTO INCREMENTAL A CADA LINHA ---
                         faltam = len(df) - len(output)
                         temp_output = output + [None] * faltam
                         temp_in_tokens = input_tokens_list + [None] * faltam
