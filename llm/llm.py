@@ -3,11 +3,23 @@ import logging
 import os
 import sys
 import time
+from datetime import datetime, timezone
 from typing import List, Dict
 
 import pandas as pd
-from anthropic import Anthropic, RateLimitError as AnthropicRateLimitError
-from openai import OpenAI, RateLimitError as OpenAIRateLimitError
+from anthropic import (
+    Anthropic,
+    BadRequestError as AnthropicBadRequestError,
+    AuthenticationError as AnthropicAuthError,
+    PermissionDeniedError as AnthropicPermissionError,
+    RateLimitError as AnthropicRateLimitError,
+)
+from openai import (
+    OpenAI,
+    AuthenticationError as OpenAIAuthError,
+    PermissionDeniedError as OpenAIPermissionError,
+    RateLimitError as OpenAIRateLimitError,
+)
 from google import genai
 from google.genai import errors as GenAIErrors
 from dotenv import load_dotenv
@@ -21,27 +33,52 @@ logger.setLevel(logging.WARNING)  # Default to WARNING, can be changed to INFO w
 
 # Initialize Anthropic, OpenAI, and Gemini clients
 load_dotenv()
-_client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy_key"))
-_openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "dummy_key"))
 
+# --- ROTAÇÃO ANTHROPIC (CLAUDE) ---
+_anthropic_keys = []
+if os.getenv("ANTHROPIC_API_KEY"): _anthropic_keys.append(os.getenv("ANTHROPIC_API_KEY"))
+for i in range(1, 10):
+    key = os.getenv(f"ANTHROPIC_KEY_{i}")
+    if key and key not in _anthropic_keys: _anthropic_keys.append(key)
+if not _anthropic_keys: _anthropic_keys = ["dummy_key"]
+
+_anthropic_clients = [Anthropic(api_key=k) for k in _anthropic_keys]
+_current_anthropic_index = 0
+# As versões novas do SDK da Anthropic não têm mais o argumento `temperature`.
+# Ele é enviado via extra_body; se a API recusar, o script passa a usar o padrão.
+_anthropic_send_temperature = True
+
+# --- ROTAÇÃO OPENAI (GPT) ---
+_openai_keys = []
+if os.getenv("OPENAI_API_KEY"): _openai_keys.append(os.getenv("OPENAI_API_KEY"))
+for i in range(1, 10):
+    key = os.getenv(f"OPENAI_KEY_{i}")
+    if key and key not in _openai_keys: _openai_keys.append(key)
+if not _openai_keys: _openai_keys = ["dummy_key"]
+
+_openai_clients = [OpenAI(api_key=k) for k in _openai_keys]
+_current_openai_index = 0
+
+# --- ROTAÇÃO GEMINI ---
 _gemini_keys = []
-for i in range(1, 10): # Busca no .env por GEMINI_KEY_1 até GEMINI_KEY_9
+for i in range(1, 10): 
     key = os.getenv(f"GEMINI_KEY_{i}")
-    if key:
-        _gemini_keys.append(key)
+    if key: _gemini_keys.append(key)
 
-# Fallback para manter compatibilidade com GEMINI_API_KEY antiga
 if not _gemini_keys and os.getenv("GEMINI_API_KEY"):
     _gemini_keys.append(os.getenv("GEMINI_API_KEY"))
 
-if not _gemini_keys:
-    _gemini_keys = ["dummy_key"]
+if not _gemini_keys: _gemini_keys = ["dummy_key"]
 
 _gemini_clients = [genai.Client(api_key=k) for k in _gemini_keys]
 _current_gemini_index = 0
 
-
 # Custom exception for rate limits
+# Temperatura única para TODOS os modelos e condições (baseline e QG).
+# O Gemini QG já foi coletado com 0.7, por isso esse valor foi mantido.
+TEMPERATURE = 0.7
+
+
 class RateLimitExceeded(Exception):
     """Raised when API rate limit is reached"""
     pass
@@ -473,7 +510,6 @@ def prompt_task4_qg_cot(function):
         ]
     )
 
-
 def collect_df(task, project: str = DEFAULT_PROJECT):
     df = pd.read_csv("data/balanced_sample.csv")
     df["project"] = project
@@ -492,47 +528,102 @@ def collect_df(task, project: str = DEFAULT_PROJECT):
     else:
         return df[df["n_try_except"] == 1].reset_index(drop=True)
 
-
 def _call_claude(prompt: str, model_name: str) -> Dict[str, any]:
-    try:
-        response = _client.messages.create(
-            model=model_name,
-            max_tokens=10050,
-            messages=[{"role": "user", "content": prompt}],
-        )
-    except AnthropicRateLimitError as e:
-        raise RateLimitExceeded(f"Claude API rate limited: {e}") from e
+    global _current_anthropic_index, _anthropic_clients, _anthropic_send_temperature
 
-    input_tokens = response.usage.input_tokens
-    output_tokens = response.usage.output_tokens
+    if not _anthropic_clients:
+        raise RateLimitExceeded("ERRO FATAL: Nenhuma chave da Anthropic válida restante.")
 
-    return {
-        "text": response.content[0].text,
-        "input_tokens": input_tokens,
-        "output_tokens": output_tokens,
-    }
+    tentativas = 0
+    while tentativas < len(_anthropic_clients):
+        _current_anthropic_index = _current_anthropic_index % len(_anthropic_clients)
+        client = _anthropic_clients[_current_anthropic_index]
 
+        try:
+            response = client.messages.create(
+                model=model_name,
+                max_tokens=10050,
+                messages=[{"role": "user", "content": prompt}],
+                extra_body={"temperature": TEMPERATURE} if _anthropic_send_temperature else None,
+            )
+
+            text = "".join(
+                block.text for block in response.content if getattr(block, "type", "") == "text"
+            )
+
+            return {
+                "text": text,
+                "input_tokens": response.usage.input_tokens,
+                "output_tokens": response.usage.output_tokens,
+                "thinking_tokens": 0,
+                "model_version": response.model,
+                "temperature": TEMPERATURE if _anthropic_send_temperature else "api-default",
+            }
+
+        except AnthropicBadRequestError as e:
+            if _anthropic_send_temperature and "temperature" in str(e).lower():
+                logger.warning("[!] A API da Anthropic recusou `temperature`. "
+                               "Seguindo com a temperatura padrão da API (registrado na coluna temperature).")
+                _anthropic_send_temperature = False
+                continue
+            raise
+
+        except (AnthropicAuthError, AnthropicPermissionError):
+            logger.error("[!] Chave Anthropic revogada/inválida (401/403). Removendo esta chave...")
+            _anthropic_clients.pop(_current_anthropic_index)
+            if not _anthropic_clients:
+                raise RateLimitExceeded("Nenhuma chave Anthropic válida restante (401/403).")
+            continue
+
+        except AnthropicRateLimitError:
+            logger.warning("[!] Limite da chave Anthropic atingido (429). Trocando de chave...")
+            _current_anthropic_index = (_current_anthropic_index + 1) % len(_anthropic_clients)
+            tentativas += 1
+            continue
+
+    raise RateLimitExceeded(f"Todas as {len(_anthropic_clients)} chaves válidas da Anthropic esgotaram a cota simultaneamente (429).")
 
 def _call_openai(prompt: str, model_name: str) -> Dict[str, any]:
-    try:
-        response = _openai_client.chat.completions.create(
-            model=model_name,
-            max_tokens=10050,
-            temperature=0.7,
-            messages=[{"role": "user", "content": prompt}],
-        )
-    except OpenAIRateLimitError as e:
-        raise RateLimitExceeded(f"OpenAI API rate limited: {e}") from e
+    global _current_openai_index, _openai_clients
 
-    input_tokens = response.usage.prompt_tokens
-    output_tokens = response.usage.completion_tokens
+    if not _openai_clients:
+        raise RateLimitExceeded("ERRO FATAL: Nenhuma chave da OpenAI válida restante.")
 
-    return {
-        "text": response.choices[0].message.content,
-        "input_tokens": input_tokens,
-        "output_tokens": output_tokens,
-    }
+    tentativas = 0
+    while tentativas < len(_openai_clients):
+        _current_openai_index = _current_openai_index % len(_openai_clients)
+        client = _openai_clients[_current_openai_index]
 
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                max_tokens=10050,
+                temperature=TEMPERATURE,
+                messages=[{"role": "user", "content": prompt}],
+            )
+
+            return {
+                "text": response.choices[0].message.content,
+                "input_tokens": response.usage.prompt_tokens,
+                "output_tokens": response.usage.completion_tokens,
+                "thinking_tokens": 0,
+                "model_version": response.model,
+            }
+
+        except (OpenAIAuthError, OpenAIPermissionError):
+            logger.error("[!] Chave OpenAI revogada/inválida (401/403). Removendo esta chave...")
+            _openai_clients.pop(_current_openai_index)
+            if not _openai_clients:
+                raise RateLimitExceeded("Nenhuma chave OpenAI válida restante (401/403).")
+            continue
+
+        except OpenAIRateLimitError:
+            logger.warning("[!] Limite da chave OpenAI atingido (429). Trocando de chave...")
+            _current_openai_index = (_current_openai_index + 1) % len(_openai_clients)
+            tentativas += 1
+            continue
+
+    raise RateLimitExceeded(f"Todas as {len(_openai_clients)} chaves válidas da OpenAI esgotaram a cota simultaneamente (429).")
 
 def _call_gemini(prompt: str, model_name: str) -> Dict[str, any]:
     """
@@ -557,18 +648,20 @@ def _call_gemini(prompt: str, model_name: str) -> Dict[str, any]:
                 model=model_name,
                 contents=prompt,
                 config=GenAITypes.GenerateContentConfig(
-                    temperature=0.7,
+                    temperature=TEMPERATURE,
                 ),
             )
-            
-            input_tokens = response.usage_metadata.prompt_token_count or 0
-            output_tokens = response.usage_metadata.candidates_token_count or 0
+
+            usage = response.usage_metadata
             text = response.text if response.text is not None else ""
-            
+
             return {
                 "text": text,
-                "input_tokens": input_tokens,
-                "output_tokens": output_tokens,
+                "input_tokens": usage.prompt_token_count or 0,
+                "output_tokens": usage.candidates_token_count or 0,
+                # Tokens de raciocínio ("thinking") são cobrados, mas não entram em candidates_token_count
+                "thinking_tokens": getattr(usage, "thoughts_token_count", None) or 0,
+                "model_version": getattr(response, "model_version", None) or model_name,
             }
 
         except GenAIErrors.APIError as e:
@@ -576,7 +669,7 @@ def _call_gemini(prompt: str, model_name: str) -> Dict[str, any]:
                 logger.error(f"[!] Chave revogada (403). A remover esta chave da lista...")
                 _gemini_clients.pop(_current_gemini_index)
                 if not _gemini_clients:
-                    raise RateLimitExceeded("Todas as suas chaves foram bloqueadas definitivamente (403).")
+                    raise RateLimitExceeded("Nenhuma chave do Gemini válida restante (403).")
                 continue 
             
             elif e.code == 429:
@@ -589,7 +682,6 @@ def _call_gemini(prompt: str, model_name: str) -> Dict[str, any]:
 
     raise RateLimitExceeded(f"Todas as {len(_gemini_clients)} chaves válidas esgotaram a sua cota simultaneamente (429).")
 
-
 def call_llm(prompt: str, model_name: str) -> Dict[str, any]:
     if "claude" in model_name.lower():
         return _call_claude(prompt, model_name)
@@ -599,7 +691,6 @@ def call_llm(prompt: str, model_name: str) -> Dict[str, any]:
         return _call_gemini(prompt, model_name)
     else:
         raise ValueError(f"Unknown model: {model_name}")
-
 
 # Define prompt functions for tasks
 TASKS = {
@@ -634,6 +725,25 @@ TASKS = {
 
 def sanitize_for_filename(value: str) -> str:
     return "".join(ch if ch.isalnum() or ch in ("-", "_") else "-" for ch in value)
+
+
+def build_df_style(df, records, task, prompt_type, model):
+    """Monta o DataFrame de saída; linhas ainda não processadas ficam vazias."""
+    faltam = len(df) - len(records)
+    def col(key):
+        return [r.get(key) for r in records] + [None] * faltam
+    df_style = df.copy()
+    df_style["task"] = task
+    df_style["prompt_type"] = prompt_type
+    df_style["model"] = model
+    df_style["temperature"] = col("temperature")
+    df_style["llm_response"] = col("text")
+    df_style["input_tokens"] = col("input_tokens")
+    df_style["output_tokens"] = col("output_tokens")
+    df_style["thinking_tokens"] = col("thinking_tokens")
+    df_style["model_version"] = col("model_version")
+    df_style["collected_at"] = col("collected_at")
+    return df_style
 
 
 def save_results_to_csv(df, task, prompt_type, project, model_label):
@@ -757,10 +867,9 @@ def main():
                     if prompt_types_filter and prompt_type not in prompt_types_filter:
                         continue
 
-                    output = []
-                    input_tokens_list = []
-                    output_tokens_list = []
-                    
+                    # Uma entrada por linha processada (na mesma ordem do df)
+                    records = []
+
                     df = collect_df(task, project=args.project)
                     if args.limit is not None:
                         df = df.head(args.limit)
@@ -776,11 +885,16 @@ def main():
                             for idx, row_ext in df_existing.iterrows():
                                 ans = row_ext.get("llm_response")
                                 out_tok = row_ext.get("output_tokens", 0)
-                                if pd.notna(ans) and str(ans).strip() != "" and out_tok > 0:
+                                if pd.notna(ans) and str(ans).strip() != "" and pd.notna(out_tok) and out_tok > 0:
                                     existing_results[idx] = {
                                         "text": str(ans),
                                         "input_tokens": row_ext.get("input_tokens", 0),
-                                        "output_tokens": out_tok
+                                        "output_tokens": out_tok,
+                                        # Arquivos antigos não têm estas colunas: ficam vazias (não zero)
+                                        "thinking_tokens": row_ext.get("thinking_tokens", None),
+                                        "model_version": row_ext.get("model_version", None),
+                                        "temperature": row_ext.get("temperature", None),
+                                        "collected_at": row_ext.get("collected_at", None),
                                     }
                             logger.info(f"Encontradas {len(existing_results)} linhas já processadas. Retomando...")
                         except Exception as e:
@@ -791,10 +905,7 @@ def main():
                         
                         if index in existing_results:
                             print(f"Pulando linha {call_count} de {len(df)} (Já processada com sucesso)")
-                            res = existing_results[index]
-                            output.append(res["text"])
-                            input_tokens_list.append(res["input_tokens"])
-                            output_tokens_list.append(res["output_tokens"])
+                            records.append(existing_results[index])
                             continue
 
                         print(f"Calling {call_count} of {len(df)} rows for {prompt_type} prompt of {task}")
@@ -812,12 +923,12 @@ def main():
                                 response = call_llm(prompt=prompt, model_name=model)
                                 sucesso = True 
                             except RateLimitExceeded as exc:
-                                if "403" in str(exc) or "Nenhuma chave" in str(exc):
-                                    logger.error("FIM DA LINHA: Todas as chaves foram suspensas pelo Google (403). Adicione chaves novas ao .env.")
+                                if "Nenhuma chave" in str(exc):
+                                    logger.error(f"FIM DA LINHA: {exc} Adicione chaves novas ao .env.")
                                     sys.exit(1)
-                                    
+
                                 logger.error(f"Todas as chaves esgotadas: {exc}")
-                                logger.info("Pausando por 5 minutos (300s) para limpar a cota do Google...")
+                                logger.info("Pausando por 5 minutos (300s) para liberar a cota...")
                                 time.sleep(300)
                             except Exception as exc:
                                 if "503" in str(exc) or "UNAVAILABLE" in str(exc):
@@ -825,7 +936,8 @@ def main():
                                     time.sleep(30)
                                 else:
                                     logger.error(f"Erro ao processar linha {call_count}: {exc}")
-                                    response = {"text": None, "input_tokens": 0, "output_tokens": 0}
+                                    response = {"text": None, "input_tokens": 0, "output_tokens": 0,
+                                                "thinking_tokens": 0, "model_version": None}
                                     sucesso = True 
                         # ---------------------------------
 
@@ -841,25 +953,28 @@ def main():
                         else:
                             logger.warning(f"Linha {call_count} falhou. Marcando como vazia para tentar futuramente.")
 
-                        output.append(response_text)
-                        input_tokens_list.append(input_tokens)
-                        output_tokens_list.append(output_tokens)
+                        records.append({
+                            "text": response_text,
+                            "input_tokens": input_tokens,
+                            "output_tokens": output_tokens,
+                            "thinking_tokens": response.get("thinking_tokens", 0),
+                            "model_version": response.get("model_version"),
+                            "temperature": response.get("temperature", TEMPERATURE)
+                            if response_text is not None else None,
+                            "collected_at": datetime.now(timezone.utc).isoformat(timespec="seconds")
+                            if response_text is not None else None,
+                        })
 
-                        faltam = len(df) - len(output)
-                        temp_output = output + [None] * faltam
-                        temp_in_tokens = input_tokens_list + [None] * faltam
-                        temp_out_tokens = output_tokens_list + [None] * faltam
-                        
-                        df_style = df.copy()
-                        df_style["task"] = task
-                        df_style["prompt_type"] = prompt_type
-                        df_style["llm_response"] = temp_output
-                        df_style["input_tokens"] = temp_in_tokens
-                        df_style["output_tokens"] = temp_out_tokens
-
+                        df_style = build_df_style(df, records, task, prompt_type, model)
                         save_results_to_csv(
                             df_style, task, prompt_type, args.project, model_label
                         )
+
+                    # Garante df_style mesmo quando todas as linhas já estavam prontas
+                    df_style = build_df_style(df, records, task, prompt_type, model)
+                    save_results_to_csv(
+                        df_style, task, prompt_type, args.project, model_label
+                    )
 
                     # Após rodar as 379
                     df_model = pd.concat([df_model, df_style], ignore_index=True)

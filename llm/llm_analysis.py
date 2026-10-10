@@ -1,363 +1,468 @@
+"""
+Análise da Task 4: prompt padrão (style-default) vs Quality-Guided (style-qg-default).
+
+RQ1  O QG reduz W0718 (broad-exception-caught) e W0707 (raise-missing-from)?
+RQ2  A redução vem acompanhada de efeitos colaterais?
+     (W0702 bare-except, W0706 try-except-raise, capturas genéricas que o Pylint
+     não marca porque o handler relança, respostas inválidas)
+RQ3  O QG preserva a similaridade com o código dos desenvolvedores?
+     (BLEU, CrystalBLEU, Jaccard, Exact Match, concordância de tipos de exceção)
+
+Uso (a partir da raiz do repositório):
+    python llm/llm_analysis.py
+    python llm/llm_analysis.py --input-dir llm/output --out-dir llm/output/analysis
+
+Diferenças em relação ao script original:
+  * respostas com \r\n são extraídas corretamente;
+  * respostas sem código ou que não fazem parse são contadas como INVÁLIDAS,
+    nunca como "limpas" e nunca embrulhadas num `except Exception:` artificial;
+  * o Pylint roda com overgeneral-exceptions em nome completo (builtins.*),
+    obrigatório nas versões atuais para o W0718 funcionar;
+  * as violações são registradas por código e por snippet (0/1), o que permite
+    o teste pareado de McNemar;
+  * os "crystals" do CrystalBLEU vêm do código de referência (fixo), e não das
+    respostas dos modelos, então as notas não mudam quando novos arquivos entram.
+"""
+
+import argparse
 import ast
-import csv
-import logging
+import json
 import os
 import re
-import shutil
-import tempfile
-import json
 import subprocess
-import warnings
 import sys
-from difflib import SequenceMatcher
+import tempfile
+import textwrap
+import warnings
 from collections import Counter
 
-import pandas as pd
 import numpy as np
-from sklearn.metrics import (
-    accuracy_score,
-    confusion_matrix,
-    f1_score,
-    precision_score,
-    recall_score,
-)
-from sklearn.preprocessing import MultiLabelBinarizer
-from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
-from crystalbleu import sentence_bleu as cr_bleu
+import pandas as pd
+from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
+from scipy.stats import binomtest, wilcoxon
 
-# Suppress warnings
-warnings.filterwarnings("ignore", category=UserWarning, module="crystalbleu")
+try:
+    from crystalbleu import sentence_bleu as crystal_bleu
+except ImportError:  # CrystalBLEU é opcional
+    crystal_bleu = None
 
-# Configuration
-output_dir = os.path.join(os.getcwd(), "llm", "output")
-metrics_output_path = os.path.join(os.getcwd(), "llm", "output", "metrics.csv")
-samples_output_path = os.path.join(os.getcwd(), "llm", "output", "discussion_samples.csv")
-details_output_path = os.path.join(os.getcwd(), "llm", "output", "task4_quality_details.csv")
+warnings.filterwarnings("ignore")
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
-logger = logging.getLogger(__name__)
+BASELINE = "style-default"
+QG = "style-qg-default"
+TARGET_CODES = ["W0718", "W0707"]          # RQ1: as duas regras do prompt QG
+SIDE_CODES = ["W0702", "W0706"]            # RQ2: possíveis "rotas de fuga"
+ALL_CODES = TARGET_CODES + SIDE_CODES
+BROAD_NAMES = {"Exception", "BaseException"}
+FILE_RE = re.compile(r"^(?P<project>[^_]+)_(?P<model>.+)_task4_(?P<style>style-[\w-]+)_results\.csv$")
 
-# Pylint settings
-PYLINT_EXCEPTION_CODES = "W0702,W0703,W0706,W0707,W0718,E0702,E0704"
-EXCEPTION_VIOLATION_CODES = {"W0702", "W0703", "W0706", "W0707", "W0718", "E0702", "E0704"}
 
-# Cache for Pylint results to avoid redundant calls (especially for ground truth)
-pylint_cache = {}
-
-# Simplified Exception Hierarchy for RQ3
-EXCEPTION_HIERARCHY = {
-    "OSError": ["FileNotFoundError", "PermissionError", "IOError", "FileExistsError"],
-    "ArithmeticError": ["ZeroDivisionError", "FloatingPointError", "OverflowError"],
-    "LookupError": ["IndexError", "KeyError"],
-    "Exception": ["AttributeError", "TypeError", "ValueError", "RuntimeError", "NameError", "ImportError"],
-    "BaseException": ["Exception", "SystemExit", "KeyboardInterrupt"]
-}
-
-def is_hierarchy_match(true_exc, pred_exc):
-    if true_exc == pred_exc: return True
-    for parent, children in EXCEPTION_HIERARCHY.items():
-        if pred_exc == parent and true_exc in children: return True
-        if true_exc == parent and pred_exc in children: return True
-    return False
-
-def extract_statements(code):
-    try:
-        tree = ast.parse(code)
-        if tree.body and isinstance(tree.body[0], ast.FunctionDef):
-            return tree.body[0].body
-        return tree.body
-    except: return []
-
-def create_try_vector(code):
-    statements = extract_statements(code)
-    vector = [0] * len(statements)
-    for i, stmt in enumerate(statements):
-        if isinstance(stmt, ast.Try): vector[i] = 1
-    return vector
-
-def parse_task_response2(response):
-    if not isinstance(response, str) or pd.isnull(response): return ""
-    markdown_match = re.search(r"```(?:python)?\n(.*?)\n```", response, re.DOTALL)
-    if markdown_match: return markdown_match.group(1).strip()
-    try:
-        return re.search(r"<code>(.*?)</code>", response, re.DOTALL).group(1).strip()
-    except:
-        if "def " in response:
-            match = re.search(r"(def\s+\w+.*?)(?=\ndef\s|\Z)", response, re.DOTALL)
-            if match: return match.group(1).strip()
+# --------------------------------------------------------------------------- #
+# Extração e normalização do código
+# --------------------------------------------------------------------------- #
+def extract_code(response):
+    """Extrai o bloco de código da resposta (markdown ou <code>). '' se não houver."""
+    if not isinstance(response, str):
         return ""
+    text = response.replace("\r\n", "\n").replace("\r", "\n")
+    m = re.search(r"```[ \t]*(?:python|py)?[ \t]*\n(.*?)\n?```", text, re.S)
+    if not m:
+        m = re.search(r"<code>(.*?)</code>", text, re.S)
+    return m.group(1).strip("\n") if m else ""
 
-def parse_task3_response(response):
-    if not isinstance(response, str): return []
-    if response.count("\n") > 20: return []
-    return [exc.strip() for exc in response.replace("\n", ",").split(",") if exc.strip()]
 
-def parse_str_except_identifiers(identifiers):
-    if not isinstance(identifiers, str) or pd.isnull(identifiers): return []
-    if "," in identifiers: return [exc.strip() for exc in identifiers.split(",") if exc.strip()]
-    return [exc for exc in identifiers.split() if exc]
-
-def parse_tc(tc):
-    if not isinstance(tc, str) or pd.isnull(tc): return ""
-    tc = tc.strip()
-    if tc.startswith("[") and tc.endswith("]"):
+def reference_code(raw):
+    """str_captures_except vem como lista serializada; junta os handlers."""
+    if not isinstance(raw, str):
+        return ""
+    raw = raw.strip()
+    if raw.startswith("["):
         try:
-            parsed = ast.literal_eval(tc)
+            parsed = ast.literal_eval(raw)
             if isinstance(parsed, list):
-                return "\n".join(parsed)
-        except Exception:
+                return "\n".join(str(p) for p in parsed).replace("\r\n", "\n")
+        except (ValueError, SyntaxError):
             pass
-    return tc
+    return raw.replace("\r\n", "\n")
 
-def extract_except_block(response):
-    if not isinstance(response, str): return ""
-    markdown_match = re.search(r"```(?:python)?\n(.*?)\n```", response, re.DOTALL)
-    if markdown_match: return markdown_match.group(1).strip()
-    xml_match = re.search(r"<code>(.*?)</code>", response, re.DOTALL)
-    if xml_match: return xml_match.group(1).strip()
-    return ""
 
-def wrap_code_for_analysis(code: str) -> str:
-    if not code or not isinstance(code, str): return "pass"
-    try:
-        ast.parse(code)
-        return code
-    except SyntaxError:
-        pass
-    code_stripped = code.strip()
-    if code_stripped.startswith("except"):
-        lines = code.splitlines()
-        first_line = lines[0] if lines else ""
-        if not first_line.startswith((" ", "\t")):
-            indented_code = "\n".join("    " + line for line in lines)
-            wrapped = f"def _dummy_function():\n    try:\n        pass\n{indented_code}\n"
-        else:
-            wrapped = f"def _dummy_function():\n    try:\n        pass\n{code}\n"
+def make_analyzable(code):
+    """
+    Devolve um módulo Python válido contendo o handler, ou None se for inválido.
+    Nunca inventa um `except` — se não der para analisar, a resposta é inválida.
+    """
+    if not code.strip():
+        return None
+    body = textwrap.dedent(code).strip("\n")
+    first = body.lstrip().split("\n", 1)[0]
+    candidates = []
+    if first.startswith("except"):
+        block = "try:\n    pass\n" + body
+        candidates += [
+            "def _f():\n" + textwrap.indent(block, "    ") + "\n",
+            "async def _f():\n" + textwrap.indent(block, "    ") + "\n",
+        ]
+    else:  # o modelo devolveu o try/except completo (ou trecho maior)
+        candidates += [
+            "def _f():\n" + textwrap.indent(body, "    ") + "\n",
+            "async def _f():\n" + textwrap.indent(body, "    ") + "\n",
+        ]
+    for src in candidates:
         try:
-            ast.parse(wrapped)
-            return wrapped
+            tree = ast.parse(src)
         except SyntaxError:
-            pass
+            continue
+        if any(isinstance(n, ast.ExceptHandler) for n in ast.walk(tree)):
+            return src
+    return None
 
-    indented = "\n".join("    " + line for line in code.splitlines())
-    wrapped = f"def _dummy_function():\n{indented}\n"
+
+# --------------------------------------------------------------------------- #
+# Métricas estruturais (AST)
+# --------------------------------------------------------------------------- #
+def handler_types(src):
+    """Nomes das exceções capturadas (último componente: requests.RequestException -> RequestException)."""
+    names, bare = set(), False
+    for node in ast.walk(ast.parse(src)):
+        if isinstance(node, ast.ExceptHandler):
+            if node.type is None:
+                bare = True
+                continue
+            elts = node.type.elts if isinstance(node.type, ast.Tuple) else [node.type]
+            for e in elts:
+                names.add(ast.unparse(e).split(".")[-1])
+    return names, bare
+
+
+def ast_features(src):
+    if not isinstance(src, str):
+        return {"ast_broad": np.nan, "ast_bare": np.nan, "n_types": np.nan, "types": ""}
+    names, bare = handler_types(src)
+    return {
+        "ast_broad": int(bool(names & BROAD_NAMES)),
+        "ast_bare": int(bare),
+        "n_types": len(names),
+        "types": ",".join(sorted(names)),
+    }
+
+
+# --------------------------------------------------------------------------- #
+# Pylint (uma única execução para todos os arquivos)
+# --------------------------------------------------------------------------- #
+def run_pylint(sources):
+    """sources: dict id -> código. Retorna dict id -> set de códigos de violação."""
+    result = {k: set() for k in sources}
+    if not sources:
+        return result
+    with tempfile.TemporaryDirectory(prefix="eh_") as tmp:
+        names = {}
+        for i, (key, src) in enumerate(sources.items()):
+            name = f"s{i}"
+            names[name] = key
+            with open(os.path.join(tmp, f"{name}.py"), "w", encoding="utf-8") as f:
+                f.write(src)
+        cmd = [
+            sys.executable, "-m", "pylint", tmp,
+            "--rcfile=" + os.devnull,
+            "--disable=all", "--enable=" + ",".join(ALL_CODES),
+            "--overgeneral-exceptions=builtins.BaseException,builtins.Exception",
+            "--output-format=json", "--persistent=n", "--score=n",
+        ]
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        out = proc.stdout.strip()
+        if not out:
+            if proc.returncode not in (0,) and proc.stderr:
+                raise RuntimeError("Pylint falhou:\n" + proc.stderr[-2000:])
+            return result
+        for msg in json.loads(out):
+            name = os.path.splitext(os.path.basename(msg["path"]))[0]
+            code = msg.get("message-id")
+            if name in names and code in ALL_CODES:
+                result[names[name]].add(code)
+    return result
+
+
+# --------------------------------------------------------------------------- #
+# Similaridade
+# --------------------------------------------------------------------------- #
+def tokenize(code):
+    return re.findall(r"\w+|[()[\]{},:.;=<>!+\-/*&|]", code or "")
+
+
+def ngrams(tokens, n):
+    return [tuple(tokens[i:i + n]) for i in range(len(tokens) - n + 1)]
+
+
+def build_crystals(reference_codes, k=500):
+    counts = Counter()
+    for code in reference_codes:
+        toks = tokenize(code)
+        for n in range(1, 5):
+            counts.update(ngrams(toks, n))
+    return [g for g, _ in counts.most_common(k)]
+
+
+# --------------------------------------------------------------------------- #
+# Estatística
+# --------------------------------------------------------------------------- #
+def mcnemar_exact(x_base, x_qg):
+    """x_*: arrays 0/1 pareados. b = só baseline tem; c = só QG tem."""
+    b = int(((x_base == 1) & (x_qg == 0)).sum())
+    c = int(((x_base == 0) & (x_qg == 1)).sum())
+    p = 1.0 if b + c == 0 else binomtest(b, b + c, 0.5).pvalue
+    return b, c, p
+
+
+def holm(pvalues):
+    p = np.asarray(pvalues, dtype=float)
+    order = np.argsort(p)
+    adj = np.empty_like(p)
+    running = 0.0
+    for rank, idx in enumerate(order):
+        running = max(running, (len(p) - rank) * p[idx])
+        adj[idx] = min(1.0, running)
+    return adj
+
+
+# --------------------------------------------------------------------------- #
+# Pipeline
+# --------------------------------------------------------------------------- #
+def load_results(input_dir):
+    frames = []
+    for fname in sorted(os.listdir(input_dir)):
+        m = FILE_RE.match(fname)
+        if not m:
+            continue
+        df = pd.read_csv(os.path.join(input_dir, fname))
+        df["sample_id"] = range(len(df))
+        df["model"] = m.group("model")
+        df["prompt_type"] = m.group("style")
+        df["source_file"] = fname
+        frames.append(df)
+        print(f"  carregado: {fname} ({len(df)} linhas)")
+    if not frames:
+        sys.exit(f"Nenhum arquivo *_task4_*_results.csv encontrado em {input_dir}")
+    return pd.concat(frames, ignore_index=True)
+
+
+def analyze(df):
+    # ----- referência humana (uma vez por snippet) -----
+    ref = (
+        df.drop_duplicates("sample_id")
+        .set_index("sample_id")[["function", "str_captures_except"]]
+        .copy()
+    )
+    ref["ref_code"] = ref["str_captures_except"].apply(reference_code)
+    ref["ref_src"] = ref["ref_code"].apply(make_analyzable)
+
+    # ----- respostas dos modelos -----
+    df = df.copy()
+    df["pred_code"] = df["llm_response"].apply(extract_code)
+    df["pred_src"] = df["pred_code"].apply(make_analyzable)
+    df["status"] = np.where(
+        df["llm_response"].isna(), "sem_resposta",
+        np.where(df["pred_code"].str.strip() == "", "sem_codigo",
+                 np.where(df["pred_src"].isna(), "sintaxe_invalida", "valido")))
+    df["valid"] = (df["status"] == "valido").astype(int)
+
+    # ----- Pylint em lote -----
+    sources = {("pred", i): s for i, s in df["pred_src"].items() if isinstance(s, str)}
+    sources.update({("ref", i): s for i, s in ref["ref_src"].items() if isinstance(s, str)})
+    print(f"  rodando Pylint em {len(sources)} blocos...")
+    hits = run_pylint(sources)
+
+    for code in ALL_CODES:
+        df[code] = [
+            int(code in hits[("pred", i)]) if isinstance(s, str) else np.nan
+            for i, s in df["pred_src"].items()
+        ]
+        ref[code] = [
+            int(code in hits[("ref", i)]) if isinstance(s, str) else np.nan
+            for i, s in ref["ref_src"].items()
+        ]
+    df["any_target"] = df[TARGET_CODES].max(axis=1, skipna=False)
+    ref["any_target"] = ref[TARGET_CODES].max(axis=1, skipna=False)
+
+    df = pd.concat([df, df["pred_src"].apply(ast_features).apply(pd.Series)], axis=1)
+    ref = pd.concat([ref, ref["ref_src"].apply(ast_features).apply(pd.Series)], axis=1)
+    df["broad_hidden"] = ((df["ast_broad"] == 1) & (df["W0718"] == 0)).astype(float).where(df["valid"] == 1)
+    ref["broad_hidden"] = ((ref["ast_broad"] == 1) & (ref["W0718"] == 0)).astype(float).where(ref["ref_src"].notna())
+
+    # ----- similaridade com a referência -----
+    crystals = build_crystals(ref["ref_code"])
+    smooth = SmoothingFunction().method1
+    rows = []
+    for i, r in df.iterrows():
+        rc = ref.loc[r["sample_id"]]
+        rt, ht = tokenize(rc["ref_code"]), tokenize(r["pred_code"])
+        if ht and rt:
+            bleu = sentence_bleu([rt], ht, smoothing_function=smooth)
+            cbleu = (crystal_bleu([rt], ht, ignoring=crystals, smoothing_function=smooth)
+                     if crystal_bleu else np.nan)
+        else:
+            bleu, cbleu = 0.0, (0.0 if crystal_bleu else np.nan)
+        st, sp = set(rt), set(ht)
+        jacc = len(st & sp) / len(st | sp) if st | sp else 0.0
+        exact = int(bool(rt) and rt == ht)
+        ref_types = set(filter(None, rc["types"].split(","))) if isinstance(rc["types"], str) else set()
+        pred_types = set(filter(None, r["types"].split(","))) if isinstance(r["types"], str) else set()
+        rows.append({
+            "bleu": bleu, "crystalbleu": cbleu, "jaccard": jacc, "exact_match": exact,
+            # Só faz sentido quando a referência nomeia algum tipo (exclui `except:` puro)
+            "type_overlap": int(bool(ref_types & pred_types)) if ref_types else np.nan,
+            "type_exact": int(ref_types == pred_types) if ref_types else np.nan,
+        })
+    df = pd.concat([df.reset_index(drop=True), pd.DataFrame(rows)], axis=1)
+    return df, ref
+
+
+def rate(series):
+    """Proporção sobre os blocos válidos e contagem absoluta."""
+    s = series.dropna()
+    return (s.mean() if len(s) else np.nan), int(s.sum())
+
+
+def build_tables(df, ref):
+    n_ref = len(ref)
+    groups = list(df.groupby(["model", "prompt_type"], sort=True))
+
+    # ---------------- RQ1 / RQ2: violações ----------------
+    viol_rows = []
+    for (model, style), g in groups:
+        row = {"model": model, "prompt_type": style, "n": len(g),
+               "validos": int(g["valid"].sum()),
+               "invalidos": int(len(g) - g["valid"].sum())}
+        for col in ALL_CODES + ["any_target", "broad_hidden", "ast_broad"]:
+            pct, cnt = rate(g[col])
+            row[f"{col}_n"] = cnt
+            row[f"{col}_%"] = round(100 * pct, 1)
+        row["violacoes_por_amostra"] = round(g[ALL_CODES].sum(axis=1, min_count=1).mean(), 3)
+        viol_rows.append(row)
+    row = {"model": "HUMANO (referência)", "prompt_type": "-", "n": n_ref,
+           "validos": int(ref["ref_src"].notna().sum()),
+           "invalidos": int(ref["ref_src"].isna().sum())}
+    for col in ALL_CODES + ["any_target", "broad_hidden", "ast_broad"]:
+        pct, cnt = rate(ref[col])
+        row[f"{col}_n"] = cnt
+        row[f"{col}_%"] = round(100 * pct, 1)
+    row["violacoes_por_amostra"] = round(ref[ALL_CODES].sum(axis=1, min_count=1).mean(), 3)
+    viol_rows.append(row)
+    violations = pd.DataFrame(viol_rows)
+
+    # ---------------- RQ3: similaridade ----------------
+    sim_cols = ["bleu", "crystalbleu", "jaccard", "exact_match", "type_overlap", "type_exact", "n_types"]
+    similarity = (df.groupby(["model", "prompt_type"])[sim_cols].mean().round(3).reset_index())
+
+    # ---------------- custo ----------------
+    cost_cols = [c for c in ["input_tokens", "output_tokens", "thinking_tokens"] if c in df.columns]
+    cost = df.groupby(["model", "prompt_type"])[cost_cols].mean().round(1).reset_index()
+
+    # ---------------- testes pareados baseline x QG ----------------
+    tests = []
+    for model, gm in df.groupby("model"):
+        styles = set(gm["prompt_type"])
+        if not {BASELINE, QG} <= styles:
+            print(f"  [aviso] {model}: faltando {sorted({BASELINE, QG} - styles)}; sem teste pareado.")
+            continue
+        base = gm[gm["prompt_type"] == BASELINE].set_index("sample_id")
+        qg = gm[gm["prompt_type"] == QG].set_index("sample_id")
+        common = base.index.intersection(qg.index)
+        if not (base.loc[common, "function"] == qg.loc[common, "function"]).all():
+            raise ValueError(f"{model}: as linhas de baseline e QG não estão na mesma ordem.")
+        both_valid = common[(base.loc[common, "valid"] == 1) & (qg.loc[common, "valid"] == 1)]
+
+        model_tests = []
+        # Validade: em TODAS as linhas (resposta inválida é um desfecho)
+        b, c, p = mcnemar_exact(1 - base.loc[common, "valid"].values, 1 - qg.loc[common, "valid"].values)
+        model_tests.append(("invalidas", "RQ2", len(common), b, c, p,
+                            100 * (1 - base.loc[common, "valid"].mean()),
+                            100 * (1 - qg.loc[common, "valid"].mean())))
+        # Violações: nas linhas válidas nas duas condições
+        for col, rq in [("W0718", "RQ1"), ("W0707", "RQ1"), ("any_target", "RQ1"),
+                        ("W0702", "RQ2"), ("W0706", "RQ2"), ("broad_hidden", "RQ2"),
+                        ("ast_broad", "RQ2")]:
+            xb = base.loc[both_valid, col].astype(int).values
+            xq = qg.loc[both_valid, col].astype(int).values
+            b, c, p = mcnemar_exact(xb, xq)
+            model_tests.append((col, rq, len(both_valid), b, c, p, 100 * xb.mean(), 100 * xq.mean()))
+        # Similaridade: Wilcoxon pareado em todas as linhas
+        for col in ["jaccard", "crystalbleu", "type_overlap"]:
+            xb, xq = base.loc[common, col].values.astype(float), qg.loc[common, col].values.astype(float)
+            keep = ~(np.isnan(xb) | np.isnan(xq))
+            xb, xq = xb[keep], xq[keep]
+            if len(xb) == 0:
+                continue
+            diff = xq - xb
+            p = 1.0 if np.allclose(diff, 0) else wilcoxon(xb, xq, zero_method="wilcox").pvalue
+            model_tests.append((col, "RQ3", len(xb), None, None, p,
+                                np.nanmean(xb), np.nanmean(xq)))
+
+        adj = holm([t[5] for t in model_tests])
+        for t, pa in zip(model_tests, adj):
+            metric, rq, n, b, c, p, vb, vq = t
+            tests.append({
+                "model": model, "rq": rq, "metrica": metric, "n_pares": n,
+                "baseline": round(vb, 3), "qg": round(vq, 3),
+                "so_baseline(b)": b, "so_qg(c)": c,
+                "teste": "McNemar exato" if b is not None else "Wilcoxon",
+                "p": p, "p_holm": pa, "signif_0.05": "sim" if pa < 0.05 else "não",
+            })
+    return violations, similarity, cost, pd.DataFrame(tests)
+
+
+def to_markdown(df):
     try:
-        ast.parse(wrapped)
-        return wrapped
-    except SyntaxError:
-        return f"def _dummy_function():\n    try:\n        pass\n    except Exception:\n        {code}\n"
+        return df.to_markdown(index=False)
+    except ImportError:
+        return df.to_string(index=False)
 
 
-def run_pylint_on_code(code: str, temp_dir: str, file_id: str) -> dict:
-    code_hash = hash(code)
-    if code_hash in pylint_cache:
-        return pylint_cache[code_hash]
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--input-dir", default=os.path.join("llm", "output"))
+    ap.add_argument("--out-dir", default=os.path.join("llm", "output", "analysis"))
+    args = ap.parse_args()
+    os.makedirs(args.out_dir, exist_ok=True)
 
-    temp_file = os.path.join(temp_dir, f"snippet_{file_id}.py")
-    try:
-        with open(temp_file, "w", encoding="utf-8") as f: f.write(code)
-        # Fix: using sys.executable to ensure correct pylint is called
-        cmd = [sys.executable, "-m", "pylint", temp_file, "--disable=all", f"--enable={PYLINT_EXCEPTION_CODES}", "--output-format=json"]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
-        violations = []
-        output = result.stdout
-        
-        if output:
-            try:
-                # Fix: robust json parsing ignoring non-json prefixes
-                if "[" in output and "]" in output:
-                    output = output[output.find("["):output.rfind("]")+1]
-                for msg in json.loads(output):
-                    if msg.get("message-id") in EXCEPTION_VIOLATION_CODES:
-                        violations.append(msg.get("message-id"))
-            except json.JSONDecodeError: 
-                pass
-        
-        res = {"violation_codes": violations}
-        pylint_cache[code_hash] = res
-        return res
-    except Exception as e: 
-        return {"violation_codes": []}
+    print("Carregando resultados...")
+    df = load_results(args.input_dir)
+    print("Analisando...")
+    df, ref = analyze(df)
+    violations, similarity, cost, tests = build_tables(df, ref)
 
-def tokenize_code(code):
-    if not isinstance(code, str): return []
-    return re.findall(r"\w+|[()[\]{},:.;=<>!+-/*&|]", code)
+    keep = ["sample_id", "function", "model", "prompt_type", "status", "pred_code"] + ALL_CODES + [
+        "any_target", "ast_broad", "broad_hidden", "ast_bare", "types", "n_types",
+        "bleu", "crystalbleu", "jaccard", "exact_match", "type_overlap", "type_exact"]
+    df[keep].to_csv(os.path.join(args.out_dir, "per_sample.csv"), index=False)
+    ref.reset_index()[["sample_id", "function", "ref_code"] + ALL_CODES + ["ast_broad", "broad_hidden", "types"]] \
+        .to_csv(os.path.join(args.out_dir, "reference.csv"), index=False)
+    violations.to_csv(os.path.join(args.out_dir, "rq1_rq2_violations.csv"), index=False)
+    similarity.to_csv(os.path.join(args.out_dir, "rq3_similarity.csv"), index=False)
+    cost.to_csv(os.path.join(args.out_dir, "cost_tokens.csv"), index=False)
+    tests.to_csv(os.path.join(args.out_dir, "paired_tests.csv"), index=False)
 
-def get_ngrams(tokens, n):
-    return [tuple(tokens[i:i+n]) for i in range(len(tokens)-n+1)]
+    status = df.groupby(["model", "prompt_type"])["status"].value_counts().unstack(fill_value=0).reset_index()
+    status.to_csv(os.path.join(args.out_dir, "response_status.csv"), index=False)
 
-# 1. Load data
-logger.info(f"Loading results from {output_dir}...")
-files = [f for f in os.listdir(output_dir) if f.endswith(".csv") and "_results_all" not in f and f != "metrics.csv"]
-df_list = []
-for file in files:
-    try:
-        tmp = pd.read_csv(os.path.join(output_dir, file))
-        match = re.match(r"combined_(.+?)_task(\d+)", file)
-        if match:
-            tmp["model"] = match.group(1)
-            tmp["task"] = f"task{match.group(2)}"
-        df_list.append(tmp)
-    except Exception as e: logger.warning(f"Could not read {file}: {e}")
+    pct_cols = ["model", "prompt_type", "n", "invalidos"] + [f"{c}_%" for c in
+               ["W0718", "W0707", "any_target", "W0702", "W0706", "broad_hidden"]] + ["violacoes_por_amostra"]
+    report = [
+        "# Task 4: Baseline vs Quality-Guided\n",
+        "Percentuais calculados sobre os blocos válidos. `broad_hidden` = captura de "
+        "Exception/BaseException que o Pylint não marca porque o handler relança.\n",
+        "## RQ1/RQ2: violações\n", to_markdown(violations[pct_cols]), "",
+        "## RQ3: similaridade com o código humano\n", to_markdown(similarity), "",
+        "## Status das respostas\n", to_markdown(status), "",
+        "## Custo médio (tokens)\n", to_markdown(cost), "",
+        "## Testes pareados (baseline x QG, Holm por modelo)\n",
+        to_markdown(tests) if len(tests) else "_Ainda não há pares baseline/QG completos._", "",
+    ]
+    with open(os.path.join(args.out_dir, "report.md"), "w", encoding="utf-8") as f:
+        f.write("\n".join(report))
 
-if not df_list:
-    logger.error("No data found!")
-    exit(1)
+    print("\n".join(report))
+    print(f"\nArquivos salvos em {args.out_dir}")
 
-df = pd.concat(df_list, ignore_index=True)
 
-# Pre-calculate crystals (1- to 4-grams as tuples)
-logger.info("Extracting CrystalBLEU n-grams from test set...")
-all_t4 = df[df["task"] == "task4"]["llm_response"].apply(extract_except_block).tolist()
-all_ngrams = []
-for c in all_t4:
-    toks = tokenize_code(c)
-    for n in range(1, 5):
-        all_ngrams.extend(get_ngrams(toks, n))
-
-ngram_counts = Counter(all_ngrams)
-# Using top 500 n-grams as commonly done with CrystalBLEU
-crystals = [ngram for ngram, count in ngram_counts.most_common(500)]
-
-metrics_data = []
-task4_samples = []
-task4_details = []
-temp_dir = tempfile.mkdtemp(prefix="eh_")
-smooth_fn = SmoothingFunction().method1
-
-for task_name in ["task1", "task2", "task3", "task4"]:
-    logger.info(f"Starting evaluation of {task_name}...")
-    df_task = df[df["task"] == task_name]
-    for model in df_task["model"].unique():
-        df_model = df_task[df_task["model"] == model]
-        for style in df_model["prompt_type"].unique():
-            res = df_model[df_model["prompt_type"] == style]
-            
-            if task_name == "task1":
-                y_true = res["n_try_except"].apply(lambda x: 1 if pd.notnull(x) and int(x) > 0 else 0)
-                y_pred = res["llm_response"].apply(lambda x: 1 if isinstance(x, str) and "yes" in x.lower() else 0)
-                metrics_data.extend([
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Accuracy", "value": accuracy_score(y_true, y_pred)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Precision", "value": precision_score(y_true, y_pred, zero_division=0)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Recall", "value": recall_score(y_true, y_pred, zero_division=0)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "F1", "value": f1_score(y_true, y_pred, zero_division=0)},
-                ])
-            
-            elif task_name == "task2":
-                y_true, y_pred = [], []
-                for _, row in res.iterrows():
-                    vt = create_try_vector(row["func_body"])
-                    vp = create_try_vector(parse_task_response2(row["llm_response"]))
-                    ml = max(len(vt), len(vp))
-                    vt += [0]*(ml-len(vt)); vp += [0]*(ml-len(vp))
-                    y_true.extend(vt); y_pred.extend(vp)
-                metrics_data.extend([
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Accuracy", "value": accuracy_score(y_true, y_pred)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Precision", "value": precision_score(y_true, y_pred, zero_division=0)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Recall", "value": recall_score(y_true, y_pred, zero_division=0)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "F1", "value": f1_score(y_true, y_pred, zero_division=0)},
-                ])
-
-            elif task_name == "task3":
-                h_acc, e_acc, acc_k = [], [], []
-                y_true_all, y_pred_all = [], []
-                for _, row in res.iterrows():
-                    ts = parse_str_except_identifiers(row["str_except_identifiers"])
-                    ps = parse_task3_response(row["llm_response"])
-                    y_true_all.append(ts); y_pred_all.append(ps)
-                    e_acc.append(1 if any(p in ts for p in ps) else 0)
-                    h_acc.append(1 if any(is_hierarchy_match(t, p) for t in ts for p in ps) else 0)
-                    acc_k.append(1 if any(item in ts for item in ps[:3]) else 0)
-                
-                mlb = MultiLabelBinarizer()
-                y_t_bin = mlb.fit_transform(y_true_all)
-                y_p_bin = mlb.transform(y_pred_all)
-                
-                metrics_data.extend([
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Exact Accuracy", "value": np.mean(e_acc)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Hierarchy Accuracy", "value": np.mean(h_acc)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Accuracy@3", "value": np.mean(acc_k)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Macro F1", "value": f1_score(y_t_bin, y_p_bin, average="macro", zero_division=0)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Weighted F1", "value": f1_score(y_t_bin, y_p_bin, average="weighted", zero_division=0)},
-                ])
-
-            elif task_name == "task4":
-                logger.info(f"  Evaluating Task 4: Model={model}, Style={style} ({len(res)} samples)")
-                bl, cbl, vl, gtvl, jacc, exact = [], [], [], [], [], []
-                total = len(res)
-                for idx, (r_idx, row) in enumerate(res.iterrows()):
-                    if idx % 50 == 0: logger.info(f"    Progress: {idx}/{total} (Jaccard, CrystalBLEU, Static Analysis...)")
-                    
-                    tc_raw = row["str_captures_except"] if pd.notnull(row["str_captures_except"]) else ""
-                    tc = parse_tc(tc_raw)
-                    pc = extract_except_block(row["llm_response"])
-                    rt, ht = tokenize_code(tc), tokenize_code(pc)
-                    
-                    if ht:
-                        b_score = sentence_bleu([rt], ht, smoothing_function=smooth_fn)
-                        cb_score = cr_bleu([rt], ht, ignoring=crystals, smoothing_function=smooth_fn)
-                        bl.append(b_score)
-                        cbl.append(cb_score)
-                    else: 
-                        b_score, cb_score = 0, 0
-                        bl.append(0)
-                        cbl.append(0)
-                    
-                    st, sp = set(rt), set(ht)
-                    j_score = len(st & sp) / len(st | sp) if st | sp else 0
-                    jacc.append(j_score)
-                    
-                    ex_score = 1 if (tc.strip() == pc.strip() or (rt == ht and rt)) else 0
-                    exact.append(ex_score)
-                    
-                    pred_res = run_pylint_on_code(wrap_code_for_analysis(pc), temp_dir, f"{model}_{style}_{idx}_p")
-                    gt_res = run_pylint_on_code(wrap_code_for_analysis(tc), temp_dir, f"{model}_{style}_{idx}_g")
-                    
-                    v = len(pred_res["violation_codes"])
-                    gtv = len(gt_res["violation_codes"])
-                    vl.append(v)
-                    gtvl.append(gtv)
-                    
-                    task4_samples.append({"model": model, "style": style, "cbleu": cb_score, "v": v, "true": tc, "pred": pc})
-                    task4_details.append({
-                        "model": model,
-                        "style": style,
-                        "file_idx": idx,
-                        "true_code": tc,
-                        "pred_code": pc,
-                        "exact_match": ex_score,
-                        "bleu": b_score,
-                        "crystalbleu": cb_score,
-                        "jaccard": j_score,
-                        "pred_violations_count": v,
-                        "gt_violations_count": gtv,
-                        "pred_violation_codes": ",".join(pred_res["violation_codes"]),
-                        "gt_violation_codes": ",".join(gt_res["violation_codes"]),
-                    })
-
-                metrics_data.extend([
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "BLEU", "value": np.mean(bl)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "CrystalBLEU", "value": np.mean(cbl)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Jaccard", "value": np.mean(jacc)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Exact Match Rate", "value": np.mean(exact)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "Avg Violations", "value": np.mean(vl)},
-                    {"task": task_name, "style-prompt": style, "model": model, "metric": "GT Avg Violations", "value": np.mean(gtvl)},
-                ])
-
-pd.DataFrame(metrics_data).to_csv(metrics_output_path, index=False)
-
-# Save task 4 quality details
-if task4_details:
-    pd.DataFrame(task4_details).to_csv(details_output_path, index=False)
-    logger.info(f"Task 4 detailed quality CSV saved to: {details_output_path}")
-
-if task4_samples:
-    s_df = pd.DataFrame(task4_samples)
-    valid = s_df[s_df["pred"].str.len() > 5]
-    if not valid.empty:
-        best = valid.sort_values("cbleu", ascending=False).head(5)
-        worst = valid.sort_values("cbleu").head(5)
-        pd.concat([best, worst]).to_csv(samples_output_path, index=False)
-
-shutil.rmtree(temp_dir)
-logger.info("Done.")
+if __name__ == "__main__":
+    main()
