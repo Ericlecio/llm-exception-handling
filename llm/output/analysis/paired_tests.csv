@@ -1,0 +1,34 @@
+model,rq,metrica,n_pares,baseline,qg,so_baseline(b),so_qg(c),teste,p,p_holm,signif_0.05
+claude-haiku-4-5,RQ2,invalidas,379,0.0,0.264,0.0,1.0,McNemar exato,1.0,1.0,não
+claude-haiku-4-5,RQ1,W0718,378,6.878,0.529,24.0,0.0,McNemar exato,1.1920928955078125e-07,5.960464477539062e-07,sim
+claude-haiku-4-5,RQ1,W0707,378,24.868,0.0,94.0,0.0,McNemar exato,1.0097419586828951e-28,8.12064894376978e-28,sim
+claude-haiku-4-5,RQ1,any_target,378,31.746,0.529,118.0,0.0,McNemar exato,6.018531076210112e-36,6.018531076210112e-35,sim
+claude-haiku-4-5,RQ2,W0702,378,0.0,0.0,0.0,0.0,McNemar exato,1.0,1.0,não
+claude-haiku-4-5,RQ2,W0706,378,1.323,9.788,3.0,35.0,McNemar exato,6.677873898297548e-08,4.006724338978529e-07,sim
+claude-haiku-4-5,RQ2,broad_hidden,378,30.952,2.91,109.0,3.0,McNemar exato,9.022943270855311e-29,8.12064894376978e-28,sim
+claude-haiku-4-5,RQ2,ast_broad,378,37.831,3.439,132.0,2.0,McNemar exato,8.307438982451885e-37,9.138182880697073e-36,sim
+claude-haiku-4-5,RQ3,jaccard,379,0.345,0.291,,,Wilcoxon,1.189152546247869e-12,8.324067823735084e-12,sim
+claude-haiku-4-5,RQ3,crystalbleu,379,0.075,0.042,,,Wilcoxon,1.0558276314347211e-06,4.2233105257388845e-06,sim
+claude-haiku-4-5,RQ3,type_overlap,356,0.413,0.371,,,Wilcoxon,0.016309171877754974,0.04892751563326492,sim
+gemini-3-flash-preview,RQ2,invalidas,379,0.0,0.792,0.0,3.0,McNemar exato,0.25,0.75,não
+gemini-3-flash-preview,RQ1,W0718,376,12.234,0.266,45.0,0.0,McNemar exato,5.684341886080802e-14,3.979039320256561e-13,sim
+gemini-3-flash-preview,RQ1,W0707,376,22.606,0.0,85.0,0.0,McNemar exato,5.169878828456423e-26,4.652890945610781e-25,sim
+gemini-3-flash-preview,RQ1,any_target,376,34.84,0.266,130.0,0.0,McNemar exato,1.4693679385278594e-39,1.6163047323806453e-38,sim
+gemini-3-flash-preview,RQ2,W0702,376,0.532,0.0,2.0,0.0,McNemar exato,0.5,1.0,não
+gemini-3-flash-preview,RQ2,W0706,376,0.0,0.0,0.0,0.0,McNemar exato,1.0,1.0,não
+gemini-3-flash-preview,RQ2,broad_hidden,376,22.34,0.0,84.0,0.0,McNemar exato,1.0339757656912846e-25,8.271806125530277e-25,sim
+gemini-3-flash-preview,RQ2,ast_broad,376,34.574,0.266,129.0,0.0,McNemar exato,2.938735877055719e-39,2.938735877055719e-38,sim
+gemini-3-flash-preview,RQ3,jaccard,379,0.422,0.373,,,Wilcoxon,2.1751287539673784e-09,1.305077252380427e-08,sim
+gemini-3-flash-preview,RQ3,crystalbleu,379,0.132,0.103,,,Wilcoxon,0.0006459996502553571,0.0032299982512767854,sim
+gemini-3-flash-preview,RQ3,type_overlap,356,0.424,0.385,,,Wilcoxon,0.0895550744136426,0.3582202976545704,não
+gpt-4o-mini,RQ2,invalidas,379,0.0,0.0,0.0,0.0,McNemar exato,1.0,1.0,não
+gpt-4o-mini,RQ1,W0718,379,20.053,0.0,76.0,0.0,McNemar exato,2.6469779601696886e-23,1.852884572118782e-22,sim
+gpt-4o-mini,RQ1,W0707,379,39.578,0.0,150.0,0.0,McNemar exato,1.401298464324817e-45,1.2611686178923354e-44,sim
+gpt-4o-mini,RQ1,any_target,379,59.631,0.0,226.0,0.0,McNemar exato,1.8546030753437107e-68,2.0400633828780818e-67,sim
+gpt-4o-mini,RQ2,W0702,379,0.0,0.0,0.0,0.0,McNemar exato,1.0,1.0,não
+gpt-4o-mini,RQ2,W0706,379,0.0,0.0,0.0,0.0,McNemar exato,1.0,1.0,não
+gpt-4o-mini,RQ2,broad_hidden,379,29.024,0.264,110.0,1.0,McNemar exato,8.628166150854817e-32,6.902532920683853e-31,sim
+gpt-4o-mini,RQ2,ast_broad,379,49.077,0.264,186.0,1.0,McNemar exato,1.9168081874745666e-54,1.9168081874745666e-53,sim
+gpt-4o-mini,RQ3,jaccard,379,0.255,0.236,,,Wilcoxon,0.4398904187277026,1.0,não
+gpt-4o-mini,RQ3,crystalbleu,379,0.029,0.01,,,Wilcoxon,0.0023188613577000573,0.01389484145934354,sim
+gpt-4o-mini,RQ3,type_overlap,356,0.301,0.236,,,Wilcoxon,0.00231580690989059,0.01389484145934354,sim

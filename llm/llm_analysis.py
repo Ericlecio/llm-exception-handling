@@ -8,7 +8,7 @@ RQ2  A redução vem acompanhada de efeitos colaterais?
 RQ3  O QG preserva a similaridade com o código dos desenvolvedores?
      (BLEU, CrystalBLEU, Jaccard, Exact Match, concordância de tipos de exceção)
 
-Uso (a partir da raiz do repositório):
+Uso (a partir da raiz do repositório; os CSVs podem estar em subpastas de llm/output):
     python llm/llm_analysis.py
     python llm/llm_analysis.py --input-dir llm/output --out-dir llm/output/analysis
 
@@ -227,21 +227,43 @@ def holm(pvalues):
 # --------------------------------------------------------------------------- #
 # Pipeline
 # --------------------------------------------------------------------------- #
-def load_results(input_dir):
-    frames = []
-    for fname in sorted(os.listdir(input_dir)):
-        m = FILE_RE.match(fname)
-        if not m:
+def load_results(input_dir, include_incomplete=False):
+    """
+    Procura os CSVs da Task 4 em input_dir e em todas as subpastas.
+    Arquivos com respostas faltando (coleta em andamento) são ignorados,
+    a não ser que include_incomplete=True.
+    """
+    found = {}
+    for root, _dirs, files in os.walk(input_dir):
+        if os.path.basename(root) == "analysis":
             continue
-        df = pd.read_csv(os.path.join(input_dir, fname))
+        for fname in sorted(files):
+            m = FILE_RE.match(fname)
+            if not m:
+                continue
+            key = (m.group("model"), m.group("style"))
+            path = os.path.join(root, fname)
+            if key in found:
+                sys.exit(f"Arquivo duplicado para {key}:\n  {found[key]}\n  {path}\n"
+                         "Deixe só uma cópia de cada condição dentro de --input-dir.")
+            found[key] = path
+
+    frames = []
+    for (model, style), path in sorted(found.items()):
+        df = pd.read_csv(path)
+        missing = df["llm_response"].isna().sum() + (df["llm_response"].astype(str).str.strip() == "").sum()
+        rel = os.path.relpath(path, input_dir)
+        if missing and not include_incomplete:
+            print(f"  [ignorado] {rel}: {missing} de {len(df)} linhas sem resposta (coleta incompleta)")
+            continue
         df["sample_id"] = range(len(df))
-        df["model"] = m.group("model")
-        df["prompt_type"] = m.group("style")
-        df["source_file"] = fname
+        df["model"] = model
+        df["prompt_type"] = style
+        df["source_file"] = rel
         frames.append(df)
-        print(f"  carregado: {fname} ({len(df)} linhas)")
+        print(f"  carregado: {rel} ({len(df)} linhas)")
     if not frames:
-        sys.exit(f"Nenhum arquivo *_task4_*_results.csv encontrado em {input_dir}")
+        sys.exit(f"Nenhum arquivo *_task4_*_results.csv completo encontrado em {input_dir}")
     return pd.concat(frames, ignore_index=True)
 
 
@@ -419,13 +441,15 @@ def to_markdown(df):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--input-dir", default=os.path.join("llm", "output"))
+    ap.add_argument("--input-dir", default=os.path.join("llm", "output", "geracao"))
     ap.add_argument("--out-dir", default=os.path.join("llm", "output", "analysis"))
+    ap.add_argument("--include-incomplete", action="store_true",
+                    help="inclui arquivos com linhas ainda sem resposta (contadas como inválidas)")
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
 
     print("Carregando resultados...")
-    df = load_results(args.input_dir)
+    df = load_results(args.input_dir, args.include_incomplete)
     print("Analisando...")
     df, ref = analyze(df)
     violations, similarity, cost, tests = build_tables(df, ref)

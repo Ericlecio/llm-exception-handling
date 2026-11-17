@@ -1,9 +1,17 @@
-# Variáveis de ambiente
+# Chaves de API
 .env
 
-# Arquivos gerados pelo Python
+# Python
 __pycache__/
 *.pyc
+.venv/
+venv/
 
-# Ignorar a pasta de resultados temporários (opcional)
-llm/output/
+# Arquivos temporários
+*.bak
+~$*.xlsx
+.DS_Store
+Thumbs.db
+
+# Material de outro estudo, disponível no pacote de replicação de Souza et al. (2026)
+archive_sbes_original/

@@ -1,0 +1,7 @@
+model,prompt_type,sem_codigo,sintaxe_invalida,valido
+claude-haiku-4-5,style-default,0,0,379
+claude-haiku-4-5,style-qg-default,0,1,378
+gemini-3-flash-preview,style-default,0,0,379
+gemini-3-flash-preview,style-qg-default,2,1,376
+gpt-4o-mini,style-default,0,0,379
+gpt-4o-mini,style-qg-default,0,0,379

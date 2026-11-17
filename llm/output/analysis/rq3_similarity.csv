@@ -1,0 +1,7 @@
+model,prompt_type,bleu,crystalbleu,jaccard,exact_match,type_overlap,type_exact,n_types
+claude-haiku-4-5,style-default,0.145,0.075,0.345,0.04,0.413,0.267,1.573
+claude-haiku-4-5,style-qg-default,0.092,0.042,0.291,0.026,0.371,0.247,1.463
+gemini-3-flash-preview,style-default,0.218,0.132,0.422,0.098,0.424,0.34,1.208
+gemini-3-flash-preview,style-qg-default,0.18,0.103,0.373,0.082,0.385,0.289,1.253
+gpt-4o-mini,style-default,0.067,0.029,0.255,0.013,0.301,0.16,1.464
+gpt-4o-mini,style-qg-default,0.035,0.01,0.236,0.0,0.236,0.129,1.33

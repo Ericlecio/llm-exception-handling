@@ -1,0 +1,7 @@
+model,prompt_type,input_tokens,output_tokens,thinking_tokens
+claude-haiku-4-5,style-default,472.8,46.3,0.0
+claude-haiku-4-5,style-qg-default,567.8,41.9,0.0
+gemini-3-flash-preview,style-default,479.9,31.0,13817.0
+gemini-3-flash-preview,style-qg-default,569.9,47.6,
+gpt-4o-mini,style-default,374.9,33.2,0.0
+gpt-4o-mini,style-qg-default,457.9,31.9,0.0

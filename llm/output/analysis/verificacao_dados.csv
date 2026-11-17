@@ -1,0 +1,7 @@
+arquivo,modelo,condicao,linhas,respostas_vazias,temperatura,versao,status
+claude_default\combined_claude-haiku-4-5_task4_style-default_results.csv,claude-haiku-4-5,style-default,379,0,0.7,claude-haiku-4-5-20251001,OK
+claude_qg\combined_claude-haiku-4-5_task4_style-qg-default_results.csv,claude-haiku-4-5,style-qg-default,379,0,0.7,claude-haiku-4-5-20251001,OK
+gemini_default\combined_gemini-3-flash-preview_task4_style-default_results.csv,gemini-3-flash-preview,style-default,379,0,0.7,gemini-3-flash-preview,OK
+gemini_qg\combined_gemini-3-flash-preview_task4_style-qg-default_results.csv,gemini-3-flash-preview,style-qg-default,379,0,0.7,gemini-3-flash-preview,AVISO
+gpt_default\combined_gpt-4o-mini_task4_style-default_results.csv,gpt-4o-mini,style-default,379,0,0.7,gpt-4o-mini-2024-07-18,OK
+gpt_qg\combined_gpt-4o-mini_task4_style-qg-default_results.csv,gpt-4o-mini,style-qg-default,379,0,0.7,gpt-4o-mini-2024-07-18,OK

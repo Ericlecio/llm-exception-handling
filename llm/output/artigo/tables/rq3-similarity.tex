@@ -1,0 +1,18 @@
+% Gerado por gerar_artefatos_artigo.py; não editar à mão.
+\begin{table}[t]
+  \centering
+  \scriptsize
+  \setlength{\tabcolsep}{2.5pt}
+  \caption{Similarity to the developer's handler (default $\rightarrow$ QG); $p$ from Wilcoxon, Holm-corrected}
+  \label{tab:rq3}
+  \begin{tabular}{lcccc}
+    \toprule
+    Model & BLEU & CrystalBLEU & Jaccard & Same type (\%) \\
+    \midrule
+    Claude & .145 $\rightarrow$ .092 & .075 $\rightarrow$ .042\textsuperscript{*} & .345 $\rightarrow$ .291\textsuperscript{*} & 41.3 $\rightarrow$ 37.1\textsuperscript{*} \\
+    Gemini & .218 $\rightarrow$ .180 & .132 $\rightarrow$ .103\textsuperscript{*} & .422 $\rightarrow$ .373\textsuperscript{*} & 42.4 $\rightarrow$ 38.5 \\
+    GPT & .067 $\rightarrow$ .035 & .029 $\rightarrow$ .010\textsuperscript{*} & .255 $\rightarrow$ .236 & 30.1 $\rightarrow$ 23.6\textsuperscript{*} \\
+    \bottomrule
+    \multicolumn{5}{l}{\textsuperscript{*}$p < 0.05$. Same type: at least one exception type in common.}
+  \end{tabular}
+\end{table}

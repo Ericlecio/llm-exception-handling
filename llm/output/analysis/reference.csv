@@ -1,0 +1,1097 @@
+sample_id,function,ref_code,W0718,W0707,W0702,W0706,ast_broad,broad_hidden,types
+0,_index_with_default,"except ValueError:
+            return default",0,0,0,0,0,0.0,ValueError
+1,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+2,_reset_vpn_client_shared_key_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+3,get_daily_indices,"except HttpResponseError as exception:
+        if exception.error is not None:
+            print(f""Error Code: {exception.error.code}"")
+            print(f""Message: {exception.error.message}"")",0,0,0,0,0,0.0,HttpResponseError
+4,query,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+5,create_access_token,"except ValueError as val_error:
+        raise ValueError(token_parse_err_msg) from val_error",0,0,0,0,0,0.0,ValueError
+6,_compare,"except AssertionError:
+                    return False",0,0,0,0,0,0.0,AssertionError
+7,deserialize_rfc,"except ValueError as err:
+            msg = ""Cannot deserialize to rfc datetime object.""
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,ValueError
+8,_update_snapshot,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+9,serialize_iter,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized.append(None)",0,0,0,0,0,0.0,ValueError
+10,deserialize_duration,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize duration object.""
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+11,wrapper,"except AttributeError:
+                return func(*args, **kwargs)",0,0,0,0,0,0.0,AttributeError
+12,deserialize_decimal,"except decimal.DecimalException as err:
+            msg = ""Invalid decimal {}"".format(attr)
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,DecimalException
+13,deserialize_iso,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+14,_find_and_emit_messages,"except AttributeError:
+                    pass",0,0,0,0,0,0.0,AttributeError
+15,delete,"except DocumentNotFoundException:
+            return False",0,0,0,0,0,0.0,DocumentNotFoundException
+16,_idval_from_function,"except Exception as e:
+            prefix = f""{self.nodeid}: "" if self.nodeid is not None else """"
+            msg = ""error raised while trying to determine id of parameter '{}' at position {}""
+            msg = prefix + msg.format(argname, idx)
+            raise ValueError(msg) from e",0,0,0,0,1,1.0,Exception
+17,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+18,cancel,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+19,get_metric_namespaces,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+20,_generate_credentials_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+21,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+22,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+23,_list_learned_prefixes_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+24,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+25,_create_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+26,_update_token_and_reschedule,"except:
+                with self._lock:
+                    self._some_thread_refreshing = False
+                    self._lock.notify_all()
+                raise",0,0,0,0,0,0.0,
+27,find_by_credentials,"except frappe.AuthenticationError:
+				user[""is_authenticated""] = False",0,0,0,0,0,0.0,AuthenticationError
+28,set_standard_blob_tier,"except HttpResponseError as error:
+            process_storage_error(error)",0,0,0,0,0,0.0,HttpResponseError
+29,delete,"except (AttributeError, TypeError):
+                pass",0,0,0,0,0,0.0,"AttributeError,TypeError"
+30,deserialize_unix,"except ValueError as err:
+            msg = ""Cannot deserialize to unix datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,ValueError
+31,serialize_iter,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized.append(None)",0,0,0,0,0,0.0,ValueError
+32,_infer_class_models,"except Exception:  # pylint: disable=broad-exception-caught
+            # Assume it's not Autorest generated (tests?). Add ourselves as dependencies.
+            client_models = {cls.__name__: cls}",0,0,0,0,1,1.0,Exception
+33,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+34,failsafe_deserialize,"except:  # pylint: disable=bare-except
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,0,0,0,0.0,
+35,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+36,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+37,sample_chat_completions_with_defaults,"except KeyError:
+        print(""Missing environment variable 'AZURE_AI_CHAT_ENDPOINT' or 'AZURE_AI_CHAT_KEY'"")
+        print(""Set them before running this sample."")
+        exit()",0,0,0,0,0,0.0,KeyError
+38,wrap_model_call,"except Exception:
+                    attempts.append(""retry-attempt"")
+                    result = handler(request)
+                    return result",1,0,0,0,1,0.0,Exception
+39,query,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+40,test_concurrent_download_and_cleanup,"except LockNotAvailableError:
+                    # should come from waiting for get_export_cache_lock
+                    exited_by_timeout = True",0,0,0,0,0,0.0,LockNotAvailableError
+41,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+42,_restart_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+43,atransform,"except TypeError:
+                    final = ichunk",0,0,0,0,0,0.0,TypeError
+44,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+45,deserialize_data,"except (ValueError, TypeError, AttributeError) as err:
+            msg = ""Unable to deserialize response data.""
+            msg += "" Data: {}, {}"".format(data, data_type)
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,"AttributeError,TypeError,ValueError"
+46,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+47,query,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+48,authorize_access,"except Exception as e:
+		frappe.throw(e)",1,0,0,0,1,0.0,Exception
+49,_bms_trigger_data_move_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+50,query_visualization,"except HttpResponseError as err:
+        print(""something fatal happened"")
+        print(err)",0,0,0,0,0,0.0,HttpResponseError
+51,api_version_validation,"except AttributeError:
+                return func(*args, **kwargs)",0,0,0,0,0,0.0,AttributeError
+52,url,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+53,_revert_relocation_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+54,stage_block,"except HttpResponseError as error:
+            process_storage_error(error)",0,0,0,0,0,0.0,HttpResponseError
+55,import_data,"except Exception:
+					messages = frappe.local.message_log
+					frappe.clear_messages()
+
+					# rollback if exception
+					frappe.db.rollback()
+
+					create_import_log(
+						self.data_import.name,
+						log_index,
+						{
+							""success"": False,
+							""exception"": frappe.get_traceback(),
+							""messages"": messages,
+							""row_indexes"": row_indexes,
+						},
+					)
+
+					log_index += 1",1,0,0,0,1,0.0,Exception
+56,on_ready,"except Exception as e:
+                self.valid = False
+                self.error = repr(e)
+                self.logger.exception(repr(e))",1,0,0,0,1,0.0,Exception
+57,store_keys_async,"except:
+            callback(self, [])",0,0,1,0,0,0.0,
+58,serialize_unix,"except AttributeError as exc:
+            raise TypeError(""Unix time object must be valid Datetime object."") from exc",0,0,0,0,0,0.0,AttributeError
+59,query,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+60,serialize_iter,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized.append(None)",0,0,0,0,0,0.0,ValueError
+61,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+62,failsafe_deserialize,"except:  # pylint: disable=bare-except
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,0,0,0,0.0,
+63,load_resource,"except Exception as exp:
+            logger.error(
+                ""An error occurred while reading file from SharePoint: %s"", exp
+            )
+            raise",0,0,0,0,1,1.0,Exception
+64,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+65,deserialize_iso,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+66,_bulk_ingest_embeddings,"except not_found_error:
+            await client.indices.create(index=index_name, body=mapping)",0,0,0,0,0,0.0,not_found_error
+67,_parallel_uploads,"except StopIteration:
+            break",0,0,0,0,0,0.0,StopIteration
+68,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+69,from_table,"except Exception as e:
+            print(""ldb version"", lancedb.__version__)
+            raise",0,0,0,0,1,1.0,Exception
+70,load,"except:
+            Logger.warning('Image: Unable to load image <%s>' % filename)
+            raise",0,0,0,0,0,0.0,
+71,_classify,"except KeyError:
+                    _LOGGER.warning(
+                        ""Subtype value %s has no mapping, use base class %s."",
+                        subtype_value,
+                        cls.__name__,
+                    )
+                    break",0,0,0,0,0,0.0,KeyError
+72,can_logger,"except KeyboardInterrupt:
+    print(f""\nNow exiting. Final message Counts... Bus 0: {bus0_msg_cnt} Bus 1: {bus1_msg_cnt} Bus 2: {bus2_msg_cnt}"")
+    outputfile.close()",0,0,0,0,0,0.0,KeyboardInterrupt
+73,_create_container,"except ResourceExistsError:
+            pass",0,0,0,0,0,0.0,ResourceExistsError
+74,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+75,url,"except SerializationError as exc:
+            raise TypeError(""{} must be type {}."".format(name, data_type)) from exc",0,0,0,0,0,0.0,SerializationError
+76,_update_sql_database_throughput_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+77,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+78,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+79,url,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+80,as_dict,"except StopIteration:
+                pass",0,0,0,0,0,0.0,StopIteration
+81,delete_by_unique_attribute,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+82,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+83,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+84,_delete_share,"except:
+            pass",0,0,1,0,0,0.0,
+85,failsafe_deserialize,"except:  # pylint: disable=bare-except
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,0,0,0,0.0,
+86,create_bullet,"except TypeError:
+                pass",0,0,0,0,0,0.0,TypeError
+87,get_entity_by_name,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+88,test_excinfo_getstatement,"except ValueError:
+        excinfo = _pytest._code.ExceptionInfo.from_current()",0,0,0,0,0,0.0,ValueError
+89,_infer_class_models,"except Exception:
+            # Assume it's not Autorest generated (tests?). Add ourselves as dependencies.
+            client_models = {cls.__name__: cls}",1,0,0,0,1,0.0,Exception
+90,serialize_iter,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized.append(None)",0,0,0,0,0,0.0,ValueError
+91,update,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+92,_assertion_supported,"except AssertionError:
+        return True",0,0,0,0,0,0.0,AssertionError
+93,_update_tags_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+94,deserialize_data,"except (ValueError, TypeError, AttributeError) as err:
+            msg = ""Unable to deserialize response data.""
+            msg += "" Data: {}, {}"".format(data, data_type)
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,TypeError,ValueError"
+95,_action_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+96,set_manifest,"except Exception as e:
+            if repository is None or manifest is None:
+                raise ValueError(""The parameter repository and manifest cannot be None."") from e
+            raise",0,0,0,0,1,1.0,Exception
+97,update,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+98,url,"except SerializationError as exc:
+            raise TypeError(""{} must be type {}."".format(name, data_type)) from exc",0,0,0,0,0,0.0,SerializationError
+99,get_modules,"except ImportError:
+		test_module = None",0,0,0,0,0,0.0,ImportError
+100,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+101,shutdown,"except Exception:  # pylint: disable=broad-except
+                pass",0,0,0,0,1,1.0,Exception
+102,_format_url_section,"except KeyError as key:
+            formatted_components = template.split(""/"")
+            components = [
+                c for c in formatted_components if ""{}"".format(key.args[0]) not in c
+            ]
+            template = ""/"".join(components)",0,0,0,0,0,0.0,KeyError
+103,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+104,query,"except SerializationError as exc:
+            raise TypeError(""{} must be type {}."".format(name, data_type)) from exc",0,0,0,0,0,0.0,SerializationError
+105,_env_var_or_default,"except KeyError:
+        return default_val",0,0,0,0,0,0.0,KeyError
+106,header,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+107,_classify,"except KeyError:
+                    _LOGGER.warning(
+                        ""Subtype value %s has no mapping, use base class %s."",
+                        subtype_value,
+                        cls.__name__,
+                    )
+                    break",0,0,0,0,0,0.0,KeyError
+108,failsafe_deserialize,"except:  # pylint: disable=bare-except
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,0,0,0,0.0,
+109,request_password,"except Exception as e:
+                self.show_error(str(e), parent=parent)
+                continue",1,0,0,0,1,0.0,Exception
+110,_get_resource_group,"except KeyError:
+            template = (
+                ""To create a batch account a resource group is required. Please add ""
+                ""decorator @{} in front of this storage account preparer.""
+            )
+            raise AzureTestError(template.format(ResourceGroupPreparer.__name__))",0,1,0,0,0,0.0,KeyError
+111,_create_xml_node,"except AttributeError:
+            xml_map = {}",0,0,0,0,0,0.0,AttributeError
+112,_add_app_package,"except Exception as err:
+            raise AzureTestError(""Failed to upload test package: {}"".format(err))",0,1,0,0,1,1.0,Exception
+113,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+114,_infer_class_models,"except Exception:  # pylint: disable=broad-exception-caught
+            # Assume it's not Autorest generated (tests?). Add ourselves as dependencies.
+            client_models = {cls.__name__: cls}",0,0,0,0,1,1.0,Exception
+115,_json_attemp,"except ValueError:
+                        return False, None  # Don't care about this one",0,0,0,0,0,0.0,ValueError
+116,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+117,_format_url_section,"except KeyError as key:
+            formatted_components = template.split(""/"")
+            components = [
+                c for c in formatted_components if ""{}"".format(key.args[0]) not in c
+            ]
+            template = ""/"".join(components)",0,0,0,0,0,0.0,KeyError
+118,tradetime,"except:
+            return None",0,0,1,0,0,0.0,
+119,__getattr__,"except ValueError:
+		raise AttributeError(f""module '{__name__}' has no attribute '{name}'"")",0,1,0,0,0,0.0,ValueError
+120,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+121,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+122,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+123,_resolve_last_node,"except ValueError:
+                return sister_nodes[end], end",0,0,0,0,0,0.0,ValueError
+124,file_candidates,"except ValueError:
+            return []",0,0,0,0,0,0.0,ValueError
+125,deserialize_decimal,"except decimal.DecimalException as err:
+            msg = ""Invalid decimal {}"".format(attr)
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,DecimalException
+126,_test_permissions_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+127,update,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+128,settle_messages_async,"except TypeError:
+            first = delivery_id
+            last = None",0,0,0,0,0,0.0,TypeError
+129,update_repo,"except Exception:
+            logger.exception(""Failed to pull existing repo"")",1,0,0,0,1,0.0,Exception
+130,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+131,header,"except SerializationError as exc:
+            raise TypeError(""{} must be type {}."".format(name, data_type)) from exc",0,0,0,0,0,0.0,SerializationError
+132,deserialize_rfc,"except ValueError as err:
+            msg = ""Cannot deserialize to rfc datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,ValueError
+133,_json_attemp,"except ValueError:
+                        return False, None  # Don't care about this one",0,0,0,0,0,0.0,ValueError
+134,serialize_unix,"except AttributeError as exc:
+            raise TypeError(""Unix time object must be valid Datetime object."") from exc",0,0,0,0,0,0.0,AttributeError
+135,is_xml_model,"except AttributeError:
+            return False",0,0,0,0,0,0.0,AttributeError
+136,setUpClass,"except Exception as e:
+            print(f""Error starting FalkorDB container: {e}"")
+            raise",0,0,0,0,1,1.0,Exception
+137,serialize_unix,"except AttributeError:
+            raise TypeError(""Unix time object must be valid Datetime object."")",0,1,0,0,0,0.0,AttributeError
+138,serialize_data,"except (ValueError, TypeError) as err:
+            msg = ""Unable to serialize value: {!r} as type: {!r}.""
+            raise_with_traceback(SerializationError, msg.format(data, data_type), err)",0,0,0,0,0,0.0,"TypeError,ValueError"
+139,serialize_iter,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized.append(None)",0,0,0,0,0,0.0,ValueError
+140,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+141,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+142,serialize_unix,"except AttributeError as exc:
+            raise TypeError(""Unix time object must be valid Datetime object."") from exc",0,0,0,0,0,0.0,AttributeError
+143,serialize_dict,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized[self.serialize_unicode(key)] = None",0,0,0,0,0,0.0,ValueError
+144,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+145,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+146,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+147,test_messages_with_more_than_one_assistant_message,"except EvaluationException as ex:
+            assert (
+                ex.message
+                in ""Evaluators for multimodal conversations only support single turn. User and assistant role expected as the only role in each message.""
+            )",0,0,0,0,0,0.0,EvaluationException
+148,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+149,flush_batch,"except GraphException as e:
+      graphed_jit_cache.extend(current_batch)
+      if DEBUG >= 2: print(f""JIT GRAPHing failed batch with {len(current_batch)} kernels on device {current_batch_devs[0]}: {e}"")",0,0,0,0,0,0.0,GraphException
+150,_generate_credentials_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+151,_storage_header_sort,"except ValueError as exc:
+        raise ValueError(""Illegal character encountered when sorting headers."") from exc",0,0,0,0,0,0.0,ValueError
+152,serialize_unix,"except AttributeError:
+            raise TypeError(""Unix time object must be valid Datetime object."")",0,1,0,0,0,0.0,AttributeError
+153,_flush_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+154,_create_segments_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+155,_create_xml_node,"except AttributeError:
+            xml_map = {}",0,0,0,0,0,0.0,AttributeError
+156,get_headers,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+157,sample_manage_classifiers_async,"except ResourceNotFoundError:
+            print(
+                f""Successfully deleted classifier with ID {my_classifier.classifier_id}""
+            )",0,0,0,0,0,0.0,ResourceNotFoundError
+158,deserialize_rfc,"except ValueError as err:
+            msg = ""Cannot deserialize to rfc datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,ValueError
+159,test_repr_traceback_with_unicode,"except RuntimeError:
+        e_info = ExceptionInfo.from_current()",0,0,0,0,0,0.0,RuntimeError
+160,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+161,deserialize_unix,"except ValueError as err:
+            msg = ""Cannot deserialize to unix datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,ValueError
+162,_attach_detach_data_disks_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+163,get_template_parameters,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+164,from_container_url,"except AttributeError as exc:
+            raise ValueError(""Container URL must be a string."") from exc",0,0,0,0,0,0.0,AttributeError
+165,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+166,get_classification,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+167,test_init_filter,"except ValueError:
+            assert True",0,0,0,0,0,0.0,ValueError
+168,_json_attemp,"except ValueError:
+                        return False, None  # Don't care about this one",0,0,0,0,0,0.0,ValueError
+169,create_or_update_user,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+170,get_sample_count,"except:
+    return 0",0,0,1,0,0,0.0,
+171,failsafe_deserialize,"except:  # pylint: disable=bare-except
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,0,0,0,0.0,
+172,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+173,get_current_time,"except json.JSONDecodeError:
+                args = {}",0,0,0,0,0,0.0,JSONDecodeError
+174,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+175,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+176,_classify,"except KeyError:
+                    _LOGGER.warning(
+                        ""Subtype value %s has no mapping, use base class %s."",
+                        subtype_value,
+                        cls.__name__,
+                    )
+                    break",0,0,0,0,0,0.0,KeyError
+177,serialize_data,"except (ValueError, TypeError) as err:
+            msg = ""Unable to serialize value: {!r} as type: {!r}.""
+            raise SerializationError(msg.format(data, data_type)) from err",0,0,0,0,0,0.0,"TypeError,ValueError"
+178,submit_batch,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+179,_bms_trigger_data_move_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+180,execute,"except Exception:
+				# File might not exist on the file system in that case delete both Prepared Report and File doc
+				frappe.delete_doc(""Prepared Report"", file_dict.attached_to_name)",1,0,0,0,1,0.0,Exception
+181,parse_h2_request_headers,"except KeyError as e:
+        raise ValueError(f""Required pseudo header is missing: {e}"")",0,1,0,0,0,0.0,KeyError
+182,check_annotation_response,"except AssertionError as e:
+        print(
+            ""Objects are not equal:"",
+            pformat(response.data, compact=True),
+            ""!="",
+            pformat(data, compact=True),
+            sep=""\n"",
+        )
+        print(e)
+        raise",0,0,0,0,0,0.0,AssertionError
+183,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+184,url,"except SerializationError as exc:
+            raise TypeError(""{} must be type {}."".format(name, data_type)) from exc",0,0,0,0,0,0.0,SerializationError
+185,__str__,"except AttributeError:
+            return super(InputOutputBase, self).__str__()",0,0,0,0,0,0.0,AttributeError
+186,__init__,"except AttributeError as exc:
+            raise ValueError(""Account URL must be a string."") from exc",0,0,0,0,0,0.0,AttributeError
+187,_create_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+188,execute_cmd,"except Exception as e:
+		frappe.throw(_(""Failed to get method for command {0} with {1}"").format(cmd, e))",1,0,0,0,1,0.0,Exception
+189,deserialize_duration,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize duration object.""
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+190,get_credentials,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+191,_get_segment_count,"except Exception:
+      cloudlog.exception(f""Failed to decode firehose stats: {stats}"")
+      return 0",1,0,0,0,1,0.0,Exception
+192,query,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+193,failsafe_deserialize,"except:  # pylint: disable=bare-except
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,0,0,0,0.0,
+194,get_proxy,"except AttributeError:
+        return widget",0,0,0,0,0,0.0,AttributeError
+195,retry,"except Exception:
+                    if perf_counter() - start_time > stop_after_delay:
+                        raise
+                    sleep(wait)",1,0,0,0,1,0.0,Exception
+196,failsafe_deserialize,"except:  # pylint: disable=bare-except
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,0,0,0,0.0,
+197,failsafe_deserialize,"except:  # pylint: disable=bare-except
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,0,0,0,0.0,
+198,__init__,"except ImportError:
+            raise ImportError(
+                ""Please install tensorflow_hub: `pip install tensorflow_hub`""
+            )",0,1,0,0,0,0.0,ImportError
+199,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+200,_format_messages,"except ImportError:
+        msg = (
+            ""Must have langchain-core>=0.3.11 installed to use automatic message ""
+            ""formatting (format='langchain-openai'). Please update your langchain-core ""
+            ""version or remove the 'format' flag. Returning un-formatted ""
+            ""messages.""
+        )
+        warnings.warn(msg)
+        return list(messages)",0,0,0,0,0,0.0,ImportError
+201,create_dict_rule,"except KeyError:
+        raise TOMLDecodeError(""Cannot overwrite a value"", src, pos) from None",0,0,0,0,0,0.0,KeyError
+202,main,"except KeyError:
+        LOG.error(
+            ""Missing environment variable 'WEBPUBSUB_ENDPOINT' or 'WEBPUBSUB_CONNECTION_STRING' - please set if before running the example""
+        )
+        exit()",0,0,0,0,0,0.0,KeyError
+203,_disconnect_virtual_network_gateway_vpn_connections_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+204,get_block_list,"except HttpResponseError as error:
+            process_storage_error(error)",0,0,0,0,0,0.0,HttpResponseError
+205,_classify,"except KeyError:
+                    _LOGGER.warning(
+                        ""Subtype value %s has no mapping, use base class %s."",
+                        subtype_value,
+                        cls.__name__,
+                    )
+                    break",0,0,0,0,0,0.0,KeyError
+206,pip,"except SystemExit as e:
+            if isinstance(e.code, int):
+                returncode = e.code
+            elif e.code:
+                returncode = 1
+            else:
+                returncode = 0",0,0,0,0,0,0.0,SystemExit
+207,create_client,"except:
+        checkpoint_store = None",0,0,1,0,0,0.0,
+208,_make_request,"except Exception as e:
+				# Handle OCI-specific exceptions
+				status_code = getattr(e, 'status', 500)
+				if status_code == 429:
+					raise ModelRateLimitError(message=f'Rate limit exceeded: {str(e)}', model=self.name) from e
+				else:
+					raise ModelProviderError(message=str(e), status_code=status_code, model=self.name) from e",1,0,0,0,1,0.0,Exception
+209,transform_data,"except Exception as e:
+            logging.error(""Error transforming data:"", exc_info=True)
+            raise DataTransformError(""Error transforming data"") from e",0,0,0,0,1,1.0,Exception
+210,deserialize_decimal,"except decimal.DecimalException as err:
+            msg = ""Invalid decimal {}"".format(attr)
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,DecimalException
+211,_is_int,"except ValueError:
+        return False",0,0,0,0,0,0.0,ValueError
+212,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+213,url,"except SerializationError as exc:
+            raise TypeError(""{} must be type {}."".format(name, data_type)) from exc",0,0,0,0,0,0.0,SerializationError
+214,deserialize_iso,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize datetime object.""
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+215,get,"except KeyError:
+            return default",0,0,0,0,0,0.0,KeyError
+216,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+217,QA_util_format_date2str,"except:
+            raise ValueError('请输入正确的日期格式, 建议 ""%Y-%m-%d""')",0,1,0,0,0,0.0,
+218,failsafe_deserialize,"except:
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,1,0,0,0.0,
+219,_classify,"except KeyError:
+                    _LOGGER.warning(
+                        ""Subtype value %s has no mapping, use base class %s."",
+                        subtype_value,
+                        cls.__name__,
+                    )
+                    break",0,0,0,0,0,0.0,KeyError
+220,test_serialize_content_part,"except (SerializationError, AttributeError):
+            # If direct serialization isn't supported, at least verify the object exists
+            assert content.text == ""Hello, world!""
+            assert content.type == ""input_text""",0,0,0,0,0,0.0,"AttributeError,SerializationError"
+221,get_credentials,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+222,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+223,_create_vm_group_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+224,add_texts,"except ValueError as e:
+                    if ""Expected metadata value to be"" in str(e):
+                        msg = (
+                            ""Try filtering complex metadata from the document using ""
+                            ""langchain_community.vectorstores.utils.filter_complex_metadata.""
+                        )
+                        raise ValueError(e.args[0] + ""\n\n"" + msg) from e
+                    raise e",0,0,0,0,0,0.0,ValueError
+225,evaluate,"except (TypeError, ValueError):
+				return str(value)",0,0,0,0,0,0.0,"TypeError,ValueError"
+226,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+227,proc_issue,"except Exception as e:
+                self.log_error(f'Error happened during handling issue {item.issue.number}: {e}')",1,0,0,0,1,0.0,Exception
+228,cancel,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+229,pw_decode_bytes,"except binascii.Error as e:
+        raise CiphertextFormatError(""ciphertext not valid base64"") from e",0,0,0,0,0,0.0,Error
+230,create_or_update,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+231,create,"except Exception:
+            if os.path.exists(filename):
+                os.remove(filename)
+
+            os.rmdir(dirname)
+            raise",0,0,0,0,1,1.0,Exception
+232,_grant_access_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+233,is_xml_model,"except AttributeError:
+            return False",0,0,0,0,0,0.0,AttributeError
+234,_infer_class_models,"except Exception:  # pylint: disable=broad-exception-caught
+            # Assume it's not Autorest generated (tests?). Add ourselves as dependencies.
+            client_models = {cls.__name__: cls}",0,0,0,0,1,1.0,Exception
+235,_failsafe_deserialize_xml,"except DeserializationError:
+        _LOGGER.warning(
+            ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+        )
+        return None",0,0,0,0,0,0.0,DeserializationError
+236,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+237,_failsafe_deserialize_xml,"except DeserializationError:
+        _LOGGER.warning(
+            ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+        )
+        return None",0,0,0,0,0,0.0,DeserializationError
+238,start_run_if_local,"except Exception as e:
+        msg = LOCAL_JOB_FAILURE_MSG.format(e)
+        raise MlException(message=msg, no_personal_data_message=msg) from e",0,0,0,0,1,1.0,Exception
+239,_create_xml_node,"except AttributeError:
+            xml_map = {}",0,0,0,0,0,0.0,AttributeError
+240,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+241,__getattr__,"except KeyError:
+            pass",0,0,0,0,0,0.0,KeyError
+242,_delete_at_scope_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+243,_create_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+244,deserialize_duration,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize duration object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+245,clear_session,"except BaseException as e:
+            # If the device was removed it has the same effect...
+            self.logger.info(f""clear_session: ignoring error {e}"")",1,0,0,0,1,0.0,BaseException
+246,deserialize_duration,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize duration object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+247,deserialize_unix,"except ValueError as err:
+            msg = ""Cannot deserialize to unix datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,ValueError
+248,_init_encryption_version,"except Exception:
+            return StorageEncryptionVersion.PLAINTEXT",1,0,0,0,1,0.0,Exception
+249,tearDownClass,"except CosmosHttpResponseError:
+            pass",0,0,0,0,0,0.0,CosmosHttpResponseError
+250,__set__,"except KeyError:
+                pass",0,0,0,0,0,0.0,KeyError
+251,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+252,_create_xml_node,"except AttributeError:
+            xml_map = {}",0,0,0,0,0,0.0,AttributeError
+253,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+254,_collect_attention_coefficients,"except ValueError:  # Component not found
+                        continue",0,0,0,0,0,0.0,ValueError
+255,apredict_and_call,"except Exception as e:
+            output = AgentChatResponse(
+                response=""An error occurred while running the tool: "" + str(e),
+                sources=[],
+            )",1,0,0,0,1,0.0,Exception
+256,deserialize_unix,"except ValueError as err:
+            msg = ""Cannot deserialize to unix datetime object.""
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,ValueError
+257,unstrip,"except Exception:
+		max_str = 80",1,0,0,0,1,0.0,Exception
+258,get_preference,"except StopIteration:
+            # There is no information for this identifier, so there's no known
+            # candidates.
+            has_information = False",0,0,0,0,0,0.0,StopIteration
+259,deserialize_duration,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize duration object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+260,key_value_rule,"except KeyError:
+        raise TOMLDecodeError(""Cannot overwrite a value"", src, pos) from None",0,0,0,0,0,0.0,KeyError
+261,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+262,_validate_backend_for_build_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+263,add_data,"except Exception:
+					if doc.name not in names:
+						continue",1,0,0,0,1,0.0,Exception
+264,_deserialize_with_union,"except DeserializationError:
+            pass",0,0,0,0,0,0.0,DeserializationError
+265,create_container,"except ResourceExistsError:
+            print(f""The container with name {container_name} already exists"")
+            container_client = blob_service_client.get_container_client(container=container_name)",0,0,0,0,0,0.0,ResourceExistsError
+266,deserialize_data,"except (ValueError, TypeError, AttributeError) as err:
+            msg = ""Unable to deserialize response data.""
+            msg += "" Data: {}, {}"".format(data, data_type)
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,"AttributeError,TypeError,ValueError"
+267,update,"except:
+                pass",0,0,1,0,0,0.0,
+268,serialize_dict,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized[self.serialize_unicode(key)] = None",0,0,0,0,0,0.0,ValueError
+269,stop_ttl_sweeper,"except asyncio.TimeoutError:
+                success = False",0,0,0,0,0,0.0,TimeoutError
+270,deserialize_unix,"except ValueError as err:
+            msg = ""Cannot deserialize to unix datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,ValueError
+271,authenticate_credentials,"except model.DoesNotExist:
+            raise exceptions.AuthenticationFailed(""Invalid token."")",0,1,0,0,0,0.0,DoesNotExist
+272,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+273,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+274,_replace_throughput,"except AttributeError as e:
+            raise TypeError(""offer_throughput must be int or an instance of ThroughputProperties"") from e",0,0,0,0,0,0.0,AttributeError
+275,_deserialize_default,"except Exception:
+            pass",1,0,0,0,1,0.0,Exception
+276,_set_legal_hold_immutability_by_resource_group_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+277,load_dicts,"except json.decoder.JSONDecodeError:
+                continue",0,0,0,0,0,0.0,JSONDecodeError
+278,deserialize_unix,"except ValueError as err:
+            msg = ""Cannot deserialize to unix datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,ValueError
+279,header,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+280,_retry_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+281,check_blob_exists,"except Exception as e:
+            # pylint: disable=no-member
+            if hasattr(e, ""error_code"") and e.error_code == STORAGE_AUTH_MISMATCH_ERROR:
+                msg = (
+                    ""You don't have permission to alter this storage account. ""
+                    ""Ensure that you have been assigned both ""
+                    ""Storage Blob Data Reader and Storage Blob Data Contributor roles.""
+                )
+                raise ValidationException(
+                    message=msg,
+                    no_personal_data_message=msg,
+                    target=ErrorTarget.ARTIFACT,
+                    error_category=ErrorCategory.USER_ERROR,
+                ) from e
+            raise e",0,0,0,0,1,1.0,Exception
+282,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+283,serialize_rfc,"except AttributeError as exc:
+            raise TypeError(""RFC1123 object must be valid Datetime object."") from exc",0,0,0,0,0,0.0,AttributeError
+284,get_secret,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+285,serialize_unix,"except AttributeError as exc:
+            raise TypeError(""Unix time object must be valid Datetime object."") from exc",0,0,0,0,0,0.0,AttributeError
+286,claim_ownership,"except OwnershipLostError:
+                pass",0,0,0,0,0,0.0,OwnershipLostError
+287,rk4,"except IndexError:
+                    break",0,0,0,0,0,0.0,IndexError
+288,_json_attemp,"except ValueError:
+                        return False, None  # Don't care about this one",0,0,0,0,0,0.0,ValueError
+289,_trigger_resource_group_evaluation_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+290,merge_sigs,"except Exception as e:
+            self.show_error(_(""Error combining partial transactions"") + "":\n"" + repr(e))
+            return",1,0,0,0,1,0.0,Exception
+291,_has_errors_in_toolcalls_output,"except json.JSONDecodeError:
+                continue",0,0,0,0,0,0.0,JSONDecodeError
+292,_redeploy_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+293,_get_customer_ikey_from_env_var,"except ValueError as e:
+            logger.error(""Failed to parse Instrumentation Key: %s"", e)  # pylint: disable=C",0,0,0,0,0,0.0,ValueError
+294,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+295,vol,"except:
+            return self.data.vol",0,0,1,0,0,0.0,
+296,pip_install,"except subprocess.CalledProcessError as f:
+        return False",0,0,0,0,0,0.0,CalledProcessError
+297,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+298,parse,"except KeyError:
+            raise ValueError(f""Port specification missing."")",0,1,0,0,0,0.0,KeyError
+299,_json_attemp,"except ValueError:
+                        return False, None  # Don't care about this one",0,0,0,0,0,0.0,ValueError
+300,symbolic_trace,"except (ImportError, ModuleNotFoundError):
+        import torch.fx.symbolic_trace as st",0,0,0,0,0,0.0,"ImportError,ModuleNotFoundError"
+301,is_xml_model,"except AttributeError:
+            return False",0,0,0,0,0,0.0,AttributeError
+302,wrap_model_call,"except Exception:
+                # Retry on error
+                self.retry_count += 1
+                return handler(request)",1,0,0,0,1,0.0,Exception
+303,as_dict,"except StopIteration:
+                pass",0,0,0,0,0,0.0,StopIteration
+304,send,"except AzureError as err:
+                if isinstance(err, AzureSigningError):
+                    raise
+                retries_remaining = self.increment(
+                    retry_settings, request=request.http_request, error=err)
+                if retries_remaining:
+                    await retry_hook(
+                        retry_settings,
+                        request=request.http_request,
+                        response=None,
+                        error=err)
+                    await self.sleep(retry_settings, request.context.transport)
+                    continue
+                raise err",0,0,0,0,0,0.0,AzureError
+305,_create_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+306,_reset_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+307,_delete,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+308,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+309,test_receipt_init_with_valid_receipt_arguments,"except Exception as e:
+        pytest.fail(f""Receipt __init__ threw an exception with a valid receipt {e}"")",1,0,0,0,1,0.0,Exception
+310,logs_batch_query,"except HttpResponseError as err:
+            print(""something fatal happened"")
+            print(err)",0,0,0,0,0,0.0,HttpResponseError
+311,test_sr_json_encoder_encode_decode_with_generate_schema_callable,"except:
+                raise ValueError(""schema cannot be generated"")",0,1,0,0,0,0.0,
+312,_load_cached_info,"except (KeyError, TypeError) as e:
+                error = f""{type(e).__name__}: {e}""
+                self.report_status.append(f""error reading cache, discarding ({error})"")",0,0,0,0,0,0.0,"KeyError,TypeError"
+313,_clear,"except LockNotAvailableError:
+                    # should come from waiting for get_export_cache_lock
+                    exited_by_timeout = True",0,0,0,0,0,0.0,LockNotAvailableError
+314,as_dict,"except StopIteration:
+                pass",0,0,0,0,0,0.0,StopIteration
+315,deserialize_iso,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+316,_create_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+317,get_exported_model,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+318,_check_filters,"except Exception:  # pylint: disable=broad-exception-caught
+                return False",0,0,0,0,1,1.0,Exception
+319,serialize_dict,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized[self.serialize_unicode(key)] = None",0,0,0,0,0,0.0,ValueError
+320,_mark_email_as_seen,"except Exception:
+		frappe.log_error(""Unable to mark as seen"", None, ""Communication"", name)",1,0,0,0,1,0.0,Exception
+321,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+322,reorder,"except KeyError as ex:
+            raise InvalidManifestError(f""Previous manifest does not contain {ex} image"")",0,1,0,0,0,0.0,KeyError
+323,openai_modelname_to_contextsize,"except Exception:
+        context_size = 2048  # by default assume models have at least 2048 tokens",1,0,0,0,1,0.0,Exception
+324,_json_attemp,"except ValueError:
+                        return False, None  # Don't care about this one",0,0,0,0,0,0.0,ValueError
+325,deserialize_iso,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+326,_deserialize_with_union,"except DeserializationError:
+            pass",0,0,0,0,0,0.0,DeserializationError
+327,_current_body,"except Exception:  # pylint: disable=broad-exception-caught
+            return TranslationStatus()  # type: ignore[call-overload]",0,0,0,0,1,1.0,Exception
+328,deserialize_data,"except (ValueError, TypeError, AttributeError) as err:
+            msg = ""Unable to deserialize response data.""
+            msg += "" Data: {}, {}"".format(data, data_type)
+            raise_with_traceback(DeserializationError, msg, err)",0,0,0,0,0,0.0,"AttributeError,TypeError,ValueError"
+329,_parse_access_token_from_response,"except Exception as ex:
+                raise ValueError(""Failed to parse access token from response"") from ex",0,0,0,0,1,1.0,Exception
+330,_incoming_detach,"except KeyError:
+            self._set_state(SessionState.DISCARDING)
+            self._connection.close(
+                error=AMQPError(
+                    condition=ErrorCondition.SessionUnattachedHandle,
+                    description=""""""Invalid handle reference in received frame: """"""
+                    """"""Handle is not currently associated with an attached link"""""",
+                )
+            )",0,0,0,0,0,0.0,KeyError
+331,get_insight,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+332,_update_machines_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+333,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+334,_bulk_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+335,_cancel_training_job_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+336,QA_fetch_quotations,"except Exception as e:
+        raise e",0,0,0,0,1,1.0,Exception
+337,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+338,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+339,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+340,write_security_domain,"except Exception as ex:  # pylint: disable=broad-except
+        if os.path.isfile(SECURITY_DOMAIN_PATH):
+            os.remove(SECURITY_DOMAIN_PATH)
+        raise ex",0,0,0,0,1,1.0,Exception
+341,_create_or_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+342,deserialize_decimal,"except decimal.DecimalException as err:
+            msg = ""Invalid decimal {}"".format(attr)
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,DecimalException
+343,__eq__,"except Exception:
+            return False",1,0,0,0,1,0.0,Exception
+344,get,"except KeyError:
+            return default",0,0,0,0,0,0.0,KeyError
+345,_classify,"except KeyError:
+                    _LOGGER.warning(
+                        ""Subtype value %s has no mapping, use base class %s."",
+                        subtype_value,
+                        cls.__name__,
+                    )
+                    break",0,0,0,0,0,0.0,KeyError
+346,query,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+347,deserialize_iso,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"
+348,url,"except SerializationError:
+            raise TypeError(""{} must be type {}."".format(name, data_type))",0,1,0,0,0,0.0,SerializationError
+349,_clean_up_models,"except:
+                    pass",0,0,1,0,0,0.0,
+350,main,"except Exception as e:
+		print(f'\n❌ Error: {e}')
+		print('\nMake sure the browser-use MCP server is running:')
+		print(""  uvx 'browser-use[cli]' --mcp"")",1,0,0,0,1,0.0,Exception
+351,_find_gst_plugin_path,"except:
+        return []",0,0,1,0,0,0.0,
+352,create_page_blob,"except HttpResponseError as error:
+            process_storage_error(error)",0,0,0,0,0,0.0,HttpResponseError
+353,load_model,"except ImportError:
+            raise ImportError(
+                ""Spacy is not installed, please install it with `pip install spacy`.""
+            )",0,1,0,0,0,0.0,ImportError
+354,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+355,update_by_unique_attribute,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+356,serialize_unix,"except AttributeError as exc:
+            raise TypeError(""Unix time object must be valid Datetime object."") from exc",0,0,0,0,0,0.0,AttributeError
+357,deserialize_data,"except (ValueError, TypeError, AttributeError) as err:
+            msg = ""Unable to deserialize response data.""
+            msg += "" Data: {}, {}"".format(data, data_type)
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,TypeError,ValueError"
+358,__init__,"except ValueError as exc:
+            # Ignore pyright error that comes from not identifying ApiVersion as an iterable enum
+            raise NotImplementedError(
+                f""This package doesn't support API version '{self.api_version}'. ""
+                + ""Supported versions: ""
+                + f""{', '.join(v.value for v in ApiVersion)}""  # pyright: ignore[reportGeneralTypeIssues]
+            ) from exc",0,0,0,0,0,0.0,ValueError
+359,__init__,"except AttributeError:
+            pass",0,0,0,0,0,0.0,AttributeError
+360,__set__,"except KeyError:
+                pass",0,0,0,0,0,0.0,KeyError
+361,test_logging_enabled,"except (ValueError, KeyError):
+                        # this means the request section is not JSON or has no kty property
+                        pass",0,0,0,0,0,0.0,"KeyError,ValueError"
+362,place_text_on_clipboard,"except InternalAddressCorruption as e:
+                self.main_window.show_error(str(e))
+                raise",0,0,0,0,0,0.0,InternalAddressCorruption
+363,_update_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+364,query,"except ImportError:
+            raise ImportError(_import_err_msg)",0,1,0,0,0,0.0,ImportError
+365,_iter_next_step,"except OutputParserException as e:
+            if isinstance(self.handle_parsing_errors, bool):
+                raise_error = not self.handle_parsing_errors
+            else:
+                raise_error = False
+            if raise_error:
+                msg = (
+                    ""An output parsing error occurred. ""
+                    ""In order to pass this error back to the agent and have it try ""
+                    ""again, pass `handle_parsing_errors=True` to the AgentExecutor. ""
+                    f""This is the error: {e!s}""
+                )
+                raise ValueError(msg) from e
+            text = str(e)
+            if isinstance(self.handle_parsing_errors, bool):
+                if e.send_to_llm:
+                    observation = str(e.observation)
+                    text = str(e.llm_output)
+                else:
+                    observation = ""Invalid or incomplete response""
+            elif isinstance(self.handle_parsing_errors, str):
+                observation = self.handle_parsing_errors
+            elif callable(self.handle_parsing_errors):
+                observation = self.handle_parsing_errors(e)
+            else:
+                msg = ""Got unexpected type of `handle_parsing_errors`""  # type: ignore[unreachable]
+                raise ValueError(msg) from e  # noqa: TRY004
+            output = AgentAction(""_Exception"", observation, text)
+            if run_manager:
+                run_manager.on_agent_action(output, color=""green"")
+            tool_run_kwargs = self._action_agent.tool_run_logging_kwargs()
+            observation = ExceptionTool().run(
+                output.tool_input,
+                verbose=self.verbose,
+                color=None,
+                callbacks=run_manager.get_child() if run_manager else None,
+                **tool_run_kwargs,
+            )
+            yield AgentStep(action=output, observation=observation)
+            return",0,0,0,0,0,0.0,OutputParserException
+366,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+367,deserialize_unicode,"except NameError:
+            return str(data)",0,0,0,0,0,0.0,NameError
+368,failsafe_deserialize,"except:
+            _LOGGER.debug(
+                ""Ran into a deserialization error. Ignoring since this is failsafe deserialization"", exc_info=True
+            )
+            return None",0,0,1,0,0,0.0,
+369,analyze_conversation,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+370,serialize_iter,"except ValueError as err:
+                if isinstance(err, SerializationError):
+                    raise
+                serialized.append(None)",0,0,0,0,0,0.0,ValueError
+371,deserialize_unix,"except ValueError as err:
+            msg = ""Cannot deserialize to unix datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,ValueError
+372,url,"except SerializationError as exc:
+            raise TypeError(""{} must be type {}."".format(name, data_type)) from exc",0,0,0,0,0,0.0,SerializationError
+373,iter_contextual_wrapper,"except StopIteration:
+                break",0,0,0,0,0,0.0,StopIteration
+374,_delete_initial,"except (StreamConsumedError, StreamClosedError):
+                pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+375,get,"except (StreamConsumedError, StreamClosedError):
+                    pass",0,0,0,0,0,0.0,"StreamClosedError,StreamConsumedError"
+376,_classify,"except KeyError:
+                    _LOGGER.warning(
+                        ""Subtype value %s has no mapping, use base class %s."",
+                        subtype_value,
+                        cls.__name__,
+                    )
+                    break",0,0,0,0,0,0.0,KeyError
+377,clean_folder,"except Exception as e:
+                print(""Failed to delete %s. Reason: %s"" % (file_path, e))",1,0,0,0,1,0.0,Exception
+378,deserialize_iso,"except (ValueError, OverflowError, AttributeError) as err:
+            msg = ""Cannot deserialize datetime object.""
+            raise DeserializationError(msg) from err",0,0,0,0,0,0.0,"AttributeError,OverflowError,ValueError"

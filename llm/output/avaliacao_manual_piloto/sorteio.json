@@ -1,0 +1,873 @@
+{
+  "versao_script": "1.1",
+  "semente": 20261025,
+  "parametros": {
+    "n_main": 20,
+    "n_pilot": 5,
+    "azure_main": 3,
+    "azure_pilot": 1
+  },
+  "sha256_entradas": {
+    "balanced_sample.csv": "79063175d9b3c7df19f61fa1b40aaabe7fbb38bb762ea2f6e6ad236625fd5405",
+    "per_sample.csv": "4fc01f2a4af59b0805f0a3694aafde479ec8997e5f3cdf9bab4db0c3ba0817d1"
+  },
+  "amostra_principal": [
+    279,
+    344,
+    368,
+    68,
+    30,
+    15,
+    376,
+    61,
+    328,
+    205,
+    218,
+    244,
+    111,
+    119,
+    204,
+    104,
+    296,
+    112,
+    229,
+    230
+  ],
+  "piloto": [
+    72,
+    271,
+    134,
+    249,
+    190
+  ],
+  "itens": {
+    "I6807": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      72
+    ],
+    "I8032": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      72
+    ],
+    "I4196": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      72
+    ],
+    "I7663": [
+      "gemini-3-flash-preview",
+      "style-default",
+      72
+    ],
+    "I2069": [
+      "claude-haiku-4-5",
+      "style-default",
+      72
+    ],
+    "I5109": [
+      "gpt-4o-mini",
+      "style-default",
+      72
+    ],
+    "I3329": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      271
+    ],
+    "I1696": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      271
+    ],
+    "I9235": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      271
+    ],
+    "I8167": [
+      "gemini-3-flash-preview",
+      "style-default",
+      271
+    ],
+    "I6697": [
+      "claude-haiku-4-5",
+      "style-default",
+      271
+    ],
+    "I8477": [
+      "gpt-4o-mini",
+      "style-default",
+      271
+    ],
+    "I8911": [
+      "gpt-4o-mini",
+      "style-default",
+      134
+    ],
+    "I3247": [
+      "claude-haiku-4-5",
+      "style-default",
+      134
+    ],
+    "I7998": [
+      "gemini-3-flash-preview",
+      "style-default",
+      134
+    ],
+    "I4844": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      134
+    ],
+    "I2531": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      134
+    ],
+    "I6142": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      134
+    ],
+    "I5908": [
+      "gpt-4o-mini",
+      "style-default",
+      249
+    ],
+    "I2995": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      249
+    ],
+    "I5517": [
+      "claude-haiku-4-5",
+      "style-default",
+      249
+    ],
+    "I8567": [
+      "gemini-3-flash-preview",
+      "style-default",
+      249
+    ],
+    "I5511": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      249
+    ],
+    "I8093": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      249
+    ],
+    "I7822": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      190
+    ],
+    "I9870": [
+      "gemini-3-flash-preview",
+      "style-default",
+      190
+    ],
+    "I7475": [
+      "claude-haiku-4-5",
+      "style-default",
+      190
+    ],
+    "I7411": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      190
+    ],
+    "I1458": [
+      "gpt-4o-mini",
+      "style-default",
+      190
+    ],
+    "I7516": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      190
+    ],
+    "I7008": [
+      "gpt-4o-mini",
+      "style-default",
+      279
+    ],
+    "I8792": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      279
+    ],
+    "I7287": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      279
+    ],
+    "I2668": [
+      "gemini-3-flash-preview",
+      "style-default",
+      279
+    ],
+    "I7755": [
+      "claude-haiku-4-5",
+      "style-default",
+      279
+    ],
+    "I2304": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      279
+    ],
+    "I1356": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      344
+    ],
+    "I8543": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      344
+    ],
+    "I4126": [
+      "claude-haiku-4-5",
+      "style-default",
+      344
+    ],
+    "I8701": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      344
+    ],
+    "I4580": [
+      "gemini-3-flash-preview",
+      "style-default",
+      344
+    ],
+    "I4880": [
+      "gpt-4o-mini",
+      "style-default",
+      344
+    ],
+    "I6800": [
+      "gemini-3-flash-preview",
+      "style-default",
+      368
+    ],
+    "I3443": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      368
+    ],
+    "I1962": [
+      "claude-haiku-4-5",
+      "style-default",
+      368
+    ],
+    "I3067": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      368
+    ],
+    "I9829": [
+      "gpt-4o-mini",
+      "style-default",
+      368
+    ],
+    "I5110": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      368
+    ],
+    "I9573": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      68
+    ],
+    "I6196": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      68
+    ],
+    "I6118": [
+      "gpt-4o-mini",
+      "style-default",
+      68
+    ],
+    "I2394": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      68
+    ],
+    "I5143": [
+      "claude-haiku-4-5",
+      "style-default",
+      68
+    ],
+    "I6523": [
+      "gemini-3-flash-preview",
+      "style-default",
+      68
+    ],
+    "I4924": [
+      "gemini-3-flash-preview",
+      "style-default",
+      30
+    ],
+    "I6390": [
+      "claude-haiku-4-5",
+      "style-default",
+      30
+    ],
+    "I1886": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      30
+    ],
+    "I3203": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      30
+    ],
+    "I7526": [
+      "gpt-4o-mini",
+      "style-default",
+      30
+    ],
+    "I8390": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      30
+    ],
+    "I7506": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      15
+    ],
+    "I8223": [
+      "claude-haiku-4-5",
+      "style-default",
+      15
+    ],
+    "I8078": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      15
+    ],
+    "I7202": [
+      "gemini-3-flash-preview",
+      "style-default",
+      15
+    ],
+    "I4630": [
+      "gpt-4o-mini",
+      "style-default",
+      15
+    ],
+    "I4890": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      15
+    ],
+    "I4635": [
+      "gpt-4o-mini",
+      "style-default",
+      376
+    ],
+    "I7613": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      376
+    ],
+    "I6817": [
+      "gemini-3-flash-preview",
+      "style-default",
+      376
+    ],
+    "I2732": [
+      "claude-haiku-4-5",
+      "style-default",
+      376
+    ],
+    "I4322": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      376
+    ],
+    "I3107": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      376
+    ],
+    "I8232": [
+      "gemini-3-flash-preview",
+      "style-default",
+      61
+    ],
+    "I2860": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      61
+    ],
+    "I3763": [
+      "gpt-4o-mini",
+      "style-default",
+      61
+    ],
+    "I8666": [
+      "claude-haiku-4-5",
+      "style-default",
+      61
+    ],
+    "I4734": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      61
+    ],
+    "I9823": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      61
+    ],
+    "I5009": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      328
+    ],
+    "I2944": [
+      "claude-haiku-4-5",
+      "style-default",
+      328
+    ],
+    "I6875": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      328
+    ],
+    "I3286": [
+      "gemini-3-flash-preview",
+      "style-default",
+      328
+    ],
+    "I5312": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      328
+    ],
+    "I1875": [
+      "gpt-4o-mini",
+      "style-default",
+      328
+    ],
+    "I1768": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      205
+    ],
+    "I9328": [
+      "claude-haiku-4-5",
+      "style-default",
+      205
+    ],
+    "I4150": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      205
+    ],
+    "I5796": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      205
+    ],
+    "I6799": [
+      "gpt-4o-mini",
+      "style-default",
+      205
+    ],
+    "I3976": [
+      "gemini-3-flash-preview",
+      "style-default",
+      205
+    ],
+    "I9587": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      218
+    ],
+    "I8504": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      218
+    ],
+    "I8717": [
+      "gpt-4o-mini",
+      "style-default",
+      218
+    ],
+    "I7957": [
+      "claude-haiku-4-5",
+      "style-default",
+      218
+    ],
+    "I4460": [
+      "gemini-3-flash-preview",
+      "style-default",
+      218
+    ],
+    "I7282": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      218
+    ],
+    "I9029": [
+      "claude-haiku-4-5",
+      "style-default",
+      244
+    ],
+    "I1535": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      244
+    ],
+    "I3256": [
+      "gpt-4o-mini",
+      "style-default",
+      244
+    ],
+    "I5066": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      244
+    ],
+    "I5648": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      244
+    ],
+    "I2152": [
+      "gemini-3-flash-preview",
+      "style-default",
+      244
+    ],
+    "I1904": [
+      "gpt-4o-mini",
+      "style-default",
+      111
+    ],
+    "I1254": [
+      "claude-haiku-4-5",
+      "style-default",
+      111
+    ],
+    "I1584": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      111
+    ],
+    "I3080": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      111
+    ],
+    "I7467": [
+      "gemini-3-flash-preview",
+      "style-default",
+      111
+    ],
+    "I1939": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      111
+    ],
+    "I9589": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      119
+    ],
+    "I4248": [
+      "gpt-4o-mini",
+      "style-default",
+      119
+    ],
+    "I3013": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      119
+    ],
+    "I8557": [
+      "gemini-3-flash-preview",
+      "style-default",
+      119
+    ],
+    "I9680": [
+      "claude-haiku-4-5",
+      "style-default",
+      119
+    ],
+    "I4783": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      119
+    ],
+    "I3929": [
+      "gemini-3-flash-preview",
+      "style-default",
+      204
+    ],
+    "I2439": [
+      "claude-haiku-4-5",
+      "style-default",
+      204
+    ],
+    "I8152": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      204
+    ],
+    "I3128": [
+      "gpt-4o-mini",
+      "style-default",
+      204
+    ],
+    "I2994": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      204
+    ],
+    "I8117": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      204
+    ],
+    "I1289": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      104
+    ],
+    "I1544": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      104
+    ],
+    "I5801": [
+      "gpt-4o-mini",
+      "style-default",
+      104
+    ],
+    "I4528": [
+      "gemini-3-flash-preview",
+      "style-default",
+      104
+    ],
+    "I5150": [
+      "claude-haiku-4-5",
+      "style-default",
+      104
+    ],
+    "I5887": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      104
+    ],
+    "I9350": [
+      "gpt-4o-mini",
+      "style-default",
+      296
+    ],
+    "I5449": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      296
+    ],
+    "I8273": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      296
+    ],
+    "I1936": [
+      "gemini-3-flash-preview",
+      "style-default",
+      296
+    ],
+    "I8231": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      296
+    ],
+    "I1299": [
+      "claude-haiku-4-5",
+      "style-default",
+      296
+    ],
+    "I9346": [
+      "gemini-3-flash-preview",
+      "style-default",
+      112
+    ],
+    "I3892": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      112
+    ],
+    "I8206": [
+      "claude-haiku-4-5",
+      "style-default",
+      112
+    ],
+    "I4917": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      112
+    ],
+    "I7622": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      112
+    ],
+    "I3105": [
+      "gpt-4o-mini",
+      "style-default",
+      112
+    ],
+    "I2009": [
+      "gpt-4o-mini",
+      "style-default",
+      229
+    ],
+    "I6259": [
+      "claude-haiku-4-5",
+      "style-default",
+      229
+    ],
+    "I9818": [
+      "gemini-3-flash-preview",
+      "style-default",
+      229
+    ],
+    "I6289": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      229
+    ],
+    "I4966": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      229
+    ],
+    "I4669": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      229
+    ],
+    "I7289": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      230
+    ],
+    "I2031": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      230
+    ],
+    "I4894": [
+      "gemini-3-flash-preview",
+      "style-default",
+      230
+    ],
+    "I7963": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      230
+    ],
+    "I1916": [
+      "gpt-4o-mini",
+      "style-default",
+      230
+    ],
+    "I2053": [
+      "claude-haiku-4-5",
+      "style-default",
+      230
+    ]
+  },
+  "gerado_em": "2026-10-26T10:15:00+00:00",
+  "validacao": [
+    {
+      "verificacao": "Reprodutibilidade: mesmo sorteio com a mesma semente",
+      "resultado": "OK",
+      "detalhe": "semente 20261025"
+    },
+    {
+      "verificacao": "Tamanho da amostra principal",
+      "resultado": "OK",
+      "detalhe": "20 funções"
+    },
+    {
+      "verificacao": "Tamanho do piloto",
+      "resultado": "OK",
+      "detalhe": "5 funções"
+    },
+    {
+      "verificacao": "Piloto e amostra sem sobreposição",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Todas as funções sorteadas são elegíveis",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Grupo do Azure na amostra principal",
+      "resultado": "OK",
+      "detalhe": "3 de 20"
+    },
+    {
+      "verificacao": "Grupo do Azure no piloto",
+      "resultado": "OK",
+      "detalhe": "1 de 5"
+    },
+    {
+      "verificacao": "Cada função tem os 6 handlers, um por modelo e condição",
+      "resultado": "OK",
+      "detalhe": "25 grupos"
+    },
+    {
+      "verificacao": "Códigos dos itens únicos",
+      "resultado": "OK",
+      "detalhe": "150 itens"
+    },
+    {
+      "verificacao": "Handler gerado presente no código em contexto",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Contexto correto: a função original com só o handler trocado",
+      "resultado": "OK",
+      "detalhe": "150 de 150 itens"
+    },
+    {
+      "verificacao": "Itens em que o handler gerado é idêntico ao do desenvolvedor (informativo)",
+      "resultado": "OK",
+      "detalhe": "14 itens; nesses, a coluna D mostra o próprio código original"
+    },
+    {
+      "verificacao": "Cegamento: planilhas sem identificação de modelo ou condição",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Avaliadores recebem os mesmos itens, na mesma ordem",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Representatividade: referência dentro do IC 95% da amostra",
+      "resultado": "OK",
+      "detalhe": "18 de 18 métricas"
+    }
+  ]
+}

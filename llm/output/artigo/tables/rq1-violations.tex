@@ -1,0 +1,22 @@
+% Gerado por gerar_artefatos_artigo.py; não editar à mão.
+\begin{table}[t]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{2.5pt}
+  \caption{Target violations and actual broad catches (\% of valid handlers)}
+  \label{tab:rq1}
+  \begin{tabular}{lccccc}
+    \toprule
+    & \multicolumn{2}{c}{W0718 or W0707} & & \multicolumn{2}{c}{Catches \texttt{Exception}\textsuperscript{\dag}} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){5-6}
+    Model & Def. & QG & Impr./Wors. & Def. & QG \\
+    \midrule
+    Claude Haiku 4.5 & 31.7 & 0.5 & 118 / 0 & 37.8 & 3.4 \\
+    Gemini 3 Flash & 34.8 & 0.3 & 130 / 0 & 34.6 & 0.3 \\
+    GPT-4o-mini & 59.6 & 0.0 & 226 / 0 & 49.1 & 0.3 \\
+    \midrule
+    Developers & 13.7 & -- & -- & 12.1 & -- \\
+    \bottomrule
+    \multicolumn{6}{l}{\textsuperscript{\dag}Counted in the AST, including re-raising handlers.}
+  \end{tabular}
+\end{table}

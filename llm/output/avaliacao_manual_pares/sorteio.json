@@ -1,0 +1,4988 @@
+{
+  "versao_script": "2.2",
+  "semente": 20261109,
+  "unidade": "par (função, modelo)",
+  "parametros": {
+    "n_completa": 287,
+    "n_reduzida": 120,
+    "estratos": "modelo × grupo do Azure SDK, alocação proporcional"
+  },
+  "funcoes_do_piloto_excluidas": [
+    72,
+    134,
+    190,
+    249,
+    271
+  ],
+  "sha256_entradas": {
+    "balanced_sample.csv": "79063175d9b3c7df19f61fa1b40aaabe7fbb38bb762ea2f6e6ad236625fd5405",
+    "per_sample.csv": "4fc01f2a4af59b0805f0a3694aafde479ec8997e5f3cdf9bab4db0c3ba0817d1",
+    "sorteio.json": "00ebc20607964b59f76820aa76563a966bb3a8fe9e144ab56c8952c936616abc"
+  },
+  "pares": [
+    [
+      1,
+      175,
+      "claude-haiku-4-5"
+    ],
+    [
+      2,
+      361,
+      "gpt-4o-mini"
+    ],
+    [
+      3,
+      304,
+      "claude-haiku-4-5"
+    ],
+    [
+      4,
+      35,
+      "claude-haiku-4-5"
+    ],
+    [
+      5,
+      12,
+      "claude-haiku-4-5"
+    ],
+    [
+      6,
+      199,
+      "gemini-3-flash-preview"
+    ],
+    [
+      7,
+      272,
+      "gpt-4o-mini"
+    ],
+    [
+      8,
+      201,
+      "gemini-3-flash-preview"
+    ],
+    [
+      9,
+      156,
+      "gemini-3-flash-preview"
+    ],
+    [
+      10,
+      326,
+      "claude-haiku-4-5"
+    ],
+    [
+      11,
+      59,
+      "gemini-3-flash-preview"
+    ],
+    [
+      12,
+      317,
+      "gpt-4o-mini"
+    ],
+    [
+      13,
+      309,
+      "gemini-3-flash-preview"
+    ],
+    [
+      14,
+      113,
+      "gemini-3-flash-preview"
+    ],
+    [
+      15,
+      95,
+      "gpt-4o-mini"
+    ],
+    [
+      16,
+      226,
+      "claude-haiku-4-5"
+    ],
+    [
+      17,
+      254,
+      "gemini-3-flash-preview"
+    ],
+    [
+      18,
+      330,
+      "gemini-3-flash-preview"
+    ],
+    [
+      19,
+      360,
+      "gemini-3-flash-preview"
+    ],
+    [
+      20,
+      320,
+      "gemini-3-flash-preview"
+    ],
+    [
+      21,
+      284,
+      "claude-haiku-4-5"
+    ],
+    [
+      22,
+      4,
+      "claude-haiku-4-5"
+    ],
+    [
+      23,
+      194,
+      "gpt-4o-mini"
+    ],
+    [
+      24,
+      14,
+      "claude-haiku-4-5"
+    ],
+    [
+      25,
+      140,
+      "claude-haiku-4-5"
+    ],
+    [
+      26,
+      207,
+      "gpt-4o-mini"
+    ],
+    [
+      27,
+      284,
+      "gemini-3-flash-preview"
+    ],
+    [
+      28,
+      195,
+      "gpt-4o-mini"
+    ],
+    [
+      29,
+      129,
+      "gemini-3-flash-preview"
+    ],
+    [
+      30,
+      359,
+      "claude-haiku-4-5"
+    ],
+    [
+      31,
+      142,
+      "claude-haiku-4-5"
+    ],
+    [
+      32,
+      158,
+      "gpt-4o-mini"
+    ],
+    [
+      33,
+      98,
+      "claude-haiku-4-5"
+    ],
+    [
+      34,
+      230,
+      "gemini-3-flash-preview"
+    ],
+    [
+      35,
+      350,
+      "gpt-4o-mini"
+    ],
+    [
+      36,
+      123,
+      "gpt-4o-mini"
+    ],
+    [
+      37,
+      239,
+      "gpt-4o-mini"
+    ],
+    [
+      38,
+      241,
+      "claude-haiku-4-5"
+    ],
+    [
+      39,
+      117,
+      "claude-haiku-4-5"
+    ],
+    [
+      40,
+      351,
+      "gemini-3-flash-preview"
+    ],
+    [
+      41,
+      279,
+      "gemini-3-flash-preview"
+    ],
+    [
+      42,
+      316,
+      "gpt-4o-mini"
+    ],
+    [
+      43,
+      142,
+      "gemini-3-flash-preview"
+    ],
+    [
+      44,
+      216,
+      "claude-haiku-4-5"
+    ],
+    [
+      45,
+      226,
+      "gpt-4o-mini"
+    ],
+    [
+      46,
+      238,
+      "claude-haiku-4-5"
+    ],
+    [
+      47,
+      55,
+      "claude-haiku-4-5"
+    ],
+    [
+      48,
+      92,
+      "gemini-3-flash-preview"
+    ],
+    [
+      49,
+      93,
+      "gpt-4o-mini"
+    ],
+    [
+      50,
+      37,
+      "gemini-3-flash-preview"
+    ],
+    [
+      51,
+      339,
+      "gpt-4o-mini"
+    ],
+    [
+      52,
+      299,
+      "gpt-4o-mini"
+    ],
+    [
+      53,
+      347,
+      "gpt-4o-mini"
+    ],
+    [
+      54,
+      272,
+      "claude-haiku-4-5"
+    ],
+    [
+      55,
+      280,
+      "claude-haiku-4-5"
+    ],
+    [
+      56,
+      79,
+      "gemini-3-flash-preview"
+    ],
+    [
+      57,
+      295,
+      "gemini-3-flash-preview"
+    ],
+    [
+      58,
+      323,
+      "gpt-4o-mini"
+    ],
+    [
+      59,
+      170,
+      "claude-haiku-4-5"
+    ],
+    [
+      60,
+      25,
+      "claude-haiku-4-5"
+    ],
+    [
+      61,
+      76,
+      "gpt-4o-mini"
+    ],
+    [
+      62,
+      153,
+      "gemini-3-flash-preview"
+    ],
+    [
+      63,
+      1,
+      "gemini-3-flash-preview"
+    ],
+    [
+      64,
+      71,
+      "gpt-4o-mini"
+    ],
+    [
+      65,
+      152,
+      "claude-haiku-4-5"
+    ],
+    [
+      66,
+      321,
+      "gpt-4o-mini"
+    ],
+    [
+      67,
+      203,
+      "gpt-4o-mini"
+    ],
+    [
+      68,
+      151,
+      "gpt-4o-mini"
+    ],
+    [
+      69,
+      117,
+      "gemini-3-flash-preview"
+    ],
+    [
+      70,
+      37,
+      "claude-haiku-4-5"
+    ],
+    [
+      71,
+      40,
+      "gpt-4o-mini"
+    ],
+    [
+      72,
+      180,
+      "claude-haiku-4-5"
+    ],
+    [
+      73,
+      2,
+      "gpt-4o-mini"
+    ],
+    [
+      74,
+      345,
+      "gpt-4o-mini"
+    ],
+    [
+      75,
+      45,
+      "gpt-4o-mini"
+    ],
+    [
+      76,
+      267,
+      "gemini-3-flash-preview"
+    ],
+    [
+      77,
+      113,
+      "claude-haiku-4-5"
+    ],
+    [
+      78,
+      210,
+      "gemini-3-flash-preview"
+    ],
+    [
+      79,
+      253,
+      "gemini-3-flash-preview"
+    ],
+    [
+      80,
+      290,
+      "claude-haiku-4-5"
+    ],
+    [
+      81,
+      3,
+      "gemini-3-flash-preview"
+    ],
+    [
+      82,
+      178,
+      "gemini-3-flash-preview"
+    ],
+    [
+      83,
+      333,
+      "gemini-3-flash-preview"
+    ],
+    [
+      84,
+      86,
+      "gpt-4o-mini"
+    ],
+    [
+      85,
+      94,
+      "gemini-3-flash-preview"
+    ],
+    [
+      86,
+      63,
+      "claude-haiku-4-5"
+    ],
+    [
+      87,
+      278,
+      "gemini-3-flash-preview"
+    ],
+    [
+      88,
+      372,
+      "claude-haiku-4-5"
+    ],
+    [
+      89,
+      174,
+      "claude-haiku-4-5"
+    ],
+    [
+      90,
+      165,
+      "claude-haiku-4-5"
+    ],
+    [
+      91,
+      82,
+      "gemini-3-flash-preview"
+    ],
+    [
+      92,
+      273,
+      "gemini-3-flash-preview"
+    ],
+    [
+      93,
+      54,
+      "gpt-4o-mini"
+    ],
+    [
+      94,
+      91,
+      "gemini-3-flash-preview"
+    ],
+    [
+      95,
+      329,
+      "gpt-4o-mini"
+    ],
+    [
+      96,
+      120,
+      "gpt-4o-mini"
+    ],
+    [
+      97,
+      100,
+      "gemini-3-flash-preview"
+    ],
+    [
+      98,
+      57,
+      "gemini-3-flash-preview"
+    ],
+    [
+      99,
+      136,
+      "gpt-4o-mini"
+    ],
+    [
+      100,
+      279,
+      "gpt-4o-mini"
+    ],
+    [
+      101,
+      365,
+      "gemini-3-flash-preview"
+    ],
+    [
+      102,
+      158,
+      "claude-haiku-4-5"
+    ],
+    [
+      103,
+      219,
+      "gpt-4o-mini"
+    ],
+    [
+      104,
+      32,
+      "gemini-3-flash-preview"
+    ],
+    [
+      105,
+      367,
+      "gpt-4o-mini"
+    ],
+    [
+      106,
+      92,
+      "gpt-4o-mini"
+    ],
+    [
+      107,
+      133,
+      "claude-haiku-4-5"
+    ],
+    [
+      108,
+      50,
+      "claude-haiku-4-5"
+    ],
+    [
+      109,
+      227,
+      "claude-haiku-4-5"
+    ],
+    [
+      110,
+      352,
+      "claude-haiku-4-5"
+    ],
+    [
+      111,
+      70,
+      "gpt-4o-mini"
+    ],
+    [
+      112,
+      275,
+      "gemini-3-flash-preview"
+    ],
+    [
+      113,
+      90,
+      "gpt-4o-mini"
+    ],
+    [
+      114,
+      181,
+      "claude-haiku-4-5"
+    ],
+    [
+      115,
+      60,
+      "gpt-4o-mini"
+    ],
+    [
+      116,
+      77,
+      "claude-haiku-4-5"
+    ],
+    [
+      117,
+      358,
+      "claude-haiku-4-5"
+    ],
+    [
+      118,
+      200,
+      "claude-haiku-4-5"
+    ],
+    [
+      119,
+      211,
+      "gemini-3-flash-preview"
+    ],
+    [
+      120,
+      58,
+      "gpt-4o-mini"
+    ],
+    [
+      121,
+      122,
+      "gpt-4o-mini"
+    ],
+    [
+      122,
+      317,
+      "claude-haiku-4-5"
+    ],
+    [
+      123,
+      242,
+      "claude-haiku-4-5"
+    ],
+    [
+      124,
+      195,
+      "gemini-3-flash-preview"
+    ],
+    [
+      125,
+      118,
+      "gpt-4o-mini"
+    ],
+    [
+      126,
+      21,
+      "gemini-3-flash-preview"
+    ],
+    [
+      127,
+      273,
+      "gpt-4o-mini"
+    ],
+    [
+      128,
+      357,
+      "claude-haiku-4-5"
+    ],
+    [
+      129,
+      82,
+      "gpt-4o-mini"
+    ],
+    [
+      130,
+      85,
+      "gpt-4o-mini"
+    ],
+    [
+      131,
+      124,
+      "gemini-3-flash-preview"
+    ],
+    [
+      132,
+      269,
+      "gemini-3-flash-preview"
+    ],
+    [
+      133,
+      127,
+      "gpt-4o-mini"
+    ],
+    [
+      134,
+      61,
+      "gpt-4o-mini"
+    ],
+    [
+      135,
+      89,
+      "gpt-4o-mini"
+    ],
+    [
+      136,
+      155,
+      "gpt-4o-mini"
+    ],
+    [
+      137,
+      364,
+      "gemini-3-flash-preview"
+    ],
+    [
+      138,
+      108,
+      "gpt-4o-mini"
+    ],
+    [
+      139,
+      61,
+      "gemini-3-flash-preview"
+    ],
+    [
+      140,
+      369,
+      "claude-haiku-4-5"
+    ],
+    [
+      141,
+      0,
+      "gemini-3-flash-preview"
+    ],
+    [
+      142,
+      353,
+      "gpt-4o-mini"
+    ],
+    [
+      143,
+      348,
+      "gpt-4o-mini"
+    ],
+    [
+      144,
+      179,
+      "gpt-4o-mini"
+    ],
+    [
+      145,
+      320,
+      "gpt-4o-mini"
+    ],
+    [
+      146,
+      363,
+      "claude-haiku-4-5"
+    ],
+    [
+      147,
+      180,
+      "gpt-4o-mini"
+    ],
+    [
+      148,
+      230,
+      "claude-haiku-4-5"
+    ],
+    [
+      149,
+      98,
+      "gpt-4o-mini"
+    ],
+    [
+      150,
+      374,
+      "gemini-3-flash-preview"
+    ],
+    [
+      151,
+      236,
+      "gemini-3-flash-preview"
+    ],
+    [
+      152,
+      318,
+      "gemini-3-flash-preview"
+    ],
+    [
+      153,
+      328,
+      "gemini-3-flash-preview"
+    ],
+    [
+      154,
+      378,
+      "claude-haiku-4-5"
+    ],
+    [
+      155,
+      64,
+      "gemini-3-flash-preview"
+    ],
+    [
+      156,
+      184,
+      "gemini-3-flash-preview"
+    ],
+    [
+      157,
+      148,
+      "claude-haiku-4-5"
+    ],
+    [
+      158,
+      218,
+      "claude-haiku-4-5"
+    ],
+    [
+      159,
+      102,
+      "claude-haiku-4-5"
+    ],
+    [
+      160,
+      305,
+      "gpt-4o-mini"
+    ],
+    [
+      161,
+      103,
+      "gemini-3-flash-preview"
+    ],
+    [
+      162,
+      329,
+      "gemini-3-flash-preview"
+    ],
+    [
+      163,
+      375,
+      "gemini-3-flash-preview"
+    ],
+    [
+      164,
+      297,
+      "gemini-3-flash-preview"
+    ],
+    [
+      165,
+      26,
+      "gemini-3-flash-preview"
+    ],
+    [
+      166,
+      4,
+      "gpt-4o-mini"
+    ],
+    [
+      167,
+      47,
+      "gemini-3-flash-preview"
+    ],
+    [
+      168,
+      247,
+      "claude-haiku-4-5"
+    ],
+    [
+      169,
+      319,
+      "gemini-3-flash-preview"
+    ],
+    [
+      170,
+      253,
+      "gpt-4o-mini"
+    ],
+    [
+      171,
+      48,
+      "claude-haiku-4-5"
+    ],
+    [
+      172,
+      32,
+      "claude-haiku-4-5"
+    ],
+    [
+      173,
+      116,
+      "gemini-3-flash-preview"
+    ],
+    [
+      174,
+      129,
+      "claude-haiku-4-5"
+    ],
+    [
+      175,
+      62,
+      "claude-haiku-4-5"
+    ],
+    [
+      176,
+      6,
+      "gpt-4o-mini"
+    ],
+    [
+      177,
+      215,
+      "gemini-3-flash-preview"
+    ],
+    [
+      178,
+      85,
+      "claude-haiku-4-5"
+    ],
+    [
+      179,
+      250,
+      "claude-haiku-4-5"
+    ],
+    [
+      180,
+      237,
+      "gemini-3-flash-preview"
+    ],
+    [
+      181,
+      161,
+      "gpt-4o-mini"
+    ],
+    [
+      182,
+      298,
+      "claude-haiku-4-5"
+    ],
+    [
+      183,
+      69,
+      "claude-haiku-4-5"
+    ],
+    [
+      184,
+      239,
+      "claude-haiku-4-5"
+    ],
+    [
+      185,
+      191,
+      "claude-haiku-4-5"
+    ],
+    [
+      186,
+      284,
+      "gpt-4o-mini"
+    ],
+    [
+      187,
+      356,
+      "claude-haiku-4-5"
+    ],
+    [
+      188,
+      121,
+      "gemini-3-flash-preview"
+    ],
+    [
+      189,
+      69,
+      "gpt-4o-mini"
+    ],
+    [
+      190,
+      366,
+      "gemini-3-flash-preview"
+    ],
+    [
+      191,
+      136,
+      "gemini-3-flash-preview"
+    ],
+    [
+      192,
+      276,
+      "claude-haiku-4-5"
+    ],
+    [
+      193,
+      146,
+      "claude-haiku-4-5"
+    ],
+    [
+      194,
+      327,
+      "gpt-4o-mini"
+    ],
+    [
+      195,
+      30,
+      "gemini-3-flash-preview"
+    ],
+    [
+      196,
+      126,
+      "gpt-4o-mini"
+    ],
+    [
+      197,
+      292,
+      "gpt-4o-mini"
+    ],
+    [
+      198,
+      312,
+      "gpt-4o-mini"
+    ],
+    [
+      199,
+      244,
+      "gpt-4o-mini"
+    ],
+    [
+      200,
+      325,
+      "gpt-4o-mini"
+    ],
+    [
+      201,
+      255,
+      "gpt-4o-mini"
+    ],
+    [
+      202,
+      293,
+      "claude-haiku-4-5"
+    ],
+    [
+      203,
+      118,
+      "gemini-3-flash-preview"
+    ],
+    [
+      204,
+      332,
+      "gemini-3-flash-preview"
+    ],
+    [
+      205,
+      81,
+      "gpt-4o-mini"
+    ],
+    [
+      206,
+      5,
+      "gpt-4o-mini"
+    ],
+    [
+      207,
+      158,
+      "gemini-3-flash-preview"
+    ],
+    [
+      208,
+      130,
+      "claude-haiku-4-5"
+    ],
+    [
+      209,
+      109,
+      "gpt-4o-mini"
+    ],
+    [
+      210,
+      186,
+      "gemini-3-flash-preview"
+    ],
+    [
+      211,
+      124,
+      "gpt-4o-mini"
+    ],
+    [
+      212,
+      55,
+      "gemini-3-flash-preview"
+    ],
+    [
+      213,
+      321,
+      "gemini-3-flash-preview"
+    ],
+    [
+      214,
+      176,
+      "gemini-3-flash-preview"
+    ],
+    [
+      215,
+      232,
+      "gemini-3-flash-preview"
+    ],
+    [
+      216,
+      374,
+      "gpt-4o-mini"
+    ],
+    [
+      217,
+      192,
+      "claude-haiku-4-5"
+    ],
+    [
+      218,
+      177,
+      "gemini-3-flash-preview"
+    ],
+    [
+      219,
+      226,
+      "gemini-3-flash-preview"
+    ],
+    [
+      220,
+      301,
+      "claude-haiku-4-5"
+    ],
+    [
+      221,
+      188,
+      "gpt-4o-mini"
+    ],
+    [
+      222,
+      316,
+      "claude-haiku-4-5"
+    ],
+    [
+      223,
+      244,
+      "claude-haiku-4-5"
+    ],
+    [
+      224,
+      121,
+      "gpt-4o-mini"
+    ],
+    [
+      225,
+      157,
+      "gemini-3-flash-preview"
+    ],
+    [
+      226,
+      274,
+      "gpt-4o-mini"
+    ],
+    [
+      227,
+      198,
+      "claude-haiku-4-5"
+    ],
+    [
+      228,
+      225,
+      "claude-haiku-4-5"
+    ],
+    [
+      229,
+      131,
+      "claude-haiku-4-5"
+    ],
+    [
+      230,
+      100,
+      "gpt-4o-mini"
+    ],
+    [
+      231,
+      159,
+      "gemini-3-flash-preview"
+    ],
+    [
+      232,
+      125,
+      "gpt-4o-mini"
+    ],
+    [
+      233,
+      225,
+      "gpt-4o-mini"
+    ],
+    [
+      234,
+      138,
+      "gpt-4o-mini"
+    ],
+    [
+      235,
+      73,
+      "gemini-3-flash-preview"
+    ],
+    [
+      236,
+      172,
+      "gpt-4o-mini"
+    ],
+    [
+      237,
+      297,
+      "claude-haiku-4-5"
+    ],
+    [
+      238,
+      315,
+      "gemini-3-flash-preview"
+    ],
+    [
+      239,
+      145,
+      "claude-haiku-4-5"
+    ],
+    [
+      240,
+      236,
+      "claude-haiku-4-5"
+    ],
+    [
+      241,
+      243,
+      "claude-haiku-4-5"
+    ],
+    [
+      242,
+      184,
+      "claude-haiku-4-5"
+    ],
+    [
+      243,
+      8,
+      "gemini-3-flash-preview"
+    ],
+    [
+      244,
+      334,
+      "gemini-3-flash-preview"
+    ],
+    [
+      245,
+      154,
+      "gpt-4o-mini"
+    ],
+    [
+      246,
+      36,
+      "gpt-4o-mini"
+    ],
+    [
+      247,
+      75,
+      "gemini-3-flash-preview"
+    ],
+    [
+      248,
+      364,
+      "claude-haiku-4-5"
+    ],
+    [
+      249,
+      87,
+      "gemini-3-flash-preview"
+    ],
+    [
+      250,
+      104,
+      "gpt-4o-mini"
+    ],
+    [
+      251,
+      212,
+      "claude-haiku-4-5"
+    ],
+    [
+      252,
+      73,
+      "claude-haiku-4-5"
+    ],
+    [
+      253,
+      197,
+      "gpt-4o-mini"
+    ],
+    [
+      254,
+      155,
+      "gemini-3-flash-preview"
+    ],
+    [
+      255,
+      169,
+      "gpt-4o-mini"
+    ],
+    [
+      256,
+      296,
+      "gpt-4o-mini"
+    ],
+    [
+      257,
+      186,
+      "claude-haiku-4-5"
+    ],
+    [
+      258,
+      327,
+      "claude-haiku-4-5"
+    ],
+    [
+      259,
+      250,
+      "gemini-3-flash-preview"
+    ],
+    [
+      260,
+      256,
+      "gemini-3-flash-preview"
+    ],
+    [
+      261,
+      265,
+      "claude-haiku-4-5"
+    ],
+    [
+      262,
+      358,
+      "gemini-3-flash-preview"
+    ],
+    [
+      263,
+      149,
+      "gemini-3-flash-preview"
+    ],
+    [
+      264,
+      83,
+      "claude-haiku-4-5"
+    ],
+    [
+      265,
+      318,
+      "gpt-4o-mini"
+    ],
+    [
+      266,
+      231,
+      "claude-haiku-4-5"
+    ],
+    [
+      267,
+      310,
+      "gpt-4o-mini"
+    ],
+    [
+      268,
+      372,
+      "gemini-3-flash-preview"
+    ],
+    [
+      269,
+      137,
+      "claude-haiku-4-5"
+    ],
+    [
+      270,
+      151,
+      "claude-haiku-4-5"
+    ],
+    [
+      271,
+      12,
+      "gpt-4o-mini"
+    ],
+    [
+      272,
+      196,
+      "gemini-3-flash-preview"
+    ],
+    [
+      273,
+      368,
+      "gemini-3-flash-preview"
+    ],
+    [
+      274,
+      298,
+      "gpt-4o-mini"
+    ],
+    [
+      275,
+      361,
+      "claude-haiku-4-5"
+    ],
+    [
+      276,
+      97,
+      "claude-haiku-4-5"
+    ],
+    [
+      277,
+      114,
+      "gemini-3-flash-preview"
+    ],
+    [
+      278,
+      104,
+      "claude-haiku-4-5"
+    ],
+    [
+      279,
+      329,
+      "claude-haiku-4-5"
+    ],
+    [
+      280,
+      111,
+      "gpt-4o-mini"
+    ],
+    [
+      281,
+      264,
+      "claude-haiku-4-5"
+    ],
+    [
+      282,
+      257,
+      "claude-haiku-4-5"
+    ],
+    [
+      283,
+      233,
+      "gemini-3-flash-preview"
+    ],
+    [
+      284,
+      118,
+      "claude-haiku-4-5"
+    ],
+    [
+      285,
+      225,
+      "gemini-3-flash-preview"
+    ],
+    [
+      286,
+      70,
+      "claude-haiku-4-5"
+    ],
+    [
+      287,
+      144,
+      "gpt-4o-mini"
+    ]
+  ],
+  "itens": {
+    "I8726": [
+      "claude-haiku-4-5",
+      "style-default",
+      175,
+      1
+    ],
+    "I7931": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      175,
+      1
+    ],
+    "I6910": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      361,
+      2
+    ],
+    "I1659": [
+      "gpt-4o-mini",
+      "style-default",
+      361,
+      2
+    ],
+    "I8783": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      304,
+      3
+    ],
+    "I6135": [
+      "claude-haiku-4-5",
+      "style-default",
+      304,
+      3
+    ],
+    "I7119": [
+      "claude-haiku-4-5",
+      "style-default",
+      35,
+      4
+    ],
+    "I3576": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      35,
+      4
+    ],
+    "I9366": [
+      "claude-haiku-4-5",
+      "style-default",
+      12,
+      5
+    ],
+    "I6755": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      12,
+      5
+    ],
+    "I3489": [
+      "gemini-3-flash-preview",
+      "style-default",
+      199,
+      6
+    ],
+    "I8391": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      199,
+      6
+    ],
+    "I5629": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      272,
+      7
+    ],
+    "I1179": [
+      "gpt-4o-mini",
+      "style-default",
+      272,
+      7
+    ],
+    "I6891": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      201,
+      8
+    ],
+    "I8204": [
+      "gemini-3-flash-preview",
+      "style-default",
+      201,
+      8
+    ],
+    "I4254": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      156,
+      9
+    ],
+    "I5568": [
+      "gemini-3-flash-preview",
+      "style-default",
+      156,
+      9
+    ],
+    "I8182": [
+      "claude-haiku-4-5",
+      "style-default",
+      326,
+      10
+    ],
+    "I8486": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      326,
+      10
+    ],
+    "I7452": [
+      "gemini-3-flash-preview",
+      "style-default",
+      59,
+      11
+    ],
+    "I6112": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      59,
+      11
+    ],
+    "I3493": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      317,
+      12
+    ],
+    "I7588": [
+      "gpt-4o-mini",
+      "style-default",
+      317,
+      12
+    ],
+    "I6636": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      309,
+      13
+    ],
+    "I2968": [
+      "gemini-3-flash-preview",
+      "style-default",
+      309,
+      13
+    ],
+    "I7643": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      113,
+      14
+    ],
+    "I3054": [
+      "gemini-3-flash-preview",
+      "style-default",
+      113,
+      14
+    ],
+    "I7218": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      95,
+      15
+    ],
+    "I9045": [
+      "gpt-4o-mini",
+      "style-default",
+      95,
+      15
+    ],
+    "I2837": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      226,
+      16
+    ],
+    "I7688": [
+      "claude-haiku-4-5",
+      "style-default",
+      226,
+      16
+    ],
+    "I6117": [
+      "gemini-3-flash-preview",
+      "style-default",
+      254,
+      17
+    ],
+    "I9177": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      254,
+      17
+    ],
+    "I5223": [
+      "gemini-3-flash-preview",
+      "style-default",
+      330,
+      18
+    ],
+    "I2315": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      330,
+      18
+    ],
+    "I3537": [
+      "gemini-3-flash-preview",
+      "style-default",
+      360,
+      19
+    ],
+    "I4932": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      360,
+      19
+    ],
+    "I7247": [
+      "gemini-3-flash-preview",
+      "style-default",
+      320,
+      20
+    ],
+    "I8247": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      320,
+      20
+    ],
+    "I2313": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      284,
+      21
+    ],
+    "I3423": [
+      "claude-haiku-4-5",
+      "style-default",
+      284,
+      21
+    ],
+    "I8285": [
+      "claude-haiku-4-5",
+      "style-default",
+      4,
+      22
+    ],
+    "I9159": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      4,
+      22
+    ],
+    "I4944": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      194,
+      23
+    ],
+    "I3864": [
+      "gpt-4o-mini",
+      "style-default",
+      194,
+      23
+    ],
+    "I6341": [
+      "claude-haiku-4-5",
+      "style-default",
+      14,
+      24
+    ],
+    "I1307": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      14,
+      24
+    ],
+    "I3483": [
+      "claude-haiku-4-5",
+      "style-default",
+      140,
+      25
+    ],
+    "I3822": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      140,
+      25
+    ],
+    "I8167": [
+      "gpt-4o-mini",
+      "style-default",
+      207,
+      26
+    ],
+    "I6271": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      207,
+      26
+    ],
+    "I4356": [
+      "gemini-3-flash-preview",
+      "style-default",
+      284,
+      27
+    ],
+    "I1217": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      284,
+      27
+    ],
+    "I9735": [
+      "gpt-4o-mini",
+      "style-default",
+      195,
+      28
+    ],
+    "I6694": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      195,
+      28
+    ],
+    "I4003": [
+      "gemini-3-flash-preview",
+      "style-default",
+      129,
+      29
+    ],
+    "I1481": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      129,
+      29
+    ],
+    "I1876": [
+      "claude-haiku-4-5",
+      "style-default",
+      359,
+      30
+    ],
+    "I2055": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      359,
+      30
+    ],
+    "I1524": [
+      "claude-haiku-4-5",
+      "style-default",
+      142,
+      31
+    ],
+    "I9893": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      142,
+      31
+    ],
+    "I3272": [
+      "gpt-4o-mini",
+      "style-default",
+      158,
+      32
+    ],
+    "I9236": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      158,
+      32
+    ],
+    "I4550": [
+      "claude-haiku-4-5",
+      "style-default",
+      98,
+      33
+    ],
+    "I9535": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      98,
+      33
+    ],
+    "I6216": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      230,
+      34
+    ],
+    "I8598": [
+      "gemini-3-flash-preview",
+      "style-default",
+      230,
+      34
+    ],
+    "I5988": [
+      "gpt-4o-mini",
+      "style-default",
+      350,
+      35
+    ],
+    "I4816": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      350,
+      35
+    ],
+    "I9452": [
+      "gpt-4o-mini",
+      "style-default",
+      123,
+      36
+    ],
+    "I6354": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      123,
+      36
+    ],
+    "I7067": [
+      "gpt-4o-mini",
+      "style-default",
+      239,
+      37
+    ],
+    "I4546": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      239,
+      37
+    ],
+    "I6359": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      241,
+      38
+    ],
+    "I8211": [
+      "claude-haiku-4-5",
+      "style-default",
+      241,
+      38
+    ],
+    "I3368": [
+      "claude-haiku-4-5",
+      "style-default",
+      117,
+      39
+    ],
+    "I2831": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      117,
+      39
+    ],
+    "I9011": [
+      "gemini-3-flash-preview",
+      "style-default",
+      351,
+      40
+    ],
+    "I3313": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      351,
+      40
+    ],
+    "I2859": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      279,
+      41
+    ],
+    "I9839": [
+      "gemini-3-flash-preview",
+      "style-default",
+      279,
+      41
+    ],
+    "I8548": [
+      "gpt-4o-mini",
+      "style-default",
+      316,
+      42
+    ],
+    "I4415": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      316,
+      42
+    ],
+    "I6972": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      142,
+      43
+    ],
+    "I7729": [
+      "gemini-3-flash-preview",
+      "style-default",
+      142,
+      43
+    ],
+    "I1151": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      216,
+      44
+    ],
+    "I4043": [
+      "claude-haiku-4-5",
+      "style-default",
+      216,
+      44
+    ],
+    "I3058": [
+      "gpt-4o-mini",
+      "style-default",
+      226,
+      45
+    ],
+    "I7232": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      226,
+      45
+    ],
+    "I8890": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      238,
+      46
+    ],
+    "I1937": [
+      "claude-haiku-4-5",
+      "style-default",
+      238,
+      46
+    ],
+    "I7637": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      55,
+      47
+    ],
+    "I8747": [
+      "claude-haiku-4-5",
+      "style-default",
+      55,
+      47
+    ],
+    "I7811": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      92,
+      48
+    ],
+    "I6424": [
+      "gemini-3-flash-preview",
+      "style-default",
+      92,
+      48
+    ],
+    "I5528": [
+      "gpt-4o-mini",
+      "style-default",
+      93,
+      49
+    ],
+    "I2275": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      93,
+      49
+    ],
+    "I7233": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      37,
+      50
+    ],
+    "I8518": [
+      "gemini-3-flash-preview",
+      "style-default",
+      37,
+      50
+    ],
+    "I9374": [
+      "gpt-4o-mini",
+      "style-default",
+      339,
+      51
+    ],
+    "I2674": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      339,
+      51
+    ],
+    "I8440": [
+      "gpt-4o-mini",
+      "style-default",
+      299,
+      52
+    ],
+    "I6320": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      299,
+      52
+    ],
+    "I8791": [
+      "gpt-4o-mini",
+      "style-default",
+      347,
+      53
+    ],
+    "I9099": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      347,
+      53
+    ],
+    "I2431": [
+      "claude-haiku-4-5",
+      "style-default",
+      272,
+      54
+    ],
+    "I1938": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      272,
+      54
+    ],
+    "I5870": [
+      "claude-haiku-4-5",
+      "style-default",
+      280,
+      55
+    ],
+    "I8281": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      280,
+      55
+    ],
+    "I1361": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      79,
+      56
+    ],
+    "I4934": [
+      "gemini-3-flash-preview",
+      "style-default",
+      79,
+      56
+    ],
+    "I2934": [
+      "gemini-3-flash-preview",
+      "style-default",
+      295,
+      57
+    ],
+    "I1514": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      295,
+      57
+    ],
+    "I3336": [
+      "gpt-4o-mini",
+      "style-default",
+      323,
+      58
+    ],
+    "I6370": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      323,
+      58
+    ],
+    "I7367": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      170,
+      59
+    ],
+    "I4268": [
+      "claude-haiku-4-5",
+      "style-default",
+      170,
+      59
+    ],
+    "I8898": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      25,
+      60
+    ],
+    "I1953": [
+      "claude-haiku-4-5",
+      "style-default",
+      25,
+      60
+    ],
+    "I3507": [
+      "gpt-4o-mini",
+      "style-default",
+      76,
+      61
+    ],
+    "I7592": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      76,
+      61
+    ],
+    "I2428": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      153,
+      62
+    ],
+    "I2988": [
+      "gemini-3-flash-preview",
+      "style-default",
+      153,
+      62
+    ],
+    "I5872": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      1,
+      63
+    ],
+    "I6718": [
+      "gemini-3-flash-preview",
+      "style-default",
+      1,
+      63
+    ],
+    "I1806": [
+      "gpt-4o-mini",
+      "style-default",
+      71,
+      64
+    ],
+    "I8425": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      71,
+      64
+    ],
+    "I7476": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      152,
+      65
+    ],
+    "I7437": [
+      "claude-haiku-4-5",
+      "style-default",
+      152,
+      65
+    ],
+    "I1897": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      321,
+      66
+    ],
+    "I1288": [
+      "gpt-4o-mini",
+      "style-default",
+      321,
+      66
+    ],
+    "I9260": [
+      "gpt-4o-mini",
+      "style-default",
+      203,
+      67
+    ],
+    "I3694": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      203,
+      67
+    ],
+    "I2944": [
+      "gpt-4o-mini",
+      "style-default",
+      151,
+      68
+    ],
+    "I7003": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      151,
+      68
+    ],
+    "I8368": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      117,
+      69
+    ],
+    "I3298": [
+      "gemini-3-flash-preview",
+      "style-default",
+      117,
+      69
+    ],
+    "I4161": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      37,
+      70
+    ],
+    "I4369": [
+      "claude-haiku-4-5",
+      "style-default",
+      37,
+      70
+    ],
+    "I5699": [
+      "gpt-4o-mini",
+      "style-default",
+      40,
+      71
+    ],
+    "I8526": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      40,
+      71
+    ],
+    "I3645": [
+      "claude-haiku-4-5",
+      "style-default",
+      180,
+      72
+    ],
+    "I8949": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      180,
+      72
+    ],
+    "I2994": [
+      "gpt-4o-mini",
+      "style-default",
+      2,
+      73
+    ],
+    "I7960": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      2,
+      73
+    ],
+    "I4907": [
+      "gpt-4o-mini",
+      "style-default",
+      345,
+      74
+    ],
+    "I5508": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      345,
+      74
+    ],
+    "I7486": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      45,
+      75
+    ],
+    "I8029": [
+      "gpt-4o-mini",
+      "style-default",
+      45,
+      75
+    ],
+    "I7938": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      267,
+      76
+    ],
+    "I4656": [
+      "gemini-3-flash-preview",
+      "style-default",
+      267,
+      76
+    ],
+    "I1893": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      113,
+      77
+    ],
+    "I4222": [
+      "claude-haiku-4-5",
+      "style-default",
+      113,
+      77
+    ],
+    "I4383": [
+      "gemini-3-flash-preview",
+      "style-default",
+      210,
+      78
+    ],
+    "I9029": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      210,
+      78
+    ],
+    "I4080": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      253,
+      79
+    ],
+    "I1631": [
+      "gemini-3-flash-preview",
+      "style-default",
+      253,
+      79
+    ],
+    "I8159": [
+      "claude-haiku-4-5",
+      "style-default",
+      290,
+      80
+    ],
+    "I5869": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      290,
+      80
+    ],
+    "I2148": [
+      "gemini-3-flash-preview",
+      "style-default",
+      3,
+      81
+    ],
+    "I4928": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      3,
+      81
+    ],
+    "I5019": [
+      "gemini-3-flash-preview",
+      "style-default",
+      178,
+      82
+    ],
+    "I7810": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      178,
+      82
+    ],
+    "I2576": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      333,
+      83
+    ],
+    "I9914": [
+      "gemini-3-flash-preview",
+      "style-default",
+      333,
+      83
+    ],
+    "I4929": [
+      "gpt-4o-mini",
+      "style-default",
+      86,
+      84
+    ],
+    "I9995": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      86,
+      84
+    ],
+    "I3312": [
+      "gemini-3-flash-preview",
+      "style-default",
+      94,
+      85
+    ],
+    "I5658": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      94,
+      85
+    ],
+    "I3939": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      63,
+      86
+    ],
+    "I2045": [
+      "claude-haiku-4-5",
+      "style-default",
+      63,
+      86
+    ],
+    "I1284": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      278,
+      87
+    ],
+    "I7012": [
+      "gemini-3-flash-preview",
+      "style-default",
+      278,
+      87
+    ],
+    "I6722": [
+      "claude-haiku-4-5",
+      "style-default",
+      372,
+      88
+    ],
+    "I6652": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      372,
+      88
+    ],
+    "I5172": [
+      "claude-haiku-4-5",
+      "style-default",
+      174,
+      89
+    ],
+    "I1844": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      174,
+      89
+    ],
+    "I7426": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      165,
+      90
+    ],
+    "I6073": [
+      "claude-haiku-4-5",
+      "style-default",
+      165,
+      90
+    ],
+    "I3416": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      82,
+      91
+    ],
+    "I6462": [
+      "gemini-3-flash-preview",
+      "style-default",
+      82,
+      91
+    ],
+    "I9396": [
+      "gemini-3-flash-preview",
+      "style-default",
+      273,
+      92
+    ],
+    "I9900": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      273,
+      92
+    ],
+    "I1073": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      54,
+      93
+    ],
+    "I9551": [
+      "gpt-4o-mini",
+      "style-default",
+      54,
+      93
+    ],
+    "I3840": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      91,
+      94
+    ],
+    "I4255": [
+      "gemini-3-flash-preview",
+      "style-default",
+      91,
+      94
+    ],
+    "I1391": [
+      "gpt-4o-mini",
+      "style-default",
+      329,
+      95
+    ],
+    "I6479": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      329,
+      95
+    ],
+    "I3391": [
+      "gpt-4o-mini",
+      "style-default",
+      120,
+      96
+    ],
+    "I1421": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      120,
+      96
+    ],
+    "I9060": [
+      "gemini-3-flash-preview",
+      "style-default",
+      100,
+      97
+    ],
+    "I8333": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      100,
+      97
+    ],
+    "I7904": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      57,
+      98
+    ],
+    "I6825": [
+      "gemini-3-flash-preview",
+      "style-default",
+      57,
+      98
+    ],
+    "I8250": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      136,
+      99
+    ],
+    "I6676": [
+      "gpt-4o-mini",
+      "style-default",
+      136,
+      99
+    ],
+    "I1881": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      279,
+      100
+    ],
+    "I5599": [
+      "gpt-4o-mini",
+      "style-default",
+      279,
+      100
+    ],
+    "I9844": [
+      "gemini-3-flash-preview",
+      "style-default",
+      365,
+      101
+    ],
+    "I4805": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      365,
+      101
+    ],
+    "I1483": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      158,
+      102
+    ],
+    "I3598": [
+      "claude-haiku-4-5",
+      "style-default",
+      158,
+      102
+    ],
+    "I1441": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      219,
+      103
+    ],
+    "I8358": [
+      "gpt-4o-mini",
+      "style-default",
+      219,
+      103
+    ],
+    "I7822": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      32,
+      104
+    ],
+    "I2491": [
+      "gemini-3-flash-preview",
+      "style-default",
+      32,
+      104
+    ],
+    "I3055": [
+      "gpt-4o-mini",
+      "style-default",
+      367,
+      105
+    ],
+    "I8641": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      367,
+      105
+    ],
+    "I3134": [
+      "gpt-4o-mini",
+      "style-default",
+      92,
+      106
+    ],
+    "I4697": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      92,
+      106
+    ],
+    "I3128": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      133,
+      107
+    ],
+    "I6995": [
+      "claude-haiku-4-5",
+      "style-default",
+      133,
+      107
+    ],
+    "I7721": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      50,
+      108
+    ],
+    "I3089": [
+      "claude-haiku-4-5",
+      "style-default",
+      50,
+      108
+    ],
+    "I1241": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      227,
+      109
+    ],
+    "I9917": [
+      "claude-haiku-4-5",
+      "style-default",
+      227,
+      109
+    ],
+    "I7141": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      352,
+      110
+    ],
+    "I4398": [
+      "claude-haiku-4-5",
+      "style-default",
+      352,
+      110
+    ],
+    "I6365": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      70,
+      111
+    ],
+    "I4492": [
+      "gpt-4o-mini",
+      "style-default",
+      70,
+      111
+    ],
+    "I5056": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      275,
+      112
+    ],
+    "I3655": [
+      "gemini-3-flash-preview",
+      "style-default",
+      275,
+      112
+    ],
+    "I3183": [
+      "gpt-4o-mini",
+      "style-default",
+      90,
+      113
+    ],
+    "I8508": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      90,
+      113
+    ],
+    "I3458": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      181,
+      114
+    ],
+    "I7735": [
+      "claude-haiku-4-5",
+      "style-default",
+      181,
+      114
+    ],
+    "I7102": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      60,
+      115
+    ],
+    "I6726": [
+      "gpt-4o-mini",
+      "style-default",
+      60,
+      115
+    ],
+    "I4969": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      77,
+      116
+    ],
+    "I6179": [
+      "claude-haiku-4-5",
+      "style-default",
+      77,
+      116
+    ],
+    "I8959": [
+      "claude-haiku-4-5",
+      "style-default",
+      358,
+      117
+    ],
+    "I2507": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      358,
+      117
+    ],
+    "I2241": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      200,
+      118
+    ],
+    "I6987": [
+      "claude-haiku-4-5",
+      "style-default",
+      200,
+      118
+    ],
+    "I6919": [
+      "gemini-3-flash-preview",
+      "style-default",
+      211,
+      119
+    ],
+    "I4804": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      211,
+      119
+    ],
+    "I7248": [
+      "gpt-4o-mini",
+      "style-default",
+      58,
+      120
+    ],
+    "I2892": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      58,
+      120
+    ],
+    "I4895": [
+      "gpt-4o-mini",
+      "style-default",
+      122,
+      121
+    ],
+    "I4097": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      122,
+      121
+    ],
+    "I4506": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      317,
+      122
+    ],
+    "I8547": [
+      "claude-haiku-4-5",
+      "style-default",
+      317,
+      122
+    ],
+    "I5451": [
+      "claude-haiku-4-5",
+      "style-default",
+      242,
+      123
+    ],
+    "I7163": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      242,
+      123
+    ],
+    "I4990": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      195,
+      124
+    ],
+    "I9047": [
+      "gemini-3-flash-preview",
+      "style-default",
+      195,
+      124
+    ],
+    "I4639": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      118,
+      125
+    ],
+    "I1193": [
+      "gpt-4o-mini",
+      "style-default",
+      118,
+      125
+    ],
+    "I6879": [
+      "gemini-3-flash-preview",
+      "style-default",
+      21,
+      126
+    ],
+    "I6620": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      21,
+      126
+    ],
+    "I3086": [
+      "gpt-4o-mini",
+      "style-default",
+      273,
+      127
+    ],
+    "I4585": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      273,
+      127
+    ],
+    "I9851": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      357,
+      128
+    ],
+    "I7604": [
+      "claude-haiku-4-5",
+      "style-default",
+      357,
+      128
+    ],
+    "I8654": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      82,
+      129
+    ],
+    "I6925": [
+      "gpt-4o-mini",
+      "style-default",
+      82,
+      129
+    ],
+    "I4517": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      85,
+      130
+    ],
+    "I5148": [
+      "gpt-4o-mini",
+      "style-default",
+      85,
+      130
+    ],
+    "I5367": [
+      "gemini-3-flash-preview",
+      "style-default",
+      124,
+      131
+    ],
+    "I2003": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      124,
+      131
+    ],
+    "I2734": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      269,
+      132
+    ],
+    "I9818": [
+      "gemini-3-flash-preview",
+      "style-default",
+      269,
+      132
+    ],
+    "I2448": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      127,
+      133
+    ],
+    "I2453": [
+      "gpt-4o-mini",
+      "style-default",
+      127,
+      133
+    ],
+    "I5059": [
+      "gpt-4o-mini",
+      "style-default",
+      61,
+      134
+    ],
+    "I3614": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      61,
+      134
+    ],
+    "I9034": [
+      "gpt-4o-mini",
+      "style-default",
+      89,
+      135
+    ],
+    "I9330": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      89,
+      135
+    ],
+    "I4063": [
+      "gpt-4o-mini",
+      "style-default",
+      155,
+      136
+    ],
+    "I9333": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      155,
+      136
+    ],
+    "I2268": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      364,
+      137
+    ],
+    "I8907": [
+      "gemini-3-flash-preview",
+      "style-default",
+      364,
+      137
+    ],
+    "I1505": [
+      "gpt-4o-mini",
+      "style-default",
+      108,
+      138
+    ],
+    "I7068": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      108,
+      138
+    ],
+    "I9328": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      61,
+      139
+    ],
+    "I2916": [
+      "gemini-3-flash-preview",
+      "style-default",
+      61,
+      139
+    ],
+    "I1479": [
+      "claude-haiku-4-5",
+      "style-default",
+      369,
+      140
+    ],
+    "I3807": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      369,
+      140
+    ],
+    "I8395": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      0,
+      141
+    ],
+    "I8013": [
+      "gemini-3-flash-preview",
+      "style-default",
+      0,
+      141
+    ],
+    "I6913": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      353,
+      142
+    ],
+    "I6615": [
+      "gpt-4o-mini",
+      "style-default",
+      353,
+      142
+    ],
+    "I4725": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      348,
+      143
+    ],
+    "I3146": [
+      "gpt-4o-mini",
+      "style-default",
+      348,
+      143
+    ],
+    "I3772": [
+      "gpt-4o-mini",
+      "style-default",
+      179,
+      144
+    ],
+    "I2286": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      179,
+      144
+    ],
+    "I5730": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      320,
+      145
+    ],
+    "I1644": [
+      "gpt-4o-mini",
+      "style-default",
+      320,
+      145
+    ],
+    "I9608": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      363,
+      146
+    ],
+    "I5776": [
+      "claude-haiku-4-5",
+      "style-default",
+      363,
+      146
+    ],
+    "I8290": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      180,
+      147
+    ],
+    "I8481": [
+      "gpt-4o-mini",
+      "style-default",
+      180,
+      147
+    ],
+    "I1831": [
+      "claude-haiku-4-5",
+      "style-default",
+      230,
+      148
+    ],
+    "I8064": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      230,
+      148
+    ],
+    "I4084": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      98,
+      149
+    ],
+    "I4134": [
+      "gpt-4o-mini",
+      "style-default",
+      98,
+      149
+    ],
+    "I4065": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      374,
+      150
+    ],
+    "I8882": [
+      "gemini-3-flash-preview",
+      "style-default",
+      374,
+      150
+    ],
+    "I6621": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      236,
+      151
+    ],
+    "I7859": [
+      "gemini-3-flash-preview",
+      "style-default",
+      236,
+      151
+    ],
+    "I9964": [
+      "gemini-3-flash-preview",
+      "style-default",
+      318,
+      152
+    ],
+    "I2690": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      318,
+      152
+    ],
+    "I7112": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      328,
+      153
+    ],
+    "I7535": [
+      "gemini-3-flash-preview",
+      "style-default",
+      328,
+      153
+    ],
+    "I3484": [
+      "claude-haiku-4-5",
+      "style-default",
+      378,
+      154
+    ],
+    "I3702": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      378,
+      154
+    ],
+    "I6139": [
+      "gemini-3-flash-preview",
+      "style-default",
+      64,
+      155
+    ],
+    "I4377": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      64,
+      155
+    ],
+    "I2299": [
+      "gemini-3-flash-preview",
+      "style-default",
+      184,
+      156
+    ],
+    "I3921": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      184,
+      156
+    ],
+    "I5015": [
+      "claude-haiku-4-5",
+      "style-default",
+      148,
+      157
+    ],
+    "I5734": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      148,
+      157
+    ],
+    "I8154": [
+      "claude-haiku-4-5",
+      "style-default",
+      218,
+      158
+    ],
+    "I7182": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      218,
+      158
+    ],
+    "I6733": [
+      "claude-haiku-4-5",
+      "style-default",
+      102,
+      159
+    ],
+    "I7289": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      102,
+      159
+    ],
+    "I7707": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      305,
+      160
+    ],
+    "I3281": [
+      "gpt-4o-mini",
+      "style-default",
+      305,
+      160
+    ],
+    "I2103": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      103,
+      161
+    ],
+    "I3245": [
+      "gemini-3-flash-preview",
+      "style-default",
+      103,
+      161
+    ],
+    "I4781": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      329,
+      162
+    ],
+    "I4229": [
+      "gemini-3-flash-preview",
+      "style-default",
+      329,
+      162
+    ],
+    "I6206": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      375,
+      163
+    ],
+    "I7847": [
+      "gemini-3-flash-preview",
+      "style-default",
+      375,
+      163
+    ],
+    "I4189": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      297,
+      164
+    ],
+    "I2405": [
+      "gemini-3-flash-preview",
+      "style-default",
+      297,
+      164
+    ],
+    "I3605": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      26,
+      165
+    ],
+    "I8723": [
+      "gemini-3-flash-preview",
+      "style-default",
+      26,
+      165
+    ],
+    "I2642": [
+      "gpt-4o-mini",
+      "style-default",
+      4,
+      166
+    ],
+    "I1826": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      4,
+      166
+    ],
+    "I9480": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      47,
+      167
+    ],
+    "I6674": [
+      "gemini-3-flash-preview",
+      "style-default",
+      47,
+      167
+    ],
+    "I3535": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      247,
+      168
+    ],
+    "I4570": [
+      "claude-haiku-4-5",
+      "style-default",
+      247,
+      168
+    ],
+    "I2010": [
+      "gemini-3-flash-preview",
+      "style-default",
+      319,
+      169
+    ],
+    "I2991": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      319,
+      169
+    ],
+    "I1766": [
+      "gpt-4o-mini",
+      "style-default",
+      253,
+      170
+    ],
+    "I2319": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      253,
+      170
+    ],
+    "I1082": [
+      "claude-haiku-4-5",
+      "style-default",
+      48,
+      171
+    ],
+    "I6059": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      48,
+      171
+    ],
+    "I2789": [
+      "claude-haiku-4-5",
+      "style-default",
+      32,
+      172
+    ],
+    "I2144": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      32,
+      172
+    ],
+    "I5230": [
+      "gemini-3-flash-preview",
+      "style-default",
+      116,
+      173
+    ],
+    "I2657": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      116,
+      173
+    ],
+    "I5579": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      129,
+      174
+    ],
+    "I3103": [
+      "claude-haiku-4-5",
+      "style-default",
+      129,
+      174
+    ],
+    "I8441": [
+      "claude-haiku-4-5",
+      "style-default",
+      62,
+      175
+    ],
+    "I5016": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      62,
+      175
+    ],
+    "I8928": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      6,
+      176
+    ],
+    "I7683": [
+      "gpt-4o-mini",
+      "style-default",
+      6,
+      176
+    ],
+    "I9243": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      215,
+      177
+    ],
+    "I5036": [
+      "gemini-3-flash-preview",
+      "style-default",
+      215,
+      177
+    ],
+    "I9578": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      85,
+      178
+    ],
+    "I4955": [
+      "claude-haiku-4-5",
+      "style-default",
+      85,
+      178
+    ],
+    "I4881": [
+      "claude-haiku-4-5",
+      "style-default",
+      250,
+      179
+    ],
+    "I3789": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      250,
+      179
+    ],
+    "I9434": [
+      "gemini-3-flash-preview",
+      "style-default",
+      237,
+      180
+    ],
+    "I8123": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      237,
+      180
+    ],
+    "I8982": [
+      "gpt-4o-mini",
+      "style-default",
+      161,
+      181
+    ],
+    "I2931": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      161,
+      181
+    ],
+    "I7553": [
+      "claude-haiku-4-5",
+      "style-default",
+      298,
+      182
+    ],
+    "I3971": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      298,
+      182
+    ],
+    "I5830": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      69,
+      183
+    ],
+    "I7790": [
+      "claude-haiku-4-5",
+      "style-default",
+      69,
+      183
+    ],
+    "I5518": [
+      "claude-haiku-4-5",
+      "style-default",
+      239,
+      184
+    ],
+    "I3795": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      239,
+      184
+    ],
+    "I9040": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      191,
+      185
+    ],
+    "I6220": [
+      "claude-haiku-4-5",
+      "style-default",
+      191,
+      185
+    ],
+    "I5852": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      284,
+      186
+    ],
+    "I6976": [
+      "gpt-4o-mini",
+      "style-default",
+      284,
+      186
+    ],
+    "I3163": [
+      "claude-haiku-4-5",
+      "style-default",
+      356,
+      187
+    ],
+    "I2544": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      356,
+      187
+    ],
+    "I1598": [
+      "gemini-3-flash-preview",
+      "style-default",
+      121,
+      188
+    ],
+    "I6908": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      121,
+      188
+    ],
+    "I2474": [
+      "gpt-4o-mini",
+      "style-default",
+      69,
+      189
+    ],
+    "I3860": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      69,
+      189
+    ],
+    "I9782": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      366,
+      190
+    ],
+    "I1279": [
+      "gemini-3-flash-preview",
+      "style-default",
+      366,
+      190
+    ],
+    "I9053": [
+      "gemini-3-flash-preview",
+      "style-default",
+      136,
+      191
+    ],
+    "I2478": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      136,
+      191
+    ],
+    "I2805": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      276,
+      192
+    ],
+    "I3297": [
+      "claude-haiku-4-5",
+      "style-default",
+      276,
+      192
+    ],
+    "I3897": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      146,
+      193
+    ],
+    "I9859": [
+      "claude-haiku-4-5",
+      "style-default",
+      146,
+      193
+    ],
+    "I6391": [
+      "gpt-4o-mini",
+      "style-default",
+      327,
+      194
+    ],
+    "I3712": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      327,
+      194
+    ],
+    "I9603": [
+      "gemini-3-flash-preview",
+      "style-default",
+      30,
+      195
+    ],
+    "I4657": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      30,
+      195
+    ],
+    "I5702": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      126,
+      196
+    ],
+    "I1316": [
+      "gpt-4o-mini",
+      "style-default",
+      126,
+      196
+    ],
+    "I8340": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      292,
+      197
+    ],
+    "I1272": [
+      "gpt-4o-mini",
+      "style-default",
+      292,
+      197
+    ],
+    "I5746": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      312,
+      198
+    ],
+    "I7252": [
+      "gpt-4o-mini",
+      "style-default",
+      312,
+      198
+    ],
+    "I7393": [
+      "gpt-4o-mini",
+      "style-default",
+      244,
+      199
+    ],
+    "I8799": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      244,
+      199
+    ],
+    "I2848": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      325,
+      200
+    ],
+    "I8251": [
+      "gpt-4o-mini",
+      "style-default",
+      325,
+      200
+    ],
+    "I3071": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      255,
+      201
+    ],
+    "I5577": [
+      "gpt-4o-mini",
+      "style-default",
+      255,
+      201
+    ],
+    "I2971": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      293,
+      202
+    ],
+    "I1030": [
+      "claude-haiku-4-5",
+      "style-default",
+      293,
+      202
+    ],
+    "I7934": [
+      "gemini-3-flash-preview",
+      "style-default",
+      118,
+      203
+    ],
+    "I9959": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      118,
+      203
+    ],
+    "I2965": [
+      "gemini-3-flash-preview",
+      "style-default",
+      332,
+      204
+    ],
+    "I1871": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      332,
+      204
+    ],
+    "I9241": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      81,
+      205
+    ],
+    "I6358": [
+      "gpt-4o-mini",
+      "style-default",
+      81,
+      205
+    ],
+    "I8541": [
+      "gpt-4o-mini",
+      "style-default",
+      5,
+      206
+    ],
+    "I6962": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      5,
+      206
+    ],
+    "I2798": [
+      "gemini-3-flash-preview",
+      "style-default",
+      158,
+      207
+    ],
+    "I9537": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      158,
+      207
+    ],
+    "I2992": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      130,
+      208
+    ],
+    "I2611": [
+      "claude-haiku-4-5",
+      "style-default",
+      130,
+      208
+    ],
+    "I9903": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      109,
+      209
+    ],
+    "I4232": [
+      "gpt-4o-mini",
+      "style-default",
+      109,
+      209
+    ],
+    "I6642": [
+      "gemini-3-flash-preview",
+      "style-default",
+      186,
+      210
+    ],
+    "I8372": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      186,
+      210
+    ],
+    "I2969": [
+      "gpt-4o-mini",
+      "style-default",
+      124,
+      211
+    ],
+    "I4315": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      124,
+      211
+    ],
+    "I5973": [
+      "gemini-3-flash-preview",
+      "style-default",
+      55,
+      212
+    ],
+    "I2272": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      55,
+      212
+    ],
+    "I6502": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      321,
+      213
+    ],
+    "I6778": [
+      "gemini-3-flash-preview",
+      "style-default",
+      321,
+      213
+    ],
+    "I5818": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      176,
+      214
+    ],
+    "I7143": [
+      "gemini-3-flash-preview",
+      "style-default",
+      176,
+      214
+    ],
+    "I6709": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      232,
+      215
+    ],
+    "I2741": [
+      "gemini-3-flash-preview",
+      "style-default",
+      232,
+      215
+    ],
+    "I2609": [
+      "gpt-4o-mini",
+      "style-default",
+      374,
+      216
+    ],
+    "I4648": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      374,
+      216
+    ],
+    "I8197": [
+      "claude-haiku-4-5",
+      "style-default",
+      192,
+      217
+    ],
+    "I2333": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      192,
+      217
+    ],
+    "I5086": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      177,
+      218
+    ],
+    "I6476": [
+      "gemini-3-flash-preview",
+      "style-default",
+      177,
+      218
+    ],
+    "I1939": [
+      "gemini-3-flash-preview",
+      "style-default",
+      226,
+      219
+    ],
+    "I7562": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      226,
+      219
+    ],
+    "I9889": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      301,
+      220
+    ],
+    "I1839": [
+      "claude-haiku-4-5",
+      "style-default",
+      301,
+      220
+    ],
+    "I5936": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      188,
+      221
+    ],
+    "I9973": [
+      "gpt-4o-mini",
+      "style-default",
+      188,
+      221
+    ],
+    "I7715": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      316,
+      222
+    ],
+    "I3513": [
+      "claude-haiku-4-5",
+      "style-default",
+      316,
+      222
+    ],
+    "I3794": [
+      "claude-haiku-4-5",
+      "style-default",
+      244,
+      223
+    ],
+    "I4685": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      244,
+      223
+    ],
+    "I8405": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      121,
+      224
+    ],
+    "I5151": [
+      "gpt-4o-mini",
+      "style-default",
+      121,
+      224
+    ],
+    "I8562": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      157,
+      225
+    ],
+    "I4167": [
+      "gemini-3-flash-preview",
+      "style-default",
+      157,
+      225
+    ],
+    "I7264": [
+      "gpt-4o-mini",
+      "style-default",
+      274,
+      226
+    ],
+    "I2930": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      274,
+      226
+    ],
+    "I9354": [
+      "claude-haiku-4-5",
+      "style-default",
+      198,
+      227
+    ],
+    "I6876": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      198,
+      227
+    ],
+    "I7625": [
+      "claude-haiku-4-5",
+      "style-default",
+      225,
+      228
+    ],
+    "I9365": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      225,
+      228
+    ],
+    "I5363": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      131,
+      229
+    ],
+    "I3420": [
+      "claude-haiku-4-5",
+      "style-default",
+      131,
+      229
+    ],
+    "I7095": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      100,
+      230
+    ],
+    "I3473": [
+      "gpt-4o-mini",
+      "style-default",
+      100,
+      230
+    ],
+    "I9792": [
+      "gemini-3-flash-preview",
+      "style-default",
+      159,
+      231
+    ],
+    "I6934": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      159,
+      231
+    ],
+    "I9951": [
+      "gpt-4o-mini",
+      "style-default",
+      125,
+      232
+    ],
+    "I9187": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      125,
+      232
+    ],
+    "I4797": [
+      "gpt-4o-mini",
+      "style-default",
+      225,
+      233
+    ],
+    "I8433": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      225,
+      233
+    ],
+    "I6345": [
+      "gpt-4o-mini",
+      "style-default",
+      138,
+      234
+    ],
+    "I6005": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      138,
+      234
+    ],
+    "I8517": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      73,
+      235
+    ],
+    "I3524": [
+      "gemini-3-flash-preview",
+      "style-default",
+      73,
+      235
+    ],
+    "I9861": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      172,
+      236
+    ],
+    "I2232": [
+      "gpt-4o-mini",
+      "style-default",
+      172,
+      236
+    ],
+    "I9137": [
+      "claude-haiku-4-5",
+      "style-default",
+      297,
+      237
+    ],
+    "I7844": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      297,
+      237
+    ],
+    "I3042": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      315,
+      238
+    ],
+    "I4469": [
+      "gemini-3-flash-preview",
+      "style-default",
+      315,
+      238
+    ],
+    "I6217": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      145,
+      239
+    ],
+    "I5411": [
+      "claude-haiku-4-5",
+      "style-default",
+      145,
+      239
+    ],
+    "I6598": [
+      "claude-haiku-4-5",
+      "style-default",
+      236,
+      240
+    ],
+    "I5166": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      236,
+      240
+    ],
+    "I6392": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      243,
+      241
+    ],
+    "I3106": [
+      "claude-haiku-4-5",
+      "style-default",
+      243,
+      241
+    ],
+    "I8976": [
+      "claude-haiku-4-5",
+      "style-default",
+      184,
+      242
+    ],
+    "I2660": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      184,
+      242
+    ],
+    "I8852": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      8,
+      243
+    ],
+    "I8563": [
+      "gemini-3-flash-preview",
+      "style-default",
+      8,
+      243
+    ],
+    "I8026": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      334,
+      244
+    ],
+    "I9847": [
+      "gemini-3-flash-preview",
+      "style-default",
+      334,
+      244
+    ],
+    "I2897": [
+      "gpt-4o-mini",
+      "style-default",
+      154,
+      245
+    ],
+    "I9938": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      154,
+      245
+    ],
+    "I4520": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      36,
+      246
+    ],
+    "I4205": [
+      "gpt-4o-mini",
+      "style-default",
+      36,
+      246
+    ],
+    "I8083": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      75,
+      247
+    ],
+    "I3378": [
+      "gemini-3-flash-preview",
+      "style-default",
+      75,
+      247
+    ],
+    "I4448": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      364,
+      248
+    ],
+    "I2028": [
+      "claude-haiku-4-5",
+      "style-default",
+      364,
+      248
+    ],
+    "I5362": [
+      "gemini-3-flash-preview",
+      "style-default",
+      87,
+      249
+    ],
+    "I5316": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      87,
+      249
+    ],
+    "I6952": [
+      "gpt-4o-mini",
+      "style-default",
+      104,
+      250
+    ],
+    "I8763": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      104,
+      250
+    ],
+    "I1810": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      212,
+      251
+    ],
+    "I4486": [
+      "claude-haiku-4-5",
+      "style-default",
+      212,
+      251
+    ],
+    "I3520": [
+      "claude-haiku-4-5",
+      "style-default",
+      73,
+      252
+    ],
+    "I8523": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      73,
+      252
+    ],
+    "I2442": [
+      "gpt-4o-mini",
+      "style-default",
+      197,
+      253
+    ],
+    "I6430": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      197,
+      253
+    ],
+    "I8465": [
+      "gemini-3-flash-preview",
+      "style-default",
+      155,
+      254
+    ],
+    "I5680": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      155,
+      254
+    ],
+    "I5153": [
+      "gpt-4o-mini",
+      "style-default",
+      169,
+      255
+    ],
+    "I2058": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      169,
+      255
+    ],
+    "I1883": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      296,
+      256
+    ],
+    "I2542": [
+      "gpt-4o-mini",
+      "style-default",
+      296,
+      256
+    ],
+    "I9126": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      186,
+      257
+    ],
+    "I7724": [
+      "claude-haiku-4-5",
+      "style-default",
+      186,
+      257
+    ],
+    "I2495": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      327,
+      258
+    ],
+    "I7998": [
+      "claude-haiku-4-5",
+      "style-default",
+      327,
+      258
+    ],
+    "I8878": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      250,
+      259
+    ],
+    "I6644": [
+      "gemini-3-flash-preview",
+      "style-default",
+      250,
+      259
+    ],
+    "I9114": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      256,
+      260
+    ],
+    "I5664": [
+      "gemini-3-flash-preview",
+      "style-default",
+      256,
+      260
+    ],
+    "I8130": [
+      "claude-haiku-4-5",
+      "style-default",
+      265,
+      261
+    ],
+    "I9043": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      265,
+      261
+    ],
+    "I2357": [
+      "gemini-3-flash-preview",
+      "style-default",
+      358,
+      262
+    ],
+    "I9021": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      358,
+      262
+    ],
+    "I2245": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      149,
+      263
+    ],
+    "I7845": [
+      "gemini-3-flash-preview",
+      "style-default",
+      149,
+      263
+    ],
+    "I3269": [
+      "claude-haiku-4-5",
+      "style-default",
+      83,
+      264
+    ],
+    "I4717": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      83,
+      264
+    ],
+    "I3331": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      318,
+      265
+    ],
+    "I1714": [
+      "gpt-4o-mini",
+      "style-default",
+      318,
+      265
+    ],
+    "I4830": [
+      "claude-haiku-4-5",
+      "style-default",
+      231,
+      266
+    ],
+    "I2493": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      231,
+      266
+    ],
+    "I2079": [
+      "gpt-4o-mini",
+      "style-default",
+      310,
+      267
+    ],
+    "I7281": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      310,
+      267
+    ],
+    "I5693": [
+      "gemini-3-flash-preview",
+      "style-default",
+      372,
+      268
+    ],
+    "I3109": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      372,
+      268
+    ],
+    "I5954": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      137,
+      269
+    ],
+    "I1074": [
+      "claude-haiku-4-5",
+      "style-default",
+      137,
+      269
+    ],
+    "I9160": [
+      "claude-haiku-4-5",
+      "style-default",
+      151,
+      270
+    ],
+    "I3286": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      151,
+      270
+    ],
+    "I8185": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      12,
+      271
+    ],
+    "I6714": [
+      "gpt-4o-mini",
+      "style-default",
+      12,
+      271
+    ],
+    "I8905": [
+      "gemini-3-flash-preview",
+      "style-default",
+      196,
+      272
+    ],
+    "I8868": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      196,
+      272
+    ],
+    "I2290": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      368,
+      273
+    ],
+    "I7511": [
+      "gemini-3-flash-preview",
+      "style-default",
+      368,
+      273
+    ],
+    "I6290": [
+      "gpt-4o-mini",
+      "style-default",
+      298,
+      274
+    ],
+    "I4691": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      298,
+      274
+    ],
+    "I7370": [
+      "claude-haiku-4-5",
+      "style-default",
+      361,
+      275
+    ],
+    "I4121": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      361,
+      275
+    ],
+    "I5883": [
+      "claude-haiku-4-5",
+      "style-default",
+      97,
+      276
+    ],
+    "I6313": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      97,
+      276
+    ],
+    "I1838": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      114,
+      277
+    ],
+    "I2302": [
+      "gemini-3-flash-preview",
+      "style-default",
+      114,
+      277
+    ],
+    "I9894": [
+      "claude-haiku-4-5",
+      "style-default",
+      104,
+      278
+    ],
+    "I2818": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      104,
+      278
+    ],
+    "I6658": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      329,
+      279
+    ],
+    "I6520": [
+      "claude-haiku-4-5",
+      "style-default",
+      329,
+      279
+    ],
+    "I8987": [
+      "gpt-4o-mini",
+      "style-default",
+      111,
+      280
+    ],
+    "I9375": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      111,
+      280
+    ],
+    "I5087": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      264,
+      281
+    ],
+    "I8528": [
+      "claude-haiku-4-5",
+      "style-default",
+      264,
+      281
+    ],
+    "I2311": [
+      "claude-haiku-4-5",
+      "style-default",
+      257,
+      282
+    ],
+    "I3851": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      257,
+      282
+    ],
+    "I4144": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      233,
+      283
+    ],
+    "I9246": [
+      "gemini-3-flash-preview",
+      "style-default",
+      233,
+      283
+    ],
+    "I6754": [
+      "claude-haiku-4-5",
+      "style-default",
+      118,
+      284
+    ],
+    "I8134": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      118,
+      284
+    ],
+    "I1601": [
+      "gemini-3-flash-preview",
+      "style-qg-default",
+      225,
+      285
+    ],
+    "I5758": [
+      "gemini-3-flash-preview",
+      "style-default",
+      225,
+      285
+    ],
+    "I9596": [
+      "claude-haiku-4-5",
+      "style-qg-default",
+      70,
+      286
+    ],
+    "I3704": [
+      "claude-haiku-4-5",
+      "style-default",
+      70,
+      286
+    ],
+    "I2458": [
+      "gpt-4o-mini",
+      "style-default",
+      144,
+      287
+    ],
+    "I2218": [
+      "gpt-4o-mini",
+      "style-qg-default",
+      144,
+      287
+    ]
+  },
+  "gerado_em": "2026-11-09T12:17:43+00:00",
+  "validacao": [
+    {
+      "verificacao": "Reprodutibilidade: mesmo sorteio com a mesma semente",
+      "resultado": "OK",
+      "detalhe": "semente 20261109"
+    },
+    {
+      "verificacao": "Amostra reduzida atende ao mínimo de Cochran (95%, ±10%)",
+      "resultado": "OK",
+      "detalhe": "120 pares; mínimo 89; margem obtida ±8.5%"
+    },
+    {
+      "verificacao": "Amostra completa atende ao mínimo de Cochran (95%, ±5%)",
+      "resultado": "OK",
+      "detalhe": "287 pares; mínimo 286; margem obtida ±5.0%"
+    },
+    {
+      "verificacao": "Tamanhos sorteados",
+      "resultado": "OK",
+      "detalhe": "287 e 120 pares"
+    },
+    {
+      "verificacao": "Aninhamento: a amostra reduzida são os primeiros pares da completa",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Pares sem repetição",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Nenhuma função do piloto na amostra",
+      "resultado": "OK",
+      "detalhe": "piloto: [72, 134, 190, 249, 271]"
+    },
+    {
+      "verificacao": "Todos os pares sorteados são elegíveis",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Estratificação proporcional (modelo × Azure) respeitada",
+      "resultado": "OK",
+      "detalhe": "claude-haiku-4-5|azure: 12/29; claude-haiku-4-5|outros: 28/67; gemini-3-flash-preview|azure: 12/29; gemini-3-flash-preview|outros: 28/67; gpt-4o-mini|azure: 12/28; gpt-4o-mini|outros: 28/67"
+    },
+    {
+      "verificacao": "Cada par tem os dois handlers (padrão e QG) do mesmo modelo e função",
+      "resultado": "OK",
+      "detalhe": "287 pares"
+    },
+    {
+      "verificacao": "Códigos dos itens únicos",
+      "resultado": "OK",
+      "detalhe": "574 itens"
+    },
+    {
+      "verificacao": "Contexto correto: a função original com só o handler trocado",
+      "resultado": "OK",
+      "detalhe": "574 de 574"
+    },
+    {
+      "verificacao": "Cegamento: planilhas sem identificação de modelo ou condição",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "Avaliadores recebem os mesmos itens, na mesma ordem",
+      "resultado": "OK",
+      "detalhe": ""
+    },
+    {
+      "verificacao": "A planilha de 120 pares é o início da planilha completa",
+      "resultado": "OK",
+      "detalhe": "240 itens"
+    },
+    {
+      "verificacao": "Representatividade: valor da população dentro do IC 95% da amostra",
+      "resultado": "OK",
+      "detalhe": "12 de 12 métricas"
+    }
+  ]
+}

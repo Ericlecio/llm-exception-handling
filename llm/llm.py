@@ -746,8 +746,15 @@ def build_df_style(df, records, task, prompt_type, model):
     return df_style
 
 
+def pasta_resultados(model_label, prompt_type):
+    """llm/output/geracao/<modelo>_<condição>, por exemplo claude_default ou gpt_qg."""
+    modelo = model_label.split("-")[0].lower()
+    cond = "qg" if prompt_type == "style-qg-default" else prompt_type.replace("style-", "")
+    return os.path.join(os.getcwd(), "llm", "output", "geracao", f"{modelo}_{cond}")
+
+
 def save_results_to_csv(df, task, prompt_type, project, model_label):
-    output_dir = os.path.join(os.getcwd(), "llm", "output")
+    output_dir = pasta_resultados(model_label, prompt_type)
     os.makedirs(output_dir, exist_ok=True)
     filename = f"{project}_{model_label}_{task}_{prompt_type}_results.csv"
     output_file = os.path.join(output_dir, filename)
@@ -849,7 +856,6 @@ def main():
                 model.split("/")[-1] if "/" in model else model
             )
             print(f"\nProcessing with model: {model}")
-            df_model = pd.DataFrame()
 
             for task in tasks_to_run:
                 print(f"Processing {task}...")
@@ -875,7 +881,7 @@ def main():
                         df = df.head(args.limit)
 
                     existing_results = {}
-                    output_dir = os.path.join(os.getcwd(), "llm", "output")
+                    output_dir = pasta_resultados(model_label, prompt_type)
                     filename = f"{args.project}_{model_label}_{task}_{prompt_type}_results.csv"
                     output_file = os.path.join(output_dir, filename)
                     
@@ -977,23 +983,7 @@ def main():
                     )
 
                     # Após rodar as 379
-                    df_model = pd.concat([df_model, df_style], ignore_index=True)
                     df_result = pd.concat([df_result, df_style], ignore_index=True)
-
-            if not df_model.empty:
-                model_output_file = os.path.join(
-                    os.getcwd(), "llm", "output", f"{args.project}_{model_label}_results_all.csv",
-                )
-                df_model.to_csv(model_output_file, index=False)
-                logger.info(f"Model results saved to {model_output_file}")
-
-        if not df_result.empty:
-            aggregate_label = sanitize_for_filename("-".join(models_to_run))
-            final_output_file = os.path.join(
-                os.getcwd(), "llm", "output", f"{args.project}_{aggregate_label}_results_all.csv",
-            )
-            df_result.to_csv(final_output_file, index=False)
-            logger.info(f"Combined results saved to {final_output_file}")
 
         logger.info(f"✓ Execution completed successfully. Processed {len(df_result)} samples.")
 
