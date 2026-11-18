@@ -3,16 +3,16 @@
   \centering
   \scriptsize
   \setlength{\tabcolsep}{2.5pt}
-  \caption{Similarity to the developer's handler (default $\rightarrow$ QG); $p$ from Wilcoxon, Holm-corrected}
+  \caption{Similarity to the developer's handler (default $\rightarrow$ QG)}
   \label{tab:rq3}
   \begin{tabular}{lcccc}
     \toprule
-    Model & BLEU & CrystalBLEU & Jaccard & Same type (\%) \\
+    Model & CodeBLEU & CrystalBLEU & Same type (\%) & Same action (\%) \\
     \midrule
-    Claude & .145 $\rightarrow$ .092 & .075 $\rightarrow$ .042\textsuperscript{*} & .345 $\rightarrow$ .291\textsuperscript{*} & 41.3 $\rightarrow$ 37.1\textsuperscript{*} \\
-    Gemini & .218 $\rightarrow$ .180 & .132 $\rightarrow$ .103\textsuperscript{*} & .422 $\rightarrow$ .373\textsuperscript{*} & 42.4 $\rightarrow$ 38.5 \\
-    GPT & .067 $\rightarrow$ .035 & .029 $\rightarrow$ .010\textsuperscript{*} & .255 $\rightarrow$ .236 & 30.1 $\rightarrow$ 23.6\textsuperscript{*} \\
+    Claude & .315 $\rightarrow$ .274\textsuperscript{*} & .075 $\rightarrow$ .042\textsuperscript{*} & 41.3 $\rightarrow$ 37.1\textsuperscript{*} & 47.0 $\rightarrow$ 37.0\textsuperscript{*} \\
+    Gemini & .379 $\rightarrow$ .334\textsuperscript{*} & .132 $\rightarrow$ .103\textsuperscript{*} & 42.4 $\rightarrow$ 38.5 & 55.7 $\rightarrow$ 48.4\textsuperscript{*} \\
+    GPT & .258 $\rightarrow$ .231\textsuperscript{*} & .029 $\rightarrow$ .010\textsuperscript{*} & 30.1 $\rightarrow$ 23.6\textsuperscript{*} & 34.8 $\rightarrow$ 26.4\textsuperscript{*} \\
     \bottomrule
-    \multicolumn{5}{l}{\textsuperscript{*}$p < 0.05$. Same type: at least one exception type in common.}
+    \multicolumn{5}{l}{\textsuperscript{*}$p < 0.05$ (Wilcoxon or McNemar, Holm-corrected).}
   \end{tabular}
 \end{table}

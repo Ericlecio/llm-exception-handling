@@ -15,11 +15,11 @@ Mini-estudo que avalia se escrever regras de análise estática diretamente no p
 
 ## Principais resultados
 
-| | Prompt padrão | QG |
-| --- | --- | --- |
-| Handlers com W0718 ou W0707 | 31,7–59,6% | 0,0–0,5% |
-| Handlers que relançam o erro (desenvolvedores: 26,4%) | 58,3–66,8% | 70,2–100% |
-| Handlers adequados na avaliação manual (120 pares) | 48,0% | 34,7% (McNemar, p = 0,011) |
+|                                                       | Prompt padrão | QG                         |
+| ----------------------------------------------------- | ------------- | -------------------------- |
+| Handlers com W0718 ou W0707                           | 31,7–59,6%    | 0,0–0,5%                   |
+| Handlers que relançam o erro (desenvolvedores: 26,4%) | 58,3–66,8%    | 70,2–100%                  |
+| Handlers adequados na avaliação manual (120 pares)    | 48,0%         | 34,7% (McNemar, p = 0,011) |
 
 O QG elimina as violações-alvo nos três modelos, mas os modelos cumprem as regras mudando o comportamento do handler, e a adequação cai.
 
@@ -38,6 +38,7 @@ llm/
   llm.py                         1. coleta das respostas dos modelos
   analise_dados.py               2. verificação de integridade dos arquivos coletados
   llm_analysis.py                3. análise automática: Pylint, AST, similaridade e testes pareados
+  metricas_similaridade.py       3b. CodeBLEU, concordância de ação e medianas (RQ3)
   gerar_figuras_apresentacao.py  4. figuras e tabelas dos slides
   gerar_artefatos_artigo.py      5. tabelas (LaTeX) e gráficos (PDF) do artigo
   gerar_avaliacao_manual.py      6. sorteio da amostra e planilhas cegas da avaliação manual
@@ -78,6 +79,7 @@ Troque o modelo por `gemini-3-flash-preview` ou `gpt-4o-mini`. A coleta retoma d
 ```bash
 python llm/analise_dados.py
 python llm/llm_analysis.py
+python llm/metricas_similaridade.py
 ```
 
 ### 4. Figuras e tabelas
@@ -110,4 +112,4 @@ python llm/analisar_avaliacao_manual.py
 
 ## Referência do benchmark
 
-Souza, J., Alves, T., Lima, R., Araújo, E., Teixeira, L., Fonseca, B. *An Empirical Evaluation of Using Large Language Models to Recommend Exception Handling Tasks*. Brazilian Symposium on Software Engineering (SBES), 2026.
+Souza, J., Alves, T., Lima, R., Araújo, E., Teixeira, L., Fonseca, B. _An Empirical Evaluation of Using Large Language Models to Recommend Exception Handling Tasks_. Brazilian Symposium on Software Engineering (SBES), 2026.

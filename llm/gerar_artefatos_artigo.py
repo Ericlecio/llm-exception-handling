@@ -4,8 +4,8 @@ Gera as tabelas (LaTeX) e os gráficos (PDF vetorial) do artigo a partir dos res
 Os números vêm dos mesmos cálculos do gerar_figuras_apresentacao.py, que precisa estar
 na mesma pasta: o artigo e os slides usam exatamente os mesmos valores.
 
-Entradas (geradas pelo llm_analysis.py):
-    llm/output/analysis/per_sample.csv, reference.csv e paired_tests.csv
+Entradas (geradas pelo llm_analysis.py e pelo metricas_similaridade.py):
+    llm/output/analysis/per_sample.csv, reference.csv, paired_tests.csv e similaridade_extra.csv
 
 Saídas (em llm/output/artigo/), prontas para subir nas pastas de mesmo nome no Overleaf:
     tables/rq1-violations.tex      violações-alvo e capturas reais de Exception (RQ1)
@@ -33,6 +33,7 @@ import matplotlib.pyplot as plt                      # noqa: E402
 from matplotlib.patches import FancyBboxPatch        # noqa: E402
 from matplotlib.ticker import FuncFormatter          # noqa: E402
 import numpy as np                                   # noqa: E402
+import pandas as pd                                  # noqa: E402
 
 # Largura de uma coluna no modelo IEEE de conferência: 3,5 polegadas
 LARGURA = 3.5
@@ -81,7 +82,7 @@ def tabela(caminho, legenda, rotulo, colunas, cabecalho, linhas, nota=None, font
         f.write("% Gerado por gerar_artefatos_artigo.py; não editar à mão.\n" + "\n".join(corpo))
 
 
-def tabelas(t, ps, testes, pasta):
+def tabelas(t, ps, testes, pasta, analysis):
     # RQ1
     v, par, cego = t["rq1_violations"], t["rq1_paired"].set_index("Model"), t["pylint_blind_spot"].set_index("Model")
     linhas = []
@@ -115,27 +116,29 @@ def tabelas(t, ps, testes, pasta):
            r"What the handler does after catching the error (\% of handlers, default $\rightarrow$ QG)",
            "tab:rq2", "lccc", [r"Model & " + " & ".join(r for _, r in cols) + r" \\"], linhas)
 
-    # RQ3
+    # RQ3: CodeBLEU, CrystalBLEU, tipo e ação em comum com o desenvolvedor
     s = t["rq3_similarity"]
-    metricas = [("BLEU", None, 3), ("CrystalBLEU", "crystalbleu", 3), ("Jaccard", "jaccard", 3),
-                ("Type in common with developer (%)", "type_overlap", 1)]
+    extra_path = os.path.join(analysis, "similaridade_extra.csv")
+    if not os.path.exists(extra_path):
+        sys.exit(f"[ERRO] {extra_path} não encontrado. Rode antes: python llm/metricas_similaridade.py")
+    extra = pd.read_csv(extra_path)
     linhas = []
     for m, nome in base.MODELOS:
         b, q = linha_modelo(s, nome, base.BASE), linha_modelo(s, nome, base.QG)
-        celulas = []
-        for col, metrica, casas in metricas:
-            pv = base.p_holm(testes, m, metrica) if metrica else None
-            if col == "BLEU":   # média direta do per_sample.csv, sobre as 379 funções
-                vb = base.condicao(ps, m, base.BASE).bleu.mean()
-                vq = base.condicao(ps, m, base.QG).bleu.mean()
-            else:
-                vb, vq = b[col], q[col]
-            celulas.append(num(vb, casas) + SETA + num(vq, casas) + estrela(pv))
+        eb = extra[(extra.model == m) & (extra.prompt_type == base.BASE)].iloc[0]
+        eq = extra[(extra.model == m) & (extra.prompt_type == base.QG)].iloc[0]
+        celulas = [
+            num(eb.codebleu_mean, 3) + SETA + num(eq.codebleu_mean, 3) + estrela(eq.p_holm_codebleu),
+            num(b["CrystalBLEU"], 3) + SETA + num(q["CrystalBLEU"], 3) + estrela(base.p_holm(testes, m, "crystalbleu")),
+            num(b["Type in common with developer (%)"]) + SETA + num(q["Type in common with developer (%)"])
+            + estrela(base.p_holm(testes, m, "type_overlap")),
+            num(eb.same_action_pct) + SETA + num(eq.same_action_pct) + estrela(eq.p_holm_same_action),
+        ]
         linhas.append(CURTO[nome] + " & " + " & ".join(celulas))
     tabela(os.path.join(pasta, "rq3-similarity.tex"),
-           r"Similarity to the developer's handler (default $\rightarrow$ QG); $p$ from Wilcoxon, Holm-corrected",
-           "tab:rq3", "lcccc", [r"Model & BLEU & CrystalBLEU & Jaccard & Same type (\%) \\"], linhas,
-           r"\textsuperscript{*}$p < 0.05$. Same type: at least one exception type in common.",
+           r"Similarity to the developer's handler (default $\rightarrow$ QG)",
+           "tab:rq3", "lcccc", [r"Model & CodeBLEU & CrystalBLEU & Same type (\%) & Same action (\%) \\"], linhas,
+           r"\textsuperscript{*}$p < 0.05$ (Wilcoxon or McNemar, Holm-corrected).",
            fonte=r"\scriptsize")
 
 
@@ -211,7 +214,7 @@ def main():
     pasta_tab, pasta_fig = os.path.join(args.out, "tables"), os.path.join(args.out, "figures")
     os.makedirs(pasta_tab, exist_ok=True)
     os.makedirs(pasta_fig, exist_ok=True)
-    tabelas(t, ps, testes, pasta_tab)
+    tabelas(t, ps, testes, pasta_tab, args.analysis)
     graficos(t, ps, pasta_fig)
 
     print("Arquivos gerados para o Overleaf:")
