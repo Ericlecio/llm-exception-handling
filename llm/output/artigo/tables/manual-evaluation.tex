@@ -1,21 +1,18 @@
-% Gerado por analisar_avaliacao_manual.py; não editar à mão.
+% Gerado por gerar_artefatos_artigo.py; não editar à mão.
 \begin{table}[t]
   \centering
-  \footnotesize
-  \setlength{\tabcolsep}{4pt}
-  \caption{Manual evaluation: adequate handlers (\%), 120 pairs}
+  \scriptsize
+  \setlength{\tabcolsep}{2.5pt}
+  \caption{Manual evaluation, pooled over models (\%; $\Delta$ = QG $-$ default, 95\% CI by function-level bootstrap)}
   \label{tab:manual}
-  \begin{tabular}{lccc}
+  \begin{tabular}{lccccc}
     \toprule
-    Model & Default & QG & McNemar $p$ \\
+    Outcome & Pairs & Def. & QG & $\Delta$ [95\% CI] & $p$ \\
     \midrule
-    Claude Haiku 4.5 & 45.2 & 29.0 & 0.125 \\
-    Gemini 3 Flash & 58.1 & 54.8 & 1.000 \\
-    GPT-4o-mini & 41.7 & 22.2 & 0.065 \\
-    \midrule
-    All models & 48.0 & 34.7 & 0.011 \\
+    Appropriate reaction & 120 & 50.0 & 36.7 & -13.3 [-22.2, -5.0] & 0.004 \\
+    Adequate & 98 & 48.0 & 34.7 & -13.3 [-22.6, -4.0] & 0.011 \\
+    Adequate, strict & 120 & 32.5 & 28.3 & -4.2 [-12.2, 4.1] & 0.424 \\
     \bottomrule
+    \multicolumn{6}{l}{Adequate: type can occur and appropriate reaction; strict: also no broad catch.}
   \end{tabular}
-  \par\vspace{2pt}
-  \parbox{0.95\columnwidth}{\scriptsize Pairs with an undeterminable exception type are excluded (22 of 120). Krippendorff's $\alpha$ before consensus: type 0.50, reaction 0.82, adequacy 0.62, similarity 0.91.}
 \end{table}

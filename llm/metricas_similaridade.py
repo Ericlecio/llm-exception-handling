@@ -12,8 +12,9 @@ O que o script calcula, para cada handler gerado, em relação ao handler do des
      a mesma coisa que o do desenvolvedor.
   3. Média e mediana de todas as métricas de similaridade por modelo e prompt.
 
-Testes pareados, prompt padrão x QG, por modelo, com correção de Holm entre as duas
-métricas novas: Wilcoxon para o CodeBLEU e McNemar exato para a concordância de ação.
+Testes pareados, prompt padrão x QG, por modelo, com correção de Holm entre as três
+medidas: Wilcoxon para o CodeBLEU e McNemar exato para as concordâncias de ação e de tipo
+(medidas binárias).
 
 Entradas (geradas pelo llm_analysis.py):
     llm/output/analysis/per_sample.csv e reference.csv
@@ -139,12 +140,21 @@ def main():
         piorou = int(((b.mesma_acao[ok] == 1) & (q.mesma_acao[ok] == 0)).sum())
         melhorou = int(((b.mesma_acao[ok] == 0) & (q.mesma_acao[ok] == 1)).sum())
         p_ac = binomtest(piorou, piorou + melhorou).pvalue if piorou + melhorou else 1.0
-        p_cb_h, p_ac_h = holm(np.array([p_cb, p_ac]))
+        # concordância de tipo (binária): McNemar exato nos pares em que o desenvolvedor nomeia um tipo
+        tb = ps[(ps.model == m) & (ps.prompt_type == BASE)].set_index("sample_id").type_overlap
+        tq = ps[(ps.model == m) & (ps.prompt_type == QG)].set_index("sample_id").type_overlap
+        okt = tb.notna() & tq.notna()
+        t_piorou = int(((tb[okt] == 1) & (tq[okt] == 0)).sum())
+        t_melhorou = int(((tb[okt] == 0) & (tq[okt] == 1)).sum())
+        p_tp = binomtest(t_piorou, t_piorou + t_melhorou).pvalue if t_piorou + t_melhorou else 1.0
+        p_cb_h, p_ac_h, p_tp_h = holm(np.array([p_cb, p_ac, p_tp]))
         for cond, d in ((BASE, b), (QG, q)):
             linha = {"model": m, "prompt_type": cond,
-                     "same_action_pct": round(100 * d.mesma_acao.mean(), 1),
+                     "same_action_pct": round(100 * d.mesma_acao[ok].mean(), 1),   # só pares válidos nas duas condições
                      "same_action_pairs_lost": piorou, "same_action_pairs_gained": melhorou,
-                     "p_holm_codebleu": p_cb_h, "p_holm_same_action": p_ac_h}
+                     "p_holm_codebleu": p_cb_h, "p_holm_same_action": p_ac_h,
+                     "same_type_pct": round(100 * (tb if cond == BASE else tq)[okt].mean(), 1),
+                     "same_type_pairs": int(okt.sum()), "p_holm_same_type": p_tp_h}
             for met in ("codebleu", "bleu", "crystalbleu", "jaccard"):
                 linha[f"{met}_mean"] = round(d[met].mean(), 3)
                 linha[f"{met}_median"] = round(d[met].median(), 3)
@@ -162,7 +172,8 @@ def main():
     pd.set_option("display.width", 200)
     print("\nMÉDIAS E MEDIANAS (prompt padrão x QG)")
     print(resumo[["model", "prompt_type", "codebleu_mean", "codebleu_median", "crystalbleu_median",
-                  "jaccard_median", "same_action_pct", "p_holm_codebleu", "p_holm_same_action"]].to_string(index=False))
+                  "jaccard_median", "same_action_pct", "same_type_pct", "p_holm_codebleu", "p_holm_same_action",
+                  "p_holm_same_type"]].to_string(index=False))
     print("\nDISTRIBUIÇÃO DAS AÇÕES (% dos handlers)")
     print(resumo[["model", "prompt_type"] + [f"acao_{a}_pct" for a in ACOES]].to_string(index=False))
     print(f"\nArquivos salvos em {args.analysis}: similaridade_extra.csv e similaridade_extra_por_amostra.csv")

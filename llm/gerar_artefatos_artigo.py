@@ -83,38 +83,60 @@ def tabela(caminho, legenda, rotulo, colunas, cabecalho, linhas, nota=None, font
 
 
 def tabelas(t, ps, testes, pasta, analysis):
-    # RQ1
-    v, par, cego = t["rq1_violations"], t["rq1_paired"].set_index("Model"), t["pylint_blind_spot"].set_index("Model")
+    # RQ1: violações-alvo, W0718 isolado e capturas reais de Exception (AST)
+    v, cego = t["rq1_violations"], t["pylint_blind_spot"].set_index("Model")
     linhas = []
     for _, nome in base.MODELOS:
         b, q = linha_modelo(v, nome, base.BASE), linha_modelo(v, nome, base.QG)
         linhas.append(f"{nome} & {num(b['W0718 or W0707 (%)'])} & {num(q['W0718 or W0707 (%)'])} & "
-                      f"{par.at[nome, 'Improved']} / {par.at[nome, 'Worsened']} & "
+                      f"{num(b['W0718 (%)'])} & "
                       f"{num(cego.at[nome, 'Actual Exception catch, default (%)'])} & "
                       f"{num(cego.at[nome, 'Actual Exception catch, QG (%)'])}")
     h = v[v.Model == "Developers"].iloc[0]
-    linhas += ["MIDRULE", f"Developers & {num(h['W0718 or W0707 (%)'])} & -- & -- & "
+    linhas += ["MIDRULE", f"Developers & {num(h['W0718 or W0707 (%)'])} & -- & {num(h['W0718 (%)'])} & "
                           f"{num(cego.at['Developers', 'Actual Exception catch, default (%)'])} & --"]
     tabela(os.path.join(pasta, "rq1-violations.tex"),
-           r"Target violations and actual broad catches (\% of valid handlers)", "tab:rq1", "lccccc",
-           [r"& \multicolumn{2}{c}{W0718 or W0707} & & \multicolumn{2}{c}{Catches \texttt{Exception}\textsuperscript{\dag}} \\",
+           r"Target violations and broad catches (\% of valid handlers; Def.\ = default prompt)", "tab:rq1", "lccccc",
+           [r"& \multicolumn{2}{c}{W0718 or W0707} & W0718 & \multicolumn{2}{c}{Catches \texttt{Exception}\textsuperscript{\dag}} \\",
             r"\cmidrule(lr){2-3}\cmidrule(lr){5-6}",
-            r"Model & Def. & QG & Impr./Wors. & Def. & QG \\"],
-           linhas, r"\textsuperscript{\dag}Counted in the AST, including re-raising handlers.")
+            r"Model & Def. & QG & Def. & Def. & QG \\"],
+           linhas, r"\textsuperscript{\dag}Counted in the AST, including handlers that re-raise.")
 
-    # RQ2
-    p = t["rq2_patterns"]
-    cols = [("Contains raise (%)", "Re-raises"), ("Raises RuntimeError (%)", r"\texttt{RuntimeError}"),
-            ("Swallows the error (%)", "Swallows")]
+    # RQ2: distribuição das cinco ações depois de capturar o erro
+    extra = pd.read_csv(os.path.join(analysis, "similaridade_extra.csv"))
+    acoes = [("raise", "Re-raise"), ("return", "Return"), ("log", "Log"), ("ignore", "Ignore"), ("other", "Other")]
     linhas = []
-    for _, nome in base.MODELOS:
-        b, q = linha_modelo(p, nome, base.BASE), linha_modelo(p, nome, base.QG)
-        linhas.append(nome + " & " + " & ".join(num(b[c]) + SETA + num(q[c]) for c, _ in cols))
-    h = p[p.Model == "Developers"].iloc[0]
-    linhas += ["MIDRULE", "Developers & " + " & ".join(num(h[c]) for c, _ in cols)]
+    d = extra[extra.model == "developers"].iloc[0]
+    linhas.append("Developers & -- & " + " & ".join(num(d[f"acao_{a}_pct"]) for a, _ in acoes))
+    linhas.append("MIDRULE")
+    for m, nome in base.MODELOS:
+        for cond, rot in ((base.BASE, "Default"), (base.QG, "QG")):
+            e = extra[(extra.model == m) & (extra.prompt_type == cond)].iloc[0]
+            linhas.append((CURTO[nome] if cond == base.BASE else "") + f" & {rot} & "
+                          + " & ".join(num(e[f"acao_{a}_pct"]) for a, _ in acoes))
     tabela(os.path.join(pasta, "rq2-behavior.tex"),
-           r"What the handler does after catching the error (\% of handlers, default $\rightarrow$ QG)",
-           "tab:rq2", "lccc", [r"Model & " + " & ".join(r for _, r in cols) + r" \\"], linhas)
+           r"Action taken after catching the error (\% of valid handlers)", "tab:rq2", "llccccc",
+           [r"Model & Prompt & " + " & ".join(r for _, r in acoes) + r" \\"], linhas)
+
+    # Avaliação manual: reação (desfecho principal), adequação original e estrita
+    rob_path = os.path.join(analysis, "robustez.xlsx")
+    if os.path.exists(rob_path):
+        rob = pd.read_excel(rob_path, sheet_name="bloco1")
+        rob = rob[rob.scope == "All pairs"].set_index("measure")
+        linhas = []
+        for medida, rot in [("Reaction appropriate (primary)", "Appropriate reaction"),
+                            ("Adequate, original (determinable pairs)", "Adequate"),
+                            ("Adequate, strict (no broad catch)", "Adequate, strict")]:
+            r = rob.loc[medida]
+            dif = str(r["diff_CI95_cluster_bootstrap"]).replace(";", ",")
+            linhas.append(f"{rot} & {int(r.pairs)} & {num(r['default_%'])} & {num(r['QG_%'])} & "
+                          f"{num(r['diff_pp'])} {dif} & {r['McNemar_p']}")
+        tabela(os.path.join(pasta, "manual-evaluation.tex"),
+               r"Manual evaluation, pooled over models (\%; $\Delta$ = QG $-$ default, 95\% CI by function-level bootstrap)",
+               "tab:manual", "lccccc",
+               [r"Outcome & Pairs & Def. & QG & $\Delta$ [95\% CI] & $p$ \\"], linhas,
+               r"Adequate: type can occur and appropriate reaction; strict: also no broad catch.",
+               fonte=r"\scriptsize")
 
     # RQ3: CodeBLEU, CrystalBLEU, tipo e ação em comum com o desenvolvedor
     s = t["rq3_similarity"]
@@ -130,15 +152,14 @@ def tabelas(t, ps, testes, pasta, analysis):
         celulas = [
             num(eb.codebleu_mean, 3) + SETA + num(eq.codebleu_mean, 3) + estrela(eq.p_holm_codebleu),
             num(b["CrystalBLEU"], 3) + SETA + num(q["CrystalBLEU"], 3) + estrela(base.p_holm(testes, m, "crystalbleu")),
-            num(b["Type in common with developer (%)"]) + SETA + num(q["Type in common with developer (%)"])
-            + estrela(base.p_holm(testes, m, "type_overlap")),
+            num(eb.same_type_pct) + SETA + num(eq.same_type_pct) + estrela(eq.p_holm_same_type),
             num(eb.same_action_pct) + SETA + num(eq.same_action_pct) + estrela(eq.p_holm_same_action),
         ]
         linhas.append(CURTO[nome] + " & " + " & ".join(celulas))
     tabela(os.path.join(pasta, "rq3-similarity.tex"),
            r"Similarity to the developer's handler (default $\rightarrow$ QG)",
            "tab:rq3", "lcccc", [r"Model & CodeBLEU & CrystalBLEU & Same type (\%) & Same action (\%) \\"], linhas,
-           r"\textsuperscript{*}$p < 0.05$ (Wilcoxon or McNemar, Holm-corrected).",
+           r"\textsuperscript{*}$p<0.05$, Holm (McNemar: type, action; Wilcoxon: others).",
            fonte=r"\scriptsize")
 
 

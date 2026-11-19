@@ -3,17 +3,20 @@
   \centering
   \footnotesize
   \setlength{\tabcolsep}{2.5pt}
-  \caption{What the handler does after catching the error (\% of handlers, default $\rightarrow$ QG)}
+  \caption{Action taken after catching the error (\% of valid handlers)}
   \label{tab:rq2}
-  \begin{tabular}{lccc}
+  \begin{tabular}{llccccc}
     \toprule
-    Model & Re-raises & \texttt{RuntimeError} & Swallows \\
+    Model & Prompt & Re-raise & Return & Log & Ignore & Other \\
     \midrule
-    Claude Haiku 4.5 & 66.8 $\rightarrow$ 88.1 & 1.1 $\rightarrow$ 4.2 & 3.7 $\rightarrow$ 0.5 \\
-    Gemini 3 Flash & 58.3 $\rightarrow$ 70.2 & 0.5 $\rightarrow$ 3.5 & 7.7 $\rightarrow$ 4.3 \\
-    GPT-4o-mini & 65.4 $\rightarrow$ 100.0 & 7.4 $\rightarrow$ 26.9 & 0.0 $\rightarrow$ 0.0 \\
+    Developers & -- & 26.4 & 16.4 & 2.6 & 35.6 & 19.0 \\
     \midrule
-    Developers & 26.4 & 0.0 & 35.6 \\
+    Claude & Default & 66.8 & 16.6 & 4.2 & 3.7 & 8.7 \\
+     & QG & 88.4 & 7.4 & 0.8 & 0.5 & 2.9 \\
+    Gemini & Default & 58.3 & 15.0 & 3.7 & 7.7 & 15.3 \\
+     & QG & 70.7 & 13.3 & 2.4 & 4.3 & 9.3 \\
+    GPT & Default & 65.4 & 7.9 & 18.7 & 0.0 & 7.9 \\
+     & QG & 100.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
     \bottomrule
   \end{tabular}
 \end{table}
