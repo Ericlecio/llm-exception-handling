@@ -15,7 +15,8 @@ Não coleta dados novos: reanalisa os resultados que já existem.
    - mediana da nota de semelhança.
 2. RQ1: IC das taxas de violação, IC da diferença (bootstrap por função), razão de chances,
    razão entre a captura real de Exception (AST) e o W0718, e lançamento de Exception (W0719).
-3. RQ2: distribuição das cinco ações (desenvolvedores, padrão, QG) e redução de "engolir o erro".
+3. RQ2: distribuição das cinco ações (desenvolvedores, padrão, QG), redução de "engolir o erro"
+   e formas de raise (relança o erro capturado, exceção nova com from, exceção nova sem from).
 4. RQ3: concordância de ação e CodeBLEU com IC, tamanho de efeito do Wilcoxon e versão sem o Azure.
 
 Entradas:
@@ -220,6 +221,48 @@ def rq1(ps, ref, azure):
     return pd.DataFrame(linhas), pd.DataFrame(razoes), pd.DataFrame(w0719)
 
 
+def formas_raise(code):
+    """Separa os raise do handler: relança o erro capturado, exceção nova com from, exceção nova sem from."""
+    if not isinstance(code, str):
+        return None
+    code = textwrap.dedent(code.replace("\r\n", "\n")).strip("\n")
+    arvore = None
+    for src in ("try:\n    pass\n" + code, code):
+        try:
+            arvore = ast.parse(src)
+            break
+        except SyntaxError:
+            pass
+    if arvore is None:
+        return None
+    f = {"any_raise": 0, "reraise_caught": 0, "new_with_from": 0, "new_without_from": 0}
+    for h in ast.walk(arvore):
+        if not isinstance(h, ast.ExceptHandler):
+            continue
+        for n in ast.walk(h):
+            if isinstance(n, ast.Raise):
+                f["any_raise"] = 1
+                if n.exc is None or (isinstance(n.exc, ast.Name) and n.exc.id == h.name):
+                    f["reraise_caught"] = 1
+                elif n.cause is not None:
+                    f["new_with_from"] = 1
+                else:
+                    f["new_without_from"] = 1
+    return f
+
+
+def tabela_formas_raise(ps, ref):
+    linhas = []
+    for m, nome in MODELOS:
+        for cond, rot in ((BASE, "Default"), (QG, "QG")):
+            g = ps[(ps.model == m) & (ps.prompt_type == cond) & (ps.status == "valido")]
+            d = pd.DataFrame([x for x in g.pred_code.map(formas_raise) if x])
+            linhas.append({"model": nome, "prompt": rot, "n": len(d), **{k: round(100 * d[k].mean(), 1) for k in d}})
+    d = pd.DataFrame([x for x in ref.ref_code.map(formas_raise) if x])
+    linhas.append({"model": "Developers", "prompt": "Reference", "n": len(d), **{k: round(100 * d[k].mean(), 1) for k in d}})
+    return pd.DataFrame(linhas)
+
+
 # --------------------------------------------------------------------------- #
 # 3 e 4. Ações (RQ2) e semelhança (RQ3)
 # --------------------------------------------------------------------------- #
@@ -270,6 +313,7 @@ def main():
     man, nota, ind = avaliacao_manual(itens, ps)
     r1, razoes, w0719 = rq1(ps, ref, azure)
     dist, r3 = acoes_e_rq3(extra, ref, azure)
+    formas = tabela_formas_raise(ps, ref)
 
     blocos = [("1. Manual evaluation: primary outcome, sensitivity and strict adequacy", man),
               ("1b. Similarity rating (1-5)", nota),
@@ -278,6 +322,7 @@ def main():
               ("2b. RQ1: actual broad catches (AST) vs. W0718, default prompt", razoes),
               ("2c. RQ1: raising Exception/BaseException (W0719 behavior)", w0719),
               ("3. RQ2: action distribution (% of valid handlers)", dist),
+              ("3b. RQ2: forms of raise (% of valid handlers; a handler may have more than one)", formas),
               ("4. RQ3: action agreement and CodeBLEU, with and without Azure", r3)]
     saida_xlsx = os.path.join(args.analysis, "robustez.xlsx")
     with pd.ExcelWriter(saida_xlsx) as w:
