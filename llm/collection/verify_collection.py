@@ -1,19 +1,19 @@
 """
-Verificação dos CSVs gerados pelo llm.py (Task 4).
+Verificação dos CSVs gerados pelo generate_handlers.py (Task 4).
 
-Procura todos os arquivos *_task4_*_results.csv em llm/output/geracao (inclusive em
+Procura todos os arquivos *_task4_*_results.csv em llm/output/generation (inclusive em
 subpastas) e confere, para cada um:
   1. se tem as 379 linhas da Task 4, na mesma ordem do dataset base;
   2. se as colunas originais vieram intactas (mesma função, mesmo snippet);
-  3. se as colunas que o llm.py acrescenta existem e seguem o padrão
+  3. se as colunas que o generate_handlers.py acrescenta existem e seguem o padrão
      (task, prompt_type, modelo, temperatura, versão);
   4. se todas as respostas estão preenchidas e contêm um bloco de código;
   5. se os tokens são números válidos;
   6. se cada modelo tem as duas condições (baseline e QG).
 
 Uso (a partir da raiz do repositório):
-    python llm/analise_dados.py
-    python llm/analise_dados.py --base data/balanced_sample.csv --output llm/output/geracao
+    python llm/collection/verify_collection.py
+    python llm/collection/verify_collection.py --base data/balanced_sample.csv --output llm/output/generation
 """
 
 import argparse
@@ -45,7 +45,7 @@ DESCRICAO_COLUNAS = {
     "output_tokens": "Tokens gerados na resposta.",
     "thinking_tokens": "Tokens de raciocínio (só o Gemini usa; 0 nos outros).",
     "collected_at": "Data e hora da coleta de cada linha.",
-    "project": "Rótulo do projeto passado ao llm.py.",
+    "project": "Rótulo do projeto passado ao generate_handlers.py.",
 }
 
 CODE_RE = re.compile(r"```|<code>", re.I)
@@ -121,7 +121,7 @@ def verificar_arquivo(caminho, modelo, estilo, base, pasta):
                 rel.erro(f"coluna '{col}' difere do dataset base em {int((~iguais).sum())} linhas "
                          f"(ex.: linha {int((~iguais).argmax())})")
 
-    # 3. Colunas do llm.py
+    # 3. Colunas do generate_handlers.py
     faltando = [c for c in COLUNAS_LLM_OBRIGATORIAS if c not in df.columns]
     if faltando:
         rel.erro(f"colunas obrigatórias ausentes: {faltando}")
@@ -179,12 +179,12 @@ def verificar_arquivo(caminho, modelo, estilo, base, pasta):
         vazias = int((resp.notna() & (resp.astype(str).str.strip() == "")).sum())
         sem_codigo = int((resp.notna() & ~resp.astype(str).str.contains(CODE_RE)).sum())
         if nulas or vazias:
-            rel.erro(f"{nulas} respostas nulas e {vazias} vazias; rode o llm.py de novo para completar")
+            rel.erro(f"{nulas} respostas nulas e {vazias} vazias; rode o generate_handlers.py de novo para completar")
         else:
             rel.ok("todas as respostas preenchidas")
         if sem_codigo:
             rel.aviso(f"{sem_codigo} respostas sem bloco de código (``` ou <code>); "
-                      "o llm_analysis.py vai contá-las como inválidas")
+                      "o analyze_handlers.py vai contá-las como inválidas")
 
     # 5. Tokens
     for col in ["input_tokens", "output_tokens"]:
@@ -214,9 +214,9 @@ def verificar_arquivo(caminho, modelo, estilo, base, pasta):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Verifica os CSVs gerados pelo llm.py.")
+    ap = argparse.ArgumentParser(description="Verifica os CSVs gerados pelo generate_handlers.py.")
     ap.add_argument("--base", default=os.path.join("data", "balanced_sample.csv"))
-    ap.add_argument("--output", default=os.path.join("llm", "output", "geracao"))
+    ap.add_argument("--output", default=os.path.join("llm", "output", "generation"))
     ap.add_argument("--analysis-dir", default=os.path.join("llm", "output", "analysis"))
     ap.add_argument("--dicionario", action="store_true", help="imprime o dicionário de colunas")
     args = ap.parse_args()
@@ -271,7 +271,7 @@ def main():
 
     pasta_analise = args.analysis_dir
     os.makedirs(pasta_analise, exist_ok=True)
-    destino = os.path.join(pasta_analise, "verificacao_dados.csv")
+    destino = os.path.join(pasta_analise, "data_verification.csv")
     resumo.to_csv(destino, index=False)
 
     n_erros = sum(len(r.erros) for r in relatorios) + len(duplicados) + (0 if pares_ok else 1)

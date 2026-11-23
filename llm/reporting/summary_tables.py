@@ -1,25 +1,25 @@
 """
 Gera as figuras e tabelas da apresentação a partir dos resultados da análise.
 
-Entradas (geradas pelo llm_analysis.py e pelo comparar_avaliacoes.py):
+Entradas (geradas pelo analyze_handlers.py e pelo rater_agreement.py):
     llm/output/analysis/per_sample.csv      obrigatório
     llm/output/analysis/reference.csv       obrigatório
     llm/output/analysis/paired_tests.csv    obrigatório
     llm/output/analysis/cost_tokens.csv     opcional (tabela de custo)
-    comparacao_piloto.xlsx                  opcional (concordância do piloto; procurado em
-                                            llm/output/avaliacao_manual_piloto e subpastas)
+    agreement_pilot.xlsx                  opcional (concordância do piloto; procurado em
+                                            llm/output/manual_evaluation/pilot e subpastas)
 
-Saídas (em llm/output/apresentacao_parcial/):
-    figuras/fig1_rq1_violations.png        violações W0718/W0707 por modelo e prompt
-    figuras/fig2_pylint_blind_spot.png     W0718 do Pylint vs. captura real de Exception (AST)
-    figuras/fig3_rq2_reraise.png           handlers que relançam o erro
-    figuras/fig4_pipeline.png              entrada, geração, registros e análise
-    figuras/fig5_rq3_similarity.png        semelhança com o código do desenvolvedor
-    tabelas/*.png                          tabelas prontas para slide
-    tabelas.xlsx e tabelas.md              todas as tabelas, com os números
+Saídas (em llm/output/presentation/):
+    figures/fig1_rq1_violations.png        violações W0718/W0707 por modelo e prompt
+    figures/fig2_pylint_blind_spot.png     W0718 do Pylint vs. captura real de Exception (AST)
+    figures/fig3_rq2_reraise.png           handlers que relançam o erro
+    figures/fig4_pipeline.png              entrada, geração, registros e análise
+    figures/fig5_rq3_similarity.png        semelhança com o código do desenvolvedor
+    tables/*.png                          tabelas prontas para slide
+    tables.xlsx e tables.md              todas as tabelas, com os números
 
 Uso (a partir da raiz do repositório):
-    python llm/gerar_figuras_apresentacao.py
+    python llm/reporting/summary_tables.py
 """
 
 import argparse
@@ -137,7 +137,7 @@ def carregar(pasta):
     caminhos = {k: os.path.join(pasta, f"{k}.csv") for k in ("per_sample", "reference", "paired_tests", "cost_tokens")}
     for k in ("per_sample", "reference", "paired_tests"):
         if not os.path.exists(caminhos[k]):
-            sys.exit(f"[ERRO] {caminhos[k]} não encontrado. Rode antes: python llm/llm_analysis.py")
+            sys.exit(f"[ERRO] {caminhos[k]} não encontrado. Rode antes: python llm/analysis/analyze_handlers.py")
     ps = pd.read_csv(caminhos["per_sample"])
     ref = pd.read_csv(caminhos["reference"]).set_index("sample_id").sort_index()
     if "any_target" not in ref.columns:
@@ -289,7 +289,7 @@ def construir_tabelas(ps, ref, testes, custo):
 
 def carregar_piloto(caminho):
     if not caminho:
-        achados = glob.glob(os.path.join("llm", "output", "avaliacao_manual_piloto", "**", "comparacao_piloto.xlsx"), recursive=True)
+        achados = glob.glob(os.path.join("llm", "output", "manual_evaluation", "pilot", "**", "agreement_pilot.xlsx"), recursive=True)
         caminho = achados[0] if achados else None
     if not caminho or not os.path.exists(caminho):
         return None
@@ -457,8 +457,8 @@ def tabela_png(df, caminho, titulo):
 def main():
     ap = argparse.ArgumentParser(description="Gera figuras e tabelas da apresentação a partir dos resultados.")
     ap.add_argument("--analysis", default=os.path.join("llm", "output", "analysis"))
-    ap.add_argument("--piloto", default=None, help="caminho do comparacao_piloto.xlsx (opcional)")
-    ap.add_argument("--out", default=os.path.join("llm", "output", "apresentacao_parcial"))
+    ap.add_argument("--piloto", default=None, help="caminho do agreement_pilot.xlsx (opcional)")
+    ap.add_argument("--out", default=os.path.join("llm", "output", "presentation"))
     args = ap.parse_args()
 
     ps, ref, testes, custo = carregar(args.analysis)
@@ -467,8 +467,8 @@ def main():
     if piloto is not None:
         t["pilot_agreement"] = piloto
 
-    pasta_fig = os.path.join(args.out, "figuras")
-    pasta_tab = os.path.join(args.out, "tabelas")
+    pasta_fig = os.path.join(args.out, "figures")
+    pasta_tab = os.path.join(args.out, "tables")
     os.makedirs(pasta_fig, exist_ok=True)
     os.makedirs(pasta_tab, exist_ok=True)
 
@@ -491,10 +491,10 @@ def main():
         if nome != "rq2_patterns":   # a versão completa fica só no xlsx/md; no slide, as duas partes
             tabela_png(df, os.path.join(pasta_tab, f"{nome}.png"), titulos.get(nome, nome))
 
-    with pd.ExcelWriter(os.path.join(args.out, "tabelas.xlsx")) as w:
+    with pd.ExcelWriter(os.path.join(args.out, "tables.xlsx")) as w:
         for nome, df in t.items():
             df.to_excel(w, sheet_name=nome[:31], index=False)
-    with open(os.path.join(args.out, "tabelas.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(args.out, "tables.md"), "w", encoding="utf-8") as f:
         for nome, df in t.items():
             f.write(f"## {titulos.get(nome, nome)}\n\n")
             try:
@@ -513,7 +513,7 @@ def main():
         for a in sorted(arquivos):
             print("  ", os.path.join(raiz, a))
     if piloto is None:
-        print("\n[aviso] comparacao_piloto.xlsx não encontrado: a tabela do piloto não foi gerada.")
+        print("\n[aviso] agreement_pilot.xlsx não encontrado: a tabela do piloto não foi gerada.")
 
 
 if __name__ == "__main__":

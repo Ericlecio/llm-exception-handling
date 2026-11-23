@@ -17,7 +17,7 @@
   "sha256_entradas": {
     "balanced_sample.csv": "79063175d9b3c7df19f61fa1b40aaabe7fbb38bb762ea2f6e6ad236625fd5405",
     "per_sample.csv": "4fc01f2a4af59b0805f0a3694aafde479ec8997e5f3cdf9bab4db0c3ba0817d1",
-    "sorteio.json": "00ebc20607964b59f76820aa76563a966bb3a8fe9e144ab56c8952c936616abc"
+    "sampling.json": "00ebc20607964b59f76820aa76563a966bb3a8fe9e144ab56c8952c936616abc"
   },
   "pares": [
     [

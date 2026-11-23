@@ -2,17 +2,17 @@
 Etapa final da avaliação manual: consenso e resultados.
 
 Modo 1, preparar o consenso (rodar uma vez, depois da comparação dos avaliadores):
-    python llm/analisar_avaliacao_manual.py --preparar-consenso
-    -> cria consenso.xlsx com os itens em que 1a ou 1b divergem, ou que foram marcados
+    python llm/manual_evaluation/manual_evaluation_results.py --preparar-consenso
+    -> cria consensus.xlsx com os itens em que 1a ou 1b divergem, ou que foram marcados
        com "DÚVIDA:", para os dois avaliadores preencherem juntos a resposta final.
 
 Modo 2, analisar (depois de preencher o consenso):
-    python llm/analisar_avaliacao_manual.py
+    python llm/manual_evaluation/manual_evaluation_results.py
     -> junta as respostas finais com a chave (modelo e condição de cada item) e calcula:
        concordância antes do consenso, % de handlers adequados por condição e modelo,
        teste de McNemar pareado (padrão x QG) e nota média de semelhança.
-    -> salva resultados_avaliacao_manual.xlsx e .md na pasta dos resultados, e a tabela
-       manual-evaluation.tex em llm/output/artigo/tables/.
+    -> salva manual_evaluation_results.xlsx e .md na pasta dos resultados, e a tabela
+       manual-evaluation.tex em llm/output/paper/tables/.
 
 Regras usadas na análise:
     - resposta final: a resposta comum aos dois avaliadores, ou a do consenso quando divergiram;
@@ -28,9 +28,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
-    import comparar_avaliacoes as comp
+    import rater_agreement as comp
 except ImportError:
-    sys.exit("[ERRO] comparar_avaliacoes.py precisa estar na mesma pasta deste script.")
+    sys.exit("[ERRO] rater_agreement.py precisa estar na mesma pasta deste script.")
 
 import numpy as np                                    # noqa: E402
 import pandas as pd                                   # noqa: E402
@@ -39,8 +39,8 @@ from openpyxl.styles import Alignment, Font, PatternFill   # noqa: E402
 from openpyxl.worksheet.datavalidation import DataValidation  # noqa: E402
 from scipy.stats import binomtest, wilcoxon           # noqa: E402
 
-PASTA = os.path.join("llm", "output", "avaliacao_manual_pares")
-RESULTADOS = os.path.join(PASTA, "resultados_120_pares")
+PASTA = os.path.join("llm", "output", "manual_evaluation", "main")
+RESULTADOS = os.path.join(PASTA, "results")
 NPD = "Não é possível determinar"
 MODELOS = [("claude-haiku-4-5", "Claude Haiku 4.5"), ("gemini-3-flash-preview", "Gemini 3 Flash"),
            ("gpt-4o-mini", "GPT-4o-mini")]
@@ -140,7 +140,7 @@ def preparar_consenso(args, a, b):
         "   Itens com o mesmo número em grupo_identicos têm handlers idênticos da mesma função: decidam uma vez e repitam (Regra 4).",
         "3. Itens com motivo DÚVIDA: confirmem a resposta ou corrijam, e registrem a decisão em observacao.",
         "4. Não alterem as planilhas individuais: elas preservam as respostas usadas no cálculo da concordância.",
-        "5. Ao terminar, rodem: python llm/analisar_avaliacao_manual.py",
+        "5. Ao terminar, rodem: python llm/manual_evaluation/manual_evaluation_results.py",
     ]
     for i, t in enumerate(texto, start=1):
         wi.cell(row=i, column=1, value=t).font = Font(name="Arial", bold=(i == 1), size=12 if i == 1 else 10)
@@ -182,7 +182,7 @@ def respostas_finais(args, a, b):
     precisa = (a.tipo != b.tipo) | (a.reacao != b.reacao)
     if precisa.any() and cons.empty:
         sys.exit(f"[ERRO] Há {int(precisa.sum())} itens divergentes e o consenso não foi encontrado.\n"
-                 "        Rode antes: python llm/analisar_avaliacao_manual.py --preparar-consenso")
+                 "        Rode antes: python llm/manual_evaluation/manual_evaluation_results.py --preparar-consenso")
     cons = cons.set_index("item_id") if not cons.empty else cons
     tipo, reacao, faltando = [], [], []
     for i in range(len(a)):
@@ -265,13 +265,13 @@ def analisar(args, a, b):
                         "Wilcoxon p (similarity)": wp})
     pareado = pd.DataFrame(pareado)
 
-    saida = os.path.join(args.out, "resultados_avaliacao_manual.xlsx")
+    saida = os.path.join(args.out, "manual_evaluation_results.xlsx")
     with pd.ExcelWriter(saida) as w:
         conc.to_excel(w, sheet_name="Concordancia", index=False)
         resumo.to_excel(w, sheet_name="Resumo", index=False)
         pareado.to_excel(w, sheet_name="Pareado", index=False)
         d.to_excel(w, sheet_name="Itens_finais", index=False)
-    with open(os.path.join(args.out, "resultados_avaliacao_manual.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(args.out, "manual_evaluation_results.md"), "w", encoding="utf-8") as f:
         for titulo, df in [("Concordância antes do consenso", conc), ("Resumo por modelo e prompt", resumo),
                            ("Comparação pareada (padrão x QG)", pareado)]:
             f.write(f"## {titulo}\n\n")
@@ -290,7 +290,7 @@ def analisar(args, a, b):
             linhas.append(r"    \midrule")
         linhas.append(f"    {r.Model} & {r[3]:.1f} & {r[4]:.1f} & {fmt_p(r[7])} \\\\")
     tex = "\n".join([
-        "% Gerado por analisar_avaliacao_manual.py; não editar à mão.",
+        "% Gerado por manual_evaluation_results.py; não editar à mão.",
         r"\begin{table}[t]", r"  \centering", r"  \footnotesize", r"  \setlength{\tabcolsep}{4pt}",
         rf"  \caption{{Manual evaluation: adequate handlers (\%), {int(pareado.Pairs.iloc[-1])} pairs}}",
         r"  \label{tab:manual}", r"  \begin{tabular}{lccc}", r"    \toprule",
@@ -321,13 +321,13 @@ def analisar(args, a, b):
 
 def main():
     ap = argparse.ArgumentParser(description="Consenso e resultados da avaliação manual.")
-    ap.add_argument("--a", default=os.path.join(RESULTADOS, "avaliacao_ericlecio.xlsx"))
-    ap.add_argument("--b", default=os.path.join(RESULTADOS, "avaliacao_thays.xlsx"))
+    ap.add_argument("--a", default=os.path.join(RESULTADOS, "rater_1.xlsx"))
+    ap.add_argument("--b", default=os.path.join(RESULTADOS, "rater_2.xlsx"))
     ap.add_argument("--nomes", nargs=2, default=["Ericlecio", "Thays"])
-    ap.add_argument("--chave", default=os.path.join(PASTA, "chave_NAO_ABRIR.xlsx"))
-    ap.add_argument("--consenso", default=os.path.join(RESULTADOS, "consenso.xlsx"))
+    ap.add_argument("--chave", default=os.path.join(PASTA, "item_key.xlsx"))
+    ap.add_argument("--consenso", default=os.path.join(RESULTADOS, "consensus.xlsx"))
     ap.add_argument("--out", default=RESULTADOS)
-    ap.add_argument("--artigo", default=os.path.join("llm", "output", "artigo", "tables"))
+    ap.add_argument("--artigo", default=os.path.join("llm", "output", "paper", "tables"))
     ap.add_argument("--preparar-consenso", action="store_true")
     ap.add_argument("--forcar", action="store_true")
     args = ap.parse_args()

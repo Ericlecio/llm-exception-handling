@@ -19,14 +19,14 @@ O que o script faz:
      estratificação, cegamento, integridade dos itens e representatividade.
 
 Uso (a partir da raiz do repositório):
-    python llm/gerar_avaliacao_manual.py
-    python llm/gerar_avaliacao_manual.py --verificar
+    python llm/manual_evaluation/sample_manual_evaluation.py
+    python llm/manual_evaluation/sample_manual_evaluation.py --verificar
 
-Saídas (em llm/output/avaliacao_manual_pares/):
-    amostra_120_pares/avaliacao_<avaliador>.xlsx
-    amostra_287_pares/avaliacao_<avaliador>.xlsx
-    chave_NAO_ABRIR.xlsx        chave item -> modelo/condição, log e validação
-    sorteio.json                parâmetros, hashes das entradas e pares sorteados
+Saídas (em llm/output/manual_evaluation/main/):
+    sample_120_pairs/<avaliador>.xlsx
+    sample_287_pairs/<avaliador>.xlsx
+    item_key.xlsx        chave item -> modelo/condição, log e validação
+    sampling.json                parâmetros, hashes das entradas e pares sorteados
 """
 
 import argparse
@@ -226,7 +226,7 @@ COLUNAS = [
 PREENCHER = ("tipo", "reacao", "justificativa", "nota")
 INSTRUCOES = [
     ("Objetivo", "Julgar se cada handler gerado é adequado para a função que protege e quão semelhante ele é ao handler escrito pelo desenvolvedor."),
-    ("Cegamento", "Os itens não informam o modelo nem a condição. Não abra o arquivo chave_NAO_ABRIR.xlsx antes do fim da avaliação e não discuta itens com o outro avaliador."),
+    ("Cegamento", "Os itens não informam o modelo nem a condição. Não abra o arquivo item_key.xlsx antes do fim da avaliação e não discuta itens com o outro avaliador."),
     ("Como ler um item", "Cada linha é um handler. Cada grupo tem duas versões do handler gerado para a mesma função. A coluna D mostra a função com o handler avaliado no lugar do original. Avalie cada linha de forma independente."),
     ("Ordem de preenchimento", "Responda 1a, 1b e 2 antes de olhar a coluna I (handler do desenvolvedor). Depois leia a coluna I e responda 3."),
     ("1a. Tipo", "Sim / Não / Não é possível determinar. Siga a Regra 1 (aba Regras). Responda Não quando for possível ver que nenhuma instrução do try lança aquele tipo de exceção."),
@@ -386,7 +386,7 @@ def validar(args, pares, func, sel, itens, k_comp, k_red, pastas, ps):
     for pasta in pastas:
         conteudos[pasta] = []
         for nome in args.avaliadores:
-            caminho = os.path.join(pasta, f"avaliacao_{nome.lower()}.xlsx")
+            caminho = os.path.join(pasta, f"{nome.lower()}.xlsx")
             wb = load_workbook(caminho, read_only=True)
             for row in wb["Avaliacao"].iter_rows(values_only=True):
                 if any(p in str(v).lower() for v in row[:3] if v is not None for p in PALAVRAS_PROIBIDAS):
@@ -431,9 +431,9 @@ def main():
     ap = argparse.ArgumentParser(description="Gera e valida as planilhas da avaliação manual por pares.")
     ap.add_argument("--base", default=os.path.join("data", "balanced_sample.csv"))
     ap.add_argument("--per-sample", default=os.path.join("llm", "output", "analysis", "per_sample.csv"))
-    ap.add_argument("--sorteio-piloto", default=os.path.join("llm", "output", "avaliacao_manual_piloto", "sorteio.json"),
-                    help="sorteio.json do piloto, para excluir as funções já usadas")
-    ap.add_argument("--out", default=os.path.join("llm", "output", "avaliacao_manual_pares"))
+    ap.add_argument("--sorteio-piloto", default=os.path.join("llm", "output", "manual_evaluation", "pilot", "sampling.json"),
+                    help="sampling.json do piloto, para excluir as funções já usadas")
+    ap.add_argument("--out", default=os.path.join("llm", "output", "manual_evaluation", "main"))
     ap.add_argument("--seed", type=int, default=20261109)
     ap.add_argument("--n-completa", type=int, default=287)
     ap.add_argument("--n-reduzida", type=int, default=120)
@@ -463,7 +463,7 @@ def main():
         "pares": [[int(r.par), int(r.sample_id), r.modelo] for r in sel.itertuples()],
         "itens": {r.item_id: [r.modelo, r.condicao, int(r.sample_id), int(r.par)] for r in itens.itertuples()},
     }
-    caminho_json = os.path.join(args.out, "sorteio.json")
+    caminho_json = os.path.join(args.out, "sampling.json")
 
     if args.verificar:
         if not os.path.exists(caminho_json):
@@ -481,11 +481,11 @@ def main():
     data_regras = datetime.now().strftime("%d/%m/%Y")
     pastas = []
     for n in (args.n_reduzida, args.n_completa):
-        pasta = os.path.join(args.out, f"amostra_{n}_pares")
+        pasta = os.path.join(args.out, f"sample_{n}_pairs")
         os.makedirs(pasta, exist_ok=True)
         sub = itens[itens.par <= n]
         for nome in args.avaliadores:
-            planilha_avaliador(os.path.join(pasta, f"avaliacao_{nome.lower()}.xlsx"), nome, sub, n, data_regras)
+            planilha_avaliador(os.path.join(pasta, f"{nome.lower()}.xlsx"), nome, sub, n, data_regras)
         pastas.append(pasta)
 
     checks, rep, req_red, req_comp = validar(args, pares, func, sel, itens, k_comp, k_red, pastas, ps)
@@ -519,7 +519,7 @@ def main():
     escrever_df(wb.create_sheet("Estratos"), estratos, {"estrato": 36})
     escrever_df(wb.create_sheet("Validacao"), checks, {"verificacao": 62, "detalhe": 60})
     escrever_df(wb.create_sheet("Representatividade"), rep, {"metrica": 28, "condicao": 18, "ic95": 22})
-    wb.save(os.path.join(args.out, "chave_NAO_ABRIR.xlsx"))
+    wb.save(os.path.join(args.out, "item_key.xlsx"))
 
     print("=" * 70)
     print("AVALIAÇÃO MANUAL POR PARES: SORTEIO E PLANILHAS")

@@ -20,14 +20,14 @@ Não coleta dados novos: reanalisa os resultados que já existem.
 4. RQ3: concordância de ação e CodeBLEU com IC, tamanho de efeito do Wilcoxon e versão sem o Azure.
 
 Entradas:
-    llm/output/analysis/per_sample.csv, reference.csv, similaridade_extra_por_amostra.csv
-    llm/output/avaliacao_manual_pares/resultados_120_pares/resultados_avaliacao_manual.xlsx
-    llm/output/avaliacao_manual_pares/chave_NAO_ABRIR.xlsx
+    llm/output/analysis/per_sample.csv, reference.csv, similarity_extra_per_sample.csv
+    llm/output/manual_evaluation/main/results/manual_evaluation_results.xlsx
+    llm/output/manual_evaluation/main/item_key.xlsx
 Saídas (em llm/output/analysis/):
-    robustez.xlsx e robustez.md
+    robustness.xlsx e robustness.md
 
 Uso (a partir da raiz do repositório):
-    python llm/analises_robustez.py
+    python llm/analysis/robustness_analyses.py
 """
 
 import argparse
@@ -101,14 +101,14 @@ def carregar(args):
     caminhos = {
         "ps": os.path.join(args.analysis, "per_sample.csv"),
         "ref": os.path.join(args.analysis, "reference.csv"),
-        "extra": os.path.join(args.analysis, "similaridade_extra_por_amostra.csv"),
-        "manual": os.path.join(args.manual, "resultados_avaliacao_manual.xlsx"),
+        "extra": os.path.join(args.analysis, "similarity_extra_per_sample.csv"),
+        "manual": os.path.join(args.manual, "manual_evaluation_results.xlsx"),
         "chave": args.chave,
     }
     faltando = [c for c in caminhos.values() if not os.path.exists(c)]
     if faltando:
         sys.exit("[ERRO] Arquivos não encontrados:\n  " + "\n  ".join(faltando) +
-                 "\nRode antes: llm_analysis.py, metricas_similaridade.py e analisar_avaliacao_manual.py")
+                 "\nRode antes: analyze_handlers.py, similarity_metrics.py e manual_evaluation_results.py")
     ps = pd.read_csv(caminhos["ps"])
     ref = pd.read_csv(caminhos["ref"]).set_index("sample_id")
     extra = pd.read_csv(caminhos["extra"])
@@ -274,7 +274,7 @@ def acoes_e_rq3(extra, ref, azure):
             g = extra[(extra.model == m) & (extra.prompt_type == cond) & extra.acao_gerada.notna()]
             vc = g.acao_gerada.value_counts(normalize=True)
             dist.append({"model": nome, "prompt": rot, "n": len(g), **{a: round(100 * vc.get(a, 0), 1) for a in acoes}})
-    from metricas_similaridade import acao   # mesma classificação usada na concordância de ação
+    from similarity_metrics import acao   # mesma classificação usada na concordância de ação
     vc = ref.ref_code.apply(acao).value_counts(normalize=True)
     dist.append({"model": "Developers", "prompt": "Reference", "n": int(ref.ref_code.notna().sum()),
                  **{a: round(100 * vc.get(a, 0), 1) for a in acoes}})
@@ -304,8 +304,8 @@ def acoes_e_rq3(extra, ref, azure):
 def main():
     ap = argparse.ArgumentParser(description="Análises de robustez para o artigo.")
     ap.add_argument("--analysis", default=os.path.join("llm", "output", "analysis"))
-    ap.add_argument("--manual", default=os.path.join("llm", "output", "avaliacao_manual_pares", "resultados_120_pares"))
-    ap.add_argument("--chave", default=os.path.join("llm", "output", "avaliacao_manual_pares", "chave_NAO_ABRIR.xlsx"))
+    ap.add_argument("--manual", default=os.path.join("llm", "output", "manual_evaluation", "main", "results"))
+    ap.add_argument("--chave", default=os.path.join("llm", "output", "manual_evaluation", "main", "item_key.xlsx"))
     args = ap.parse_args()
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -324,11 +324,11 @@ def main():
               ("3. RQ2: action distribution (% of valid handlers)", dist),
               ("3b. RQ2: forms of raise (% of valid handlers; a handler may have more than one)", formas),
               ("4. RQ3: action agreement and CodeBLEU, with and without Azure", r3)]
-    saida_xlsx = os.path.join(args.analysis, "robustez.xlsx")
+    saida_xlsx = os.path.join(args.analysis, "robustness.xlsx")
     with pd.ExcelWriter(saida_xlsx) as w:
         for i, (_, df) in enumerate(blocos, start=1):
             df.to_excel(w, sheet_name=f"bloco{i}", index=False)
-    with open(os.path.join(args.analysis, "robustez.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(args.analysis, "robustness.md"), "w", encoding="utf-8") as f:
         for titulo, df in blocos:
             f.write(f"## {titulo}\n\n")
             try:
@@ -342,7 +342,7 @@ def main():
     for titulo, df in blocos:
         print("\n" + "=" * 100 + f"\n{titulo}\n" + "=" * 100)
         print(df.to_string(index=False))
-    print(f"\nArquivos salvos: {saida_xlsx} e robustez.md")
+    print(f"\nArquivos salvos: {saida_xlsx} e robustness.md")
 
 
 if __name__ == "__main__":

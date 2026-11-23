@@ -9,8 +9,8 @@ RQ3  O QG preserva a similaridade com o código dos desenvolvedores?
      (BLEU, CrystalBLEU, Jaccard, Exact Match, concordância de tipos de exceção)
 
 Uso (a partir da raiz do repositório; os CSVs podem estar em subpastas de llm/output):
-    python llm/llm_analysis.py
-    python llm/llm_analysis.py --input-dir llm/output --out-dir llm/output/analysis
+    python llm/analysis/analyze_handlers.py
+    python llm/analysis/analyze_handlers.py --input-dir llm/output --out-dir llm/output/analysis
 
 Diferenças em relação ao script original:
   * respostas com \r\n são extraídas corretamente;
@@ -441,7 +441,7 @@ def to_markdown(df):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--input-dir", default=os.path.join("llm", "output", "geracao"))
+    ap.add_argument("--input-dir", default=os.path.join("llm", "output", "generation"))
     ap.add_argument("--out-dir", default=os.path.join("llm", "output", "analysis"))
     ap.add_argument("--include-incomplete", action="store_true",
                     help="inclui arquivos com linhas ainda sem resposta (contadas como inválidas)")

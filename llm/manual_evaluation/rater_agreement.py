@@ -13,12 +13,12 @@ O que o script faz:
 O script não lê o arquivo-chave: modelo e condição continuam ocultos.
 
 Uso (a partir da raiz do repositório):
-    python llm/comparar_avaliacoes.py                    # avaliação principal (120 pares)
-    python llm/comparar_avaliacoes.py --aba Piloto \
-        --a llm/output/avaliacao_manual_piloto/resultados/avaliacao_ericlecio_piloto_analisado.xlsx \
-        --b llm/output/avaliacao_manual_piloto/resultados/avaliacao_thays_piloto_analisado.xlsx
+    python llm/manual_evaluation/rater_agreement.py                    # avaliação principal (120 pares)
+    python llm/manual_evaluation/rater_agreement.py --aba Piloto \
+        --a llm/output/manual_evaluation/pilot/results/rater_1_pilot_analyzed.xlsx \
+        --b llm/output/manual_evaluation/pilot/results/rater_2_pilot_analyzed.xlsx
 
-Saída: comparacao_<aba>.xlsx, na mesma pasta das planilhas
+Saída: agreement_main.xlsx ou agreement_pilot.xlsx, na mesma pasta das planilhas
 """
 
 import argparse
@@ -30,7 +30,7 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
-PASTA = os.path.join("llm", "output", "avaliacao_manual_pares", "resultados_120_pares")
+PASTA = os.path.join("llm", "output", "manual_evaluation", "main", "results")
 OPCOES = {
     "tipo": {"Sim", "Não", "Não é possível determinar"},
     "reacao": {"Sim", "Não"},
@@ -123,8 +123,8 @@ def alfa_krippendorff(a, b, nivel, categorias=None):
 def main():
     ap = argparse.ArgumentParser(description="Compara as respostas de dois avaliadores.")
     ap.add_argument("--aba", default="Avaliacao", choices=["Piloto", "Avaliacao"])
-    ap.add_argument("--a", default=os.path.join(PASTA, "avaliacao_ericlecio.xlsx"))
-    ap.add_argument("--b", default=os.path.join(PASTA, "avaliacao_thays.xlsx"))
+    ap.add_argument("--a", default=os.path.join(PASTA, "rater_1.xlsx"))
+    ap.add_argument("--b", default=os.path.join(PASTA, "rater_2.xlsx"))
     ap.add_argument("--nomes", nargs=2, default=["Ericlecio", "Thays"])
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
@@ -133,7 +133,7 @@ def main():
     a, b = ler(args.a, args.aba), ler(args.b, args.aba)
     if list(a.item_id) != list(b.item_id):
         sys.exit("[ERRO] As duas planilhas não têm os mesmos itens na mesma ordem. "
-                 "Confira se ambas vieram da mesma execução do gerar_avaliacao_manual.py.")
+                 "Confira se ambas vieram da mesma execução do sample_manual_evaluation.py.")
 
     erros = problemas_de_preenchimento(a, na) + problemas_de_preenchimento(b, nb)
     if erros:
@@ -177,7 +177,7 @@ def main():
     divergentes = div[div.diverge_em != ""]
 
     # saída
-    out = args.out or os.path.join(os.path.dirname(args.a), f"comparacao_{args.aba.lower()}.xlsx")
+    out = args.out or os.path.join(os.path.dirname(args.a), f"agreement_{ {'Avaliacao': 'main', 'Piloto': 'pilot'}[args.aba]}.xlsx")
     wb = Workbook()
     ws = wb.active
     ws.title = "Resumo"

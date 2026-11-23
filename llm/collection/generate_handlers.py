@@ -747,10 +747,10 @@ def build_df_style(df, records, task, prompt_type, model):
 
 
 def pasta_resultados(model_label, prompt_type):
-    """llm/output/geracao/<modelo>_<condição>, por exemplo claude_default ou gpt_qg."""
+    """llm/output/generation/<modelo>_<condição>, por exemplo claude_default ou gpt_qg."""
     modelo = model_label.split("-")[0].lower()
     cond = "qg" if prompt_type == "style-qg-default" else prompt_type.replace("style-", "")
-    return os.path.join(os.getcwd(), "llm", "output", "geracao", f"{modelo}_{cond}")
+    return os.path.join(os.getcwd(), "llm", "output", "generation", f"{modelo}_{cond}")
 
 
 def save_results_to_csv(df, task, prompt_type, project, model_label):

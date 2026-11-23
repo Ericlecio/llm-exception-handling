@@ -16,14 +16,14 @@ Testes pareados, prompt padrão x QG, por modelo, com correção de Holm entre a
 medidas: Wilcoxon para o CodeBLEU e McNemar exato para as concordâncias de ação e de tipo
 (medidas binárias).
 
-Entradas (geradas pelo llm_analysis.py):
+Entradas (geradas pelo analyze_handlers.py):
     llm/output/analysis/per_sample.csv e reference.csv
 Saídas (em llm/output/analysis/):
-    similaridade_extra_por_amostra.csv    uma linha por handler
-    similaridade_extra.csv                médias, medianas e testes por modelo e prompt
+    similarity_extra_per_sample.csv    uma linha por handler
+    similarity_extra.csv                médias, medianas e testes por modelo e prompt
 
 Uso (a partir da raiz do repositório):
-    python llm/metricas_similaridade.py
+    python llm/analysis/similarity_metrics.py
 """
 
 import argparse
@@ -108,7 +108,7 @@ def main():
     ps_path, ref_path = os.path.join(args.analysis, "per_sample.csv"), os.path.join(args.analysis, "reference.csv")
     for c in (ps_path, ref_path):
         if not os.path.exists(c):
-            sys.exit(f"[ERRO] {c} não encontrado. Rode antes: python llm/llm_analysis.py")
+            sys.exit(f"[ERRO] {c} não encontrado. Rode antes: python llm/analysis/analyze_handlers.py")
     ps = pd.read_csv(ps_path)
     ref = pd.read_csv(ref_path).set_index("sample_id")
     ref["acao_ref"] = ref["ref_code"].apply(acao)
@@ -128,7 +128,7 @@ def main():
             "bleu": r.bleu, "crystalbleu": r.crystalbleu, "jaccard": r.jaccard,
         })
     por_amostra = pd.DataFrame(linhas)
-    por_amostra.to_csv(os.path.join(args.analysis, "similaridade_extra_por_amostra.csv"), index=False)
+    por_amostra.to_csv(os.path.join(args.analysis, "similarity_extra_per_sample.csv"), index=False)
 
     resumo = []
     for m in sorted(por_amostra.model.unique()):
@@ -167,7 +167,7 @@ def main():
     dev = {"model": "developers", "prompt_type": "reference"}
     dev.update({f"acao_{a}_pct": round(100 * dist_ref.get(a, 0.0), 1) for a in ACOES})
     resumo = pd.concat([resumo, pd.DataFrame([dev])], ignore_index=True)
-    resumo.to_csv(os.path.join(args.analysis, "similaridade_extra.csv"), index=False)
+    resumo.to_csv(os.path.join(args.analysis, "similarity_extra.csv"), index=False)
 
     pd.set_option("display.width", 200)
     print("\nMÉDIAS E MEDIANAS (prompt padrão x QG)")
@@ -176,7 +176,7 @@ def main():
                   "p_holm_same_type"]].to_string(index=False))
     print("\nDISTRIBUIÇÃO DAS AÇÕES (% dos handlers)")
     print(resumo[["model", "prompt_type"] + [f"acao_{a}_pct" for a in ACOES]].to_string(index=False))
-    print(f"\nArquivos salvos em {args.analysis}: similaridade_extra.csv e similaridade_extra_por_amostra.csv")
+    print(f"\nArquivos salvos em {args.analysis}: similarity_extra.csv e similarity_extra_per_sample.csv")
 
 
 if __name__ == "__main__":

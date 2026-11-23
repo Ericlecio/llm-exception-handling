@@ -1,13 +1,13 @@
 """
 Gera as tabelas (LaTeX) e os gráficos (PDF vetorial) do artigo a partir dos resultados.
 
-Os números vêm dos mesmos cálculos do gerar_figuras_apresentacao.py, que precisa estar
+Os números vêm dos mesmos cálculos do summary_tables.py, que precisa estar
 na mesma pasta: o artigo e os slides usam exatamente os mesmos valores.
 
-Entradas (geradas pelo llm_analysis.py e pelo metricas_similaridade.py):
-    llm/output/analysis/per_sample.csv, reference.csv, paired_tests.csv e similaridade_extra.csv
+Entradas (geradas pelo analyze_handlers.py e pelo similarity_metrics.py):
+    llm/output/analysis/per_sample.csv, reference.csv, paired_tests.csv e similarity_extra.csv
 
-Saídas (em llm/output/artigo/), prontas para subir nas pastas de mesmo nome no Overleaf:
+Saídas (em llm/output/paper/), prontas para subir nas pastas de mesmo nome no Overleaf:
     tables/rq1-violations.tex      violações-alvo e capturas reais de Exception (RQ1)
     tables/rq2-behavior.tex        o que o handler faz depois de capturar o erro (RQ2)
     tables/rq3-similarity.tex      semelhança com o handler do desenvolvedor (RQ3)
@@ -16,7 +16,7 @@ Saídas (em llm/output/artigo/), prontas para subir nas pastas de mesmo nome no 
     figures/study-design.pdf       fluxo do estudo (entrada, geração, registros, análise)
 
 Uso (a partir da raiz do repositório):
-    python llm/gerar_artefatos_artigo.py
+    python llm/reporting/paper_artifacts.py
 """
 
 import argparse
@@ -25,9 +25,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
-    import gerar_figuras_apresentacao as base
+    import summary_tables as base
 except ImportError:
-    sys.exit("[ERRO] gerar_figuras_apresentacao.py precisa estar na mesma pasta deste script.")
+    sys.exit("[ERRO] summary_tables.py precisa estar na mesma pasta deste script.")
 
 import matplotlib.pyplot as plt                      # noqa: E402
 from matplotlib.patches import FancyBboxPatch        # noqa: E402
@@ -79,7 +79,7 @@ def tabela(caminho, legenda, rotulo, colunas, cabecalho, linhas, nota=None, font
         corpo.append(rf"    \multicolumn{{{len(colunas)}}}{{l}}{{{nota}}}")
     corpo += [r"  \end{tabular}", r"\end{table}", ""]
     with open(caminho, "w", encoding="utf-8") as f:
-        f.write("% Gerado por gerar_artefatos_artigo.py; não editar à mão.\n" + "\n".join(corpo))
+        f.write("% Gerado por paper_artifacts.py; não editar à mão.\n" + "\n".join(corpo))
 
 
 def tabelas(t, ps, testes, pasta, analysis):
@@ -103,7 +103,7 @@ def tabelas(t, ps, testes, pasta, analysis):
            linhas, r"\textsuperscript{\dag}Counted in the AST, including handlers that re-raise.")
 
     # RQ2: distribuição das cinco ações depois de capturar o erro
-    extra = pd.read_csv(os.path.join(analysis, "similaridade_extra.csv"))
+    extra = pd.read_csv(os.path.join(analysis, "similarity_extra.csv"))
     acoes = [("raise", "Re-raise"), ("return", "Return"), ("log", "Log"), ("ignore", "Ignore"), ("other", "Other")]
     linhas = []
     d = extra[extra.model == "developers"].iloc[0]
@@ -119,7 +119,7 @@ def tabelas(t, ps, testes, pasta, analysis):
            [r"Model & Prompt & " + " & ".join(r for _, r in acoes) + r" \\"], linhas)
 
     # Avaliação manual: reação (desfecho principal), adequação original e estrita
-    rob_path = os.path.join(analysis, "robustez.xlsx")
+    rob_path = os.path.join(analysis, "robustness.xlsx")
     if os.path.exists(rob_path):
         rob = pd.read_excel(rob_path, sheet_name="bloco1")
         rob = rob[rob.scope == "All pairs"].set_index("measure")
@@ -140,9 +140,9 @@ def tabelas(t, ps, testes, pasta, analysis):
 
     # RQ3: CodeBLEU, CrystalBLEU, tipo e ação em comum com o desenvolvedor
     s = t["rq3_similarity"]
-    extra_path = os.path.join(analysis, "similaridade_extra.csv")
+    extra_path = os.path.join(analysis, "similarity_extra.csv")
     if not os.path.exists(extra_path):
-        sys.exit(f"[ERRO] {extra_path} não encontrado. Rode antes: python llm/metricas_similaridade.py")
+        sys.exit(f"[ERRO] {extra_path} não encontrado. Rode antes: python llm/analysis/similarity_metrics.py")
     extra = pd.read_csv(extra_path)
     linhas = []
     for m, nome in base.MODELOS:
@@ -227,7 +227,7 @@ def graficos(t, ps, pasta):
 def main():
     ap = argparse.ArgumentParser(description="Gera tabelas (LaTeX) e gráficos (PDF) do artigo.")
     ap.add_argument("--analysis", default=os.path.join("llm", "output", "analysis"))
-    ap.add_argument("--out", default=os.path.join("llm", "output", "artigo"))
+    ap.add_argument("--out", default=os.path.join("llm", "output", "paper"))
     args = ap.parse_args()
 
     ps, ref, testes, custo = base.carregar(args.analysis)

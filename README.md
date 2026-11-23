@@ -35,22 +35,27 @@ O QG elimina as violações-alvo nos três modelos, mas os modelos cumprem as re
 data/
   balanced_sample.csv            benchmark (entrada e referência)
 llm/
-  llm.py                         1. coleta das respostas dos modelos
-  analise_dados.py               2. verificação de integridade dos arquivos coletados
-  llm_analysis.py                3. análise automática: Pylint, AST, similaridade e testes pareados
-  metricas_similaridade.py       3b. CodeBLEU, concordância de ação e medianas (RQ3)
-  gerar_figuras_apresentacao.py  4. figuras e tabelas dos slides
-  gerar_artefatos_artigo.py      5. tabelas (LaTeX) e gráficos (PDF) do artigo
-  gerar_avaliacao_manual.py      6. sorteio da amostra e planilhas cegas da avaliação manual
-  comparar_avaliacoes.py         7. concordância entre avaliadores (alfa de Krippendorff)
-  analisar_avaliacao_manual.py   8. consenso e resultados da avaliação manual
+  collection/
+    generate_handlers.py           1. coleta das respostas dos modelos
+    verify_collection.py           2. verificação de integridade dos arquivos coletados
+  analysis/
+    analyze_handlers.py            3. análise automática: Pylint, AST, similaridade e testes pareados
+    similarity_metrics.py          3b. CodeBLEU, concordância de ação e medianas (RQ3)
+    robustness_analyses.py         3c. análises de robustez
+  reporting/
+    summary_tables.py              4. figuras e tabelas dos slides
+    paper_artifacts.py             5. tabelas (LaTeX) e gráficos (PDF) do artigo
+  manual_evaluation/
+    sample_manual_evaluation.py    6. sorteio da amostra e planilhas cegas da avaliação manual
+    rater_agreement.py             7. concordância entre avaliadores (alfa de Krippendorff)
+    manual_evaluation_results.py   8. consenso e resultados da avaliação manual
   output/
-    geracao/                     respostas dos modelos, uma pasta por modelo e prompt
-    analysis/                    resultados da análise automática
-    avaliacao_manual_piloto/     piloto de calibração (30 itens)
-    avaliacao_manual_pares/      sorteio, chave, respostas, consenso e resultados (120 pares)
-    apresentacao_parcial/        figuras e tabelas dos slides
-    artigo/                      tabelas e figuras do artigo
+    generation/                    respostas dos modelos, uma pasta por modelo e prompt
+    analysis/                      resultados da análise automática
+    manual_evaluation/pilot/       piloto de calibração (30 itens)
+    manual_evaluation/main/        sorteio, chave, respostas, consenso e resultados (120 pares)
+    presentation/                  figuras e tabelas dos slides
+    paper/                         tabelas e figuras do artigo
 ```
 
 ## Como reproduzir
@@ -65,11 +70,11 @@ pip install -r requirements.txt
 
 Para coletar novas respostas, copie `.env.example` para `.env` e preencha as chaves de API. As etapas 2 a 8 não precisam de chaves.
 
-### 2. Coleta (opcional; os resultados já estão em `llm/output/geracao/`)
+### 2. Coleta (opcional; os resultados já estão em `llm/output/generation/`)
 
 ```bash
-python llm/llm.py --task task4 --prompt-types style-default    --models claude-haiku-4-5
-python llm/llm.py --task task4 --prompt-types style-qg-default --models claude-haiku-4-5
+python llm/collection/generate_handlers.py --task task4 --prompt-types style-default    --models claude-haiku-4-5
+python llm/collection/generate_handlers.py --task task4 --prompt-types style-qg-default --models claude-haiku-4-5
 ```
 
 Troque o modelo por `gemini-3-flash-preview` ou `gpt-4o-mini`. A coleta retoma de onde parou se for interrompida.
@@ -77,16 +82,16 @@ Troque o modelo por `gemini-3-flash-preview` ou `gpt-4o-mini`. A coleta retoma d
 ### 3. Verificação e análise automática
 
 ```bash
-python llm/analise_dados.py
-python llm/llm_analysis.py
-python llm/metricas_similaridade.py
+python llm/collection/verify_collection.py
+python llm/analysis/analyze_handlers.py
+python llm/analysis/similarity_metrics.py
 ```
 
 ### 4. Figuras e tabelas
 
 ```bash
-python llm/gerar_figuras_apresentacao.py
-python llm/gerar_artefatos_artigo.py
+python llm/reporting/summary_tables.py
+python llm/reporting/paper_artifacts.py
 ```
 
 ### 5. Avaliação manual
@@ -94,14 +99,14 @@ python llm/gerar_artefatos_artigo.py
 A amostra (120 pares, 95% de confiança, margem de ±8,5%, fórmula de Cochran) foi sorteada com semente fixa. Para conferir que o sorteio registrado é reproduzível:
 
 ```bash
-python llm/gerar_avaliacao_manual.py --verificar
+python llm/manual_evaluation/sample_manual_evaluation.py --verificar
 ```
 
 Concordância antes do consenso e resultados finais:
 
 ```bash
-python llm/comparar_avaliacoes.py
-python llm/analisar_avaliacao_manual.py
+python llm/manual_evaluation/rater_agreement.py
+python llm/manual_evaluation/manual_evaluation_results.py
 ```
 
 ## Observações
