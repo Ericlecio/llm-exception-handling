@@ -117,4 +117,4 @@ python llm/manual_evaluation/manual_evaluation_results.py
 
 ## Referência do benchmark
 
-Souza, J., Alves, T., Lima, R., Araújo, E., Teixeira, L., Fonseca, B. _An Empirical Evaluation of Using Large Language Models to Recommend Exception Handling Tasks_. Brazilian Symposium on Software Engineering (SBES), 2026.
+Souza et al. _An Empirical Evaluation of Using Large Language Models to Recommend Exception Handling Tasks_. Brazilian Symposium on Software Engineering (SBES), 2026.

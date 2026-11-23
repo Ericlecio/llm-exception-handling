@@ -323,7 +323,7 @@ def main():
     ap = argparse.ArgumentParser(description="Consenso e resultados da avaliação manual.")
     ap.add_argument("--a", default=os.path.join(RESULTADOS, "rater_1.xlsx"))
     ap.add_argument("--b", default=os.path.join(RESULTADOS, "rater_2.xlsx"))
-    ap.add_argument("--nomes", nargs=2, default=["Ericlecio", "Thays"])
+    ap.add_argument("--nomes", nargs=2, default=["rater_1", "rater_2"])
     ap.add_argument("--chave", default=os.path.join(PASTA, "item_key.xlsx"))
     ap.add_argument("--consenso", default=os.path.join(RESULTADOS, "consensus.xlsx"))
     ap.add_argument("--out", default=RESULTADOS)

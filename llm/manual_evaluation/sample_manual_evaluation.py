@@ -302,7 +302,7 @@ def planilha_avaliador(caminho, nome, itens, n_pares, data_regras):
     impressao(ws)
 
     wr = wb.create_sheet("Regras")
-    wr["A1"] = f"Regras de decisão acordadas na calibração do piloto por Ericlécio e Thays (planilha gerada em {data_regras})"
+    wr["A1"] = f"Regras de decisão acordadas na calibração do piloto por rater_1 e rater_2 (planilha gerada em {data_regras})"
     wr["A1"].font = Font(name=FONTE, bold=True, size=12)
     for j, (t, w) in enumerate([("Regra", 10), ("Pergunta", 26), ("Texto da regra", 95), ("Exemplo do piloto", 28)], start=1):
         cab(wr.cell(row=3, column=j, value=t))
@@ -437,7 +437,7 @@ def main():
     ap.add_argument("--seed", type=int, default=20261109)
     ap.add_argument("--n-completa", type=int, default=287)
     ap.add_argument("--n-reduzida", type=int, default=120)
-    ap.add_argument("--avaliadores", nargs="+", default=["Ericlecio", "Thays"])
+    ap.add_argument("--avaliadores", nargs="+", default=["rater_1", "rater_2"])
     ap.add_argument("--verificar", action="store_true")
     args = ap.parse_args()
 

@@ -125,7 +125,7 @@ def main():
     ap.add_argument("--aba", default="Avaliacao", choices=["Piloto", "Avaliacao"])
     ap.add_argument("--a", default=os.path.join(PASTA, "rater_1.xlsx"))
     ap.add_argument("--b", default=os.path.join(PASTA, "rater_2.xlsx"))
-    ap.add_argument("--nomes", nargs=2, default=["Ericlecio", "Thays"])
+    ap.add_argument("--nomes", nargs=2, default=["rater_1", "rater_2"])
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     na, nb = args.nomes
