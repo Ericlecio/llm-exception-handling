@@ -62,6 +62,18 @@
 | GPT        | QG        | 379 |   100   |      0   |   0   |      0   |     0   |
 | Developers | Reference | 379 |    26.4 |     16.4 |   2.6 |     35.6 |    19   |
 
+## 3b. RQ2: forms of raise (% of valid handlers; a handler may have more than one)
+
+| model      | prompt    |   n |   any_raise |   reraise_caught |   new_with_from |   new_without_from |
+|:-----------|:----------|----:|------------:|-----------------:|----------------:|-------------------:|
+| Claude     | Default   | 379 |        66.8 |             31.1 |            31.4 |               25.3 |
+| Claude     | QG        | 378 |        88.4 |             18.8 |            78   |                0   |
+| Gemini     | Default   | 379 |        58.3 |             23.7 |            12.1 |               22.4 |
+| Gemini     | QG        | 376 |        70.7 |              4   |            66.8 |                0   |
+| GPT        | Default   | 379 |        65.4 |             10.6 |            17.9 |               40.6 |
+| GPT        | QG        | 379 |       100   |              0   |           100   |                0   |
+| Developers | Reference | 379 |        26.4 |              6.3 |            14.2 |                6.6 |
+
 ## 4. RQ3: action agreement and CodeBLEU, with and without Azure
 
 | scope         | model   |   pairs |   same_action_default_% |   same_action_QG_% | same_action_diff_CI95   | same_action_McNemar_p   |   CodeBLEU_default |   CodeBLEU_QG | CodeBLEU_Wilcoxon_p   |   CodeBLEU_effect_r |

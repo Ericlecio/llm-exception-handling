@@ -104,7 +104,7 @@ def tabelas(t, ps, testes, pasta, analysis):
 
     # RQ2: distribuição das cinco ações depois de capturar o erro
     extra = pd.read_csv(os.path.join(analysis, "similarity_extra.csv"))
-    acoes = [("raise", "Re-raise"), ("return", "Return"), ("log", "Log"), ("ignore", "Ignore"), ("other", "Other")]
+    acoes = [("raise", "Raise"), ("return", "Return"), ("log", "Log"), ("ignore", "Ignore"), ("other", "Other")]
     linhas = []
     d = extra[extra.model == "developers"].iloc[0]
     linhas.append("Developers & -- & " + " & ".join(num(d[f"acao_{a}_pct"]) for a, _ in acoes))
